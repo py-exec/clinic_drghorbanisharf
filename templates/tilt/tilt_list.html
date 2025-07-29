@@ -1,0 +1,183 @@
+{% extends "base.html" %}
+{% load static %}
+{% load humanize %}
+
+{% block title %}📈 لیست تست‌های تیلت{% endblock %}
+
+{% block content %}
+<h4 class="py-3 mb-4">
+    <span class="text-muted fw-light">خدمات کلینیکی /</span> لیست تست‌های تیلت
+</h4>
+
+<div class="card">
+    <!-- هدر کارت و ابزارهای مدیریتی -->
+    <div class="card-header">
+        <div class="d-flex flex-wrap justify-content-between align-items-center gap-3">
+            <h5 class="card-title mb-0">لیست گزارش‌های ثبت شده</h5>
+
+            <div class="d-flex flex-wrap align-items-center gap-2">
+                <!-- دکمه انتخاب ستون‌ها -->
+                <div class="dropdown">
+                    <button class="btn btn-outline-secondary btn-sm dropdown-toggle" type="button" id="column-toggler"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="bx bx-table me-1"></i> نمایش ستون‌ها
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="column-toggler" id="column-list">
+                        <li><label class="dropdown-item"><input type="checkbox" class="form-check-input me-2"
+                                                                data-column="patient" checked> بیمار</label></li>
+                        <li><label class="dropdown-item"><input type="checkbox" class="form-check-input me-2"
+                                                                data-column="referring_physician"> پزشک
+                            ارجاع‌دهنده</label></li>
+                        <li><label class="dropdown-item"><input type="checkbox" class="form-check-input me-2"
+                                                                data-column="final_result" checked> یافته نهایی</label>
+                        </li>
+                        <li><label class="dropdown-item"><input type="checkbox" class="form-check-input me-2"
+                                                                data-column="response_type"> نوع پاسخ</label></li>
+                        <li><label class="dropdown-item"><input type="checkbox" class="form-check-input me-2"
+                                                                data-column="created_at" checked> تاریخ ثبت</label></li>
+                        <li><label class="dropdown-item"><input type="checkbox" class="form-check-input me-2"
+                                                                data-column="created_by"> کاربر ثبت‌کننده</label></li>
+                    </ul>
+                </div>
+
+                <!-- دکمه‌های عملیاتی -->
+                <a href="?export=pdf" class="btn btn-outline-danger btn-sm">
+                    <i class="bx bxs-file-pdf me-1"></i> خروجی PDF
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- جدول گزارش‌ها -->
+    <div class="card-body">
+        <div class="table-responsive text-nowrap">
+            <table class="table table-hover table-striped" id="reports-table">
+                <thead>
+                <tr>
+                    <th data-column="patient">بیمار</th>
+                    <th data-column="referring_physician">پزشک ارجاع‌دهنده</th>
+                    <th data-column="final_result">یافته نهایی</th>
+                    <th data-column="response_type">نوع پاسخ</th>
+                    <th data-column="created_at">تاریخ ثبت</th>
+                    <th data-column="created_by">کاربر ثبت‌کننده</th>
+                    <th class="text-center">عملیات</th>
+                </tr>
+                </thead>
+                <tbody class="table-border-bottom-0">
+                {% for report in page_obj %}
+                <tr>
+                    <td data-column="patient"><strong>{{ report.patient.full_name|default:"-" }}</strong></td>
+                    <td data-column="referring_physician">{{ report.referring_physician|default:"-" }}</td>
+                    <td data-column="final_result">{{ report.final_result|default:"-" }}</td>
+                    <td data-column="response_type">{{ report.response_type|default:"-" }}</td>
+                    <td data-column="created_at">{{ report.created_at|date:"Y/m/d H:i" }}</td>
+                    <td data-column="created_by">{{ report.created_by.get_full_name|default:"-" }}</td>
+                    <td class="text-center">
+                        <div class="dropdown">
+                            <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
+                                <i class="bx bx-dots-vertical-rounded"></i>
+                            </button>
+                            <div class="dropdown-menu">
+                                <a class="dropdown-item" href="{{ report.get_absolute_url }}">
+                                    <i class="bx bx-show-alt me-1"></i> مشاهده
+                                </a>
+                                <a class="dropdown-item" href="{% url 'tilt:tilt_update' report.pk %}">
+                                    <i class="bx bx-edit-alt me-1"></i> ویرایش
+                                </a>
+                                <a class="dropdown-item text-danger" href="{% url 'tilt:tilt_delete' report.pk %}">
+                                    <i class="bx bx-trash me-1"></i> حذف
+                                </a>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="7" class="text-center py-4">هیچ گزارش تست تیلتی یافت نشد.</td>
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- صفحه‌بندی -->
+        {% if page_obj.has_other_pages %}
+        <div class="d-flex justify-content-center mt-4">
+            <nav aria-label="Page navigation">
+                <ul class="pagination">
+                    {% if page_obj.has_previous %}
+                    <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">قبلی</a>
+                    </li>
+                    {% else %}
+                    <li class="page-item disabled"><span class="page-link">قبلی</span></li>
+                    {% endif %}
+
+                    {% for num in page_obj.paginator.page_range %}
+                    {% if page_obj.number == num %}
+                    <li class="page-item active"><span class="page-link">{{ num }}</span></li>
+                    {% else %}
+                    <li class="page-item"><a class="page-link" href="?page={{ num }}">{{ num }}</a></li>
+                    {% endif %}
+                    {% endfor %}
+
+                    {% if page_obj.has_next %}
+                    <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">بعدی</a>
+                    </li>
+                    {% else %}
+                    <li class="page-item disabled"><span class="page-link">بعدی</span></li>
+                    {% endif %}
+                </ul>
+            </nav>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const table = document.getElementById('reports-table');
+        const columnCheckboxes = document.querySelectorAll('#column-list input[type="checkbox"]');
+        const storageKey = 'tiltReportColumnVisibility';
+
+        function updateColumnVisibility() {
+            const visibilityState = {};
+            columnCheckboxes.forEach(checkbox => {
+                const column = checkbox.dataset.column;
+                const isVisible = checkbox.checked;
+                visibilityState[column] = isVisible;
+
+                const cells = table.querySelectorAll(`[data-column="${column}"]`);
+                cells.forEach(cell => {
+                    cell.style.display = isVisible ? '' : 'none';
+                });
+            });
+            localStorage.setItem(storageKey, JSON.stringify(visibilityState));
+        }
+
+        function loadColumnVisibility() {
+            const savedState = JSON.parse(localStorage.getItem(storageKey));
+            if (savedState) {
+                columnCheckboxes.forEach(checkbox => {
+                    const column = checkbox.dataset.column;
+                    if (savedState[column] !== undefined) {
+                        checkbox.checked = savedState[column];
+                    }
+                });
+            }
+            updateColumnVisibility();
+        }
+
+        columnCheckboxes.forEach(checkbox => {
+            checkbox.addEventListener('change', updateColumnVisibility);
+        });
+
+        document.getElementById('column-list').addEventListener('click', function (e) {
+            e.stopPropagation();
+        });
+
+        loadColumnVisibility();
+    });
+</script>
+{% endblock %}

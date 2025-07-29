@@ -1,0 +1,331 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}داشبورد مدیریت پیامک{% endblock %}
+
+{% block content %}
+<h4 class="py-3 mb-4">
+    <span class="text-muted fw-light">پیام‌رسان /</span> داشبورد مدیریت پیامک
+</h4>
+
+<!-- Tabs -->
+<ul class="nav nav-tabs nav-pills flex-column flex-sm-row mb-4" role="tablist">
+    <li class="nav-item" role="presentation">
+        <button type="button" class="nav-link active" role="tab" data-bs-toggle="tab" data-bs-target="#navs-pills-top-status" aria-controls="navs-pills-top-status" aria-selected="true">
+            <i class="bx bx-broadcast me-1"></i> وضعیت کلی و تست
+        </button>
+    </li>
+    <li class="nav-item" role="presentation">
+        <button type="button" class="nav-link" role="tab" data-bs-toggle="tab" data-bs-target="#navs-pills-top-patterns" aria-controls="navs-pills-top-patterns" aria-selected="false">
+            <i class="bx bx-text me-1"></i> مدیریت پترن‌ها
+        </button>
+    </li>
+    <li class="nav-item" role="presentation">
+        <button type="button" class="nav-link" role="tab" data-bs-toggle="tab" data-bs-target="#navs-pills-top-configs" aria-controls="navs-pills-top-configs" aria-selected="false">
+            <i class="bx bx-cog me-1"></i> مدیریت تنظیمات (API)
+        </button>
+    </li>
+    <li class="nav-item" role="presentation">
+        <button type="button" class="nav-link" role="tab" data-bs-toggle="tab" data-bs-target="#navs-pills-top-pattern-types" aria-controls="navs-pills-top-pattern-types" aria-selected="false">
+            <i class="bx bx-category-alt me-1"></i> انواع پترن
+        </button>
+    </li>
+</ul>
+<!--/ Tabs -->
+
+<!-- Tab Content -->
+<div class="tab-content">
+    <!-- Status Tab -->
+    <div class="tab-pane fade show active" id="navs-pills-top-status" role="tabpanel">
+        <div class="row">
+            <!-- Panel Status -->
+            <div class="col-md-6 mb-4">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">وضعیت پنل‌های فعال</h5>
+                    </div>
+                    <div class="card-body">
+                        {% if sms_status_list %}
+                            {% for item in sms_status_list %}
+                                <div class="alert {% if item.status.success %}alert-success{% else %}alert-danger{% endif %}">
+                                    <h6 class="alert-heading mb-1">{{ item.config.provider }} ({{ item.config.originator }})</h6>
+                                    <p class="mb-0">{{ item.status.message }}</p>
+                                </div>
+                            {% endfor %}
+                        {% else %}
+                            <div class="alert alert-warning">هیچ پنل پیامک فعالی یافت نشد.</div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Test Pattern -->
+            <div class="col-md-6 mb-4">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">تست ارسال پترن</h5>
+                    </div>
+                    <div class="card-body">
+                        <form id="test-pattern-form">
+                            {% csrf_token %}
+                            <div class="mb-3">
+                                <label for="test-pattern-code" class="form-label">انتخاب پترن</label>
+                                <select id="test-pattern-code" class="form-select">
+                                    <option value="">یک پترن را انتخاب کنید</option>
+                                    {% for pattern in patterns %}
+                                        <option value="{{ pattern.code }}">{{ pattern.name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="test-phone" class="form-label">شماره موبایل گیرنده</label>
+                                <input type="text" class="form-control" id="test-phone" placeholder="09123456789">
+                            </div>
+                            <div id="pattern-variables-container" class="mb-3">
+                                <!-- متغیرهای پترن به صورت داینامیک اینجا اضافه می‌شوند -->
+                            </div>
+                            <button type="submit" class="btn btn-primary">ارسال تست</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Patterns Tab -->
+    <div class="tab-pane fade" id="navs-pills-top-patterns" role="tabpanel">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">لیست پترن‌های پیامک</h5>
+                <a href="{% url 'clinic_messenger:sms_pattern_create' %}" class="btn btn-success btn-sm">
+                    <i class="bx bx-plus"></i> افزودن پترن جدید
+                </a>
+            </div>
+            <div class="table-responsive text-nowrap">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>کد پترن</th>
+                            <th>نام داخلی</th>
+                            <th>نوع</th>
+                            <th>تنظیمات ارسال</th>
+                            <th>وضعیت</th>
+                            <th>عملیات</th>
+                        </tr>
+                    </thead>
+                    <tbody class="table-border-bottom-0">
+                        {% for pattern in patterns %}
+                        <tr>
+                            <td><strong>{{ pattern.code }}</strong></td>
+                            <td>{{ pattern.name }}</td>
+                            <td>{{ pattern.type.title|default:"-" }}</td>
+                            <td>{{ pattern.config }}</td>
+                            <td>
+                                {% if pattern.is_active %}
+                                    <span class="badge bg-label-success">فعال</span>
+                                {% else %}
+                                    <span class="badge bg-label-secondary">غیرفعال</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <a href="{% url 'clinic_messenger:sms_pattern_update' pattern.pk %}" class="btn btn-sm btn-info">ویرایش</a>
+                                <a href="{% url 'clinic_messenger:sms_pattern_delete' pattern.pk %}" class="btn btn-sm btn-danger">حذف</a>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="6" class="text-center">هیچ پترنی یافت نشد.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Configs Tab -->
+<div class="tab-pane fade" id="navs-pills-top-configs" role="tabpanel">
+    <div class="card">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h5 class="mb-0">لیست تنظیمات پنل (API)</h5>
+            <a href="{% url 'clinic_messenger:sms_config_create' %}" class="btn btn-success btn-sm">
+                <i class="bx bx-plus"></i> افزودن تنظیمات جدید
+            </a>
+        </div>
+        <div class="table-responsive text-nowrap">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>سرویس‌دهنده</th>
+                        <th>شماره فرستنده</th>
+                        <th>وضعیت</th>
+                        <th>عملیات</th>
+                    </tr>
+                </thead>
+                <tbody class="table-border-bottom-0">
+                    {% for config in configs %}
+                    <tr>
+                        <td><strong>{{ config.provider }}</strong></td>
+                        <td>{{ config.originator }}</td>
+                        <td>
+                            {% if config.is_active %}
+                                <span class="badge bg-label-success">فعال</span>
+                            {% else %}
+                                <span class="badge bg-label-secondary">غیرفعال</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <a href="{% url 'clinic_messenger:sms_config_update' config.pk %}" class="btn btn-sm btn-info me-1">
+                                <i class="bx bx-edit"></i> ویرایش
+                            </a>
+                            <a href="{% url 'clinic_messenger:sms_config_delete' config.pk %}" class="btn btn-sm btn-danger">
+                                <i class="bx bx-trash"></i> حذف
+                            </a>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="4" class="text-center">هیچ تنظیماتی یافت نشد.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+    <!-- Pattern Types Tab -->
+<!-- Pattern Types Tab -->
+<div class="tab-pane fade" id="navs-pills-top-pattern-types" role="tabpanel">
+    <div class="card">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h5 class="mb-0">مدیریت انواع پترن‌ها</h5>
+            <a href="{% url 'clinic_messenger:sms_pattern_type_create' %}" class="btn btn-success btn-sm">
+                <i class="bx bx-plus"></i> افزودن نوع جدید
+            </a>
+        </div>
+        <div class="card-body">
+            <p>این بخش برای دسته‌بندی پترن‌ها (مثلاً: یادآوری نوبت، ارسال کد تایید) استفاده می‌شود.</p>
+        </div>
+        <div class="table-responsive text-nowrap">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>کد</th>
+                        <th>عنوان</th>
+                        <th>توضیحات</th>
+                        <th>وضعیت</th>
+                        <th>عملیات</th>
+                    </tr>
+                </thead>
+                <tbody class="table-border-bottom-0">
+                    {% for p_type in pattern_types %}
+                    <tr>
+                        <td><strong>{{ p_type.code }}</strong></td>
+                        <td>{{ p_type.title }}</td>
+                        <td>{{ p_type.description|truncatewords:10 }}</td>
+                        <td>
+                            {% if p_type.is_active %}
+                                <span class="badge bg-label-success">فعال</span>
+                            {% else %}
+                                <span class="badge bg-label-secondary">غیرفعال</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <a href="{% url 'clinic_messenger:sms_pattern_type_update' p_type.pk %}" class="btn btn-sm btn-info me-1">
+                                <i class="bx bx-edit"></i> ویرایش
+                            </a>
+                            <a href="{% url 'clinic_messenger:sms_pattern_type_delete' p_type.pk %}" class="btn btn-sm btn-danger">
+                                <i class="bx bx-trash"></i> حذف
+                            </a>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="5" class="text-center">هیچ نوع پترنی یافت نشد.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+</div>
+<!--/ Tab Content -->
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const patternSelect = document.getElementById('test-pattern-code');
+    const variablesContainer = document.getElementById('pattern-variables-container');
+    const testForm = document.getElementById('test-pattern-form');
+
+    // فرض می‌کنیم متغیرهای پترن‌ها در یک متغیر جاوا اسکریپت در دسترس هستند
+    // این متغیر باید در تمپلیت اصلی توسط Django رندر شود
+    const allPatternVariables = {{ pattern_variables_json|safe }};
+
+    patternSelect.addEventListener('change', function () {
+        const selectedPatternCode = this.value;
+        variablesContainer.innerHTML = ''; // Clear previous variables
+
+        if (selectedPatternCode && allPatternVariables[selectedPatternCode]) {
+            const variables = allPatternVariables[selectedPatternCode];
+            variables.forEach(variable => {
+                const div = document.createElement('div');
+                div.classList.add('mb-2');
+                div.innerHTML = `
+                    <label for="var-${variable.key}" class="form-label">${variable.label}</label>
+                    <input type="text" class="form-control form-control-sm" id="var-${variable.key}" name="${variable.key}" placeholder="${variable.hint || ''}">
+                `;
+                variablesContainer.appendChild(div);
+            });
+        }
+    });
+
+    testForm.addEventListener('submit', function (e) {
+        e.preventDefault();
+        const patternCode = patternSelect.value;
+        const phone = document.getElementById('test-phone').value;
+
+        if (!patternCode || !phone) {
+            alert('لطفاً پترن و شماره موبایل را وارد کنید.');
+            return;
+        }
+
+        const variables = {};
+        const inputs = variablesContainer.querySelectorAll('input');
+        inputs.forEach(input => {
+            variables[input.name] = input.value;
+        });
+
+        fetch("{% url 'clinic_messenger:test_pattern' %}", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': '{{ csrf_token }}'
+            },
+            body: JSON.stringify({
+                code: patternCode,
+                phone: phone,
+                variables: variables
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert('پیام تست با موفقیت ارسال شد!');
+            } else {
+                alert('خطا در ارسال پیام: ' + data.message);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('یک خطای پیش‌بینی نشده رخ داد.');
+        });
+    });
+});
+</script>
+{% endblock %}
+
+

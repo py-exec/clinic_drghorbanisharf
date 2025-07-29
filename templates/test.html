@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-SgOJa3DmI69IUzQ2PVdRZhwQ+dy64/BUtbMJw1MZ8t5HZApcHrRKUc4W0kG879m7" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js" integrity="sha384-k6d4wzSIapyDyv1kpU366/PK5hCdSbCRGRCMv+eplOQJWyd1fbcAu9OCUj5zNLiq" crossorigin="anonymous"></script>
+</head>
+<body>
+<!-- نسخه هماهنگ‌شده با قالب Sneat/Bootstrap RTL Admin -->
+<div class="container-xxl flex-grow-1 container-p-y">
+
+  <!-- هشدارهای فوری -->
+  <div class="alert alert-danger d-flex align-items-center" role="alert">
+    <i class="bx bx-error-circle me-2 fs-4"></i>
+    <div>
+      <strong class="me-2">هشدارهای فوری:</strong>
+      <ul class="mb-0 ps-3">
+        <li>🚨 افزایش HR در Holter نسبت به مراجعه قبلی</li>
+        <li>⚠️ کاهش EF به 28٪ — بررسی مجدد توصیه می‌شود</li>
+        <li>🧬 شوک مکرر + AF بالا — arrhythmic storm احتمالی</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- مشخصات بیمار -->
+  <div class="card mb-4">
+    <div class="card-header bg-info text-white">مشخصات بیمار</div>
+    <div class="card-body">
+      <div class="row g-3">
+        <div class="col-md-3"><label class="form-label">نام و نام خانوادگی</label><input type="text" class="form-control" value="علی محمدی" readonly></div>
+        <div class="col-md-3"><label class="form-label">کد ملی</label><input type="text" class="form-control" value="0012345678" readonly></div>
+        <div class="col-md-3"><label class="form-label">شماره پرونده</label><input type="text" class="form-control" value="PY-1403-001" readonly></div>
+        <div class="col-md-3"><label class="form-label">سن</label><input type="text" class="form-control" value="66 سال" readonly></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- بیماری های زمینه ای -->
+  <div class="card mb-4">
+    <div class="card-header bg-secondary text-white">سابقه بیماری‌های مزمن</div>
+    <div class="card-body">
+      <ul class="mb-0 ps-4">
+        <li>فشار خون بالا: <strong class="text-danger">دارد</strong></li>
+        <li>دیابت نوع ۲: <strong class="text-danger">دارد</strong></li>
+        <li>سابقه سکته قلبی: <strong class="text-danger">دارد</strong></li>
+        <li>نارسایی کلیه: <strong class="text-success">ندارد</strong></li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- جدول تست‌ها -->
+  <div class="card mb-4">
+    <div class="card-header bg-primary text-white">خلاصه تست‌ها و بررسی‌ها</div>
+    <div class="card-body table-responsive">
+      <table class="table table-bordered text-center">
+        <thead class="table-light">
+          <tr>
+            <th>نام تست</th>
+            <th>وضعیت</th>
+            <th>تفسیر</th>
+            <th>نمایش</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>هولتر فشار</td>
+            <td><span class="badge bg-success">انجام شده</span></td>
+            <td>نوسان بالا</td>
+            <td><button class="btn btn-sm btn-outline-info" onclick="showGraph('bp')">گراف</button></td>
+          </tr>
+          <tr>
+            <td>هولتر ریتم</td>
+            <td><span class="badge bg-success">انجام شده</span></td>
+            <td>PAC مکرر + AF</td>
+            <td><button class="btn btn-sm btn-outline-info" onclick="showGraph('hr')">گراف</button></td>
+          </tr>
+          <tr>
+            <td>اکو</td>
+            <td><span class="badge bg-success">انجام شده</span></td>
+            <td>EF = 28٪</td>
+            <td><button class="btn btn-sm btn-outline-info" onclick="showGraph('ef')">گراف</button></td>
+          </tr>
+          <tr>
+            <td>تست ورزش</td>
+            <td><span class="badge bg-danger">نیاز هست</span></td>
+            <td>-</td>
+            <td>-</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ادامه: گراف‌ها، فرم تصمیم پزشک، تایم‌لاین بالینی، اسکریپت‌ها در بخش بعدی -->
+
+</div>
+
+<!-- گراف‌های تحلیلی -->
+<div class="card mb-4">
+  <div class="card-header bg-dark text-white">گراف‌های تحلیلی</div>
+  <div class="card-body">
+    <div class="row g-4">
+      <div class="col-md-6">
+        <canvas id="chart_ef" height="200"></canvas>
+      </div>
+      <div class="col-md-6">
+        <canvas id="chart_bp" height="200"></canvas>
+      </div>
+      <div class="col-md-6">
+        <canvas id="chart_hr" height="200"></canvas>
+      </div>
+      <div class="col-md-6">
+        <canvas id="chart_af" height="200"></canvas>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- تصمیم پزشک -->
+<div class="card mb-4">
+  <div class="card-header bg-success text-white">ثبت تصمیم پزشک جراح</div>
+  <div class="card-body">
+    <form class="row g-3">
+      <h6 class="text-primary">۱. داروهای تجویزی</h6>
+      <div class="col-md-4"><label class="form-label">نام دارو</label><input name="med_name" class="form-control"></div>
+      <div class="col-md-2"><label class="form-label">دوز دارو (mg)</label><input name="med_dose" type="number" class="form-control"></div>
+      <div class="col-md-2"><label class="form-label">تعداد در روز</label><input name="med_freq" type="number" class="form-control"></div>
+      <div class="col-md-2"><label class="form-label">مجموع روز</label><input name="med_days" type="number" class="form-control"></div>
+      <div class="col-md-2"><label class="form-label">مجموع کل</label><input name="med_total" class="form-control" readonly></div>
+
+      <h6 class="mt-4 text-primary">۲. مداخله جراحی</h6>
+      <div class="col-md-4">
+        <label class="form-label">نیاز به باتری جدید؟</label>
+        <select class="form-select" name="needs_battery">
+          <option>بله</option><option>خیر</option>
+        </select>
+      </div>
+      <div class="col-md-4">
+        <label class="form-label">نوع جراحی پیشنهادی</label>
+        <select class="form-select" name="surgery_type">
+          <option>تعویض باتری</option><option>تعویض لید</option><option>بررسی قبل از جراحی</option>
+        </select>
+      </div>
+      <div class="col-md-4">
+        <label class="form-label">زمان پیشنهادی</label>
+        <input type="date" name="surgery_date" class="form-control">
+      </div>
+
+      <h6 class="mt-4 text-primary">۳. ارجاع و پیگیری</h6>
+      <div class="col-md-4">
+        <label class="form-label">ارجاع به</label>
+        <select class="form-select" name="referral">
+          <option>نورولوژی</option><option>ریتمولوژی</option><option>جراحی مجدد</option>
+        </select>
+      </div>
+      <div class="col-md-4">
+        <label class="form-label">زمان بررسی بعدی</label>
+        <input type="date" name="next_check" class="form-control">
+      </div>
+      <div class="col-md-12">
+        <label class="form-label">یادداشت نهایی پزشک</label>
+        <textarea name="doctor_notes" class="form-control" rows="3"></textarea>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- تایم‌لاین بالینی -->
+<div class="card mb-4">
+  <div class="card-header bg-warning text-dark">تایم‌لاین بالینی بیمار</div>
+  <div class="card-body">
+    <ul class="timeline list-unstyled">
+      <li class="mb-3 d-flex align-items-start">
+        <div class="me-3 fs-4 text-success">💊</div>
+        <div>
+          <strong>۱۴۰۳/۰۲/۲۶ – نسخه دارویی</strong><br>
+          <small>پزشک: دکتر یوسفی</small>
+          <ul class="mb-1"><li>بتابلوکر ۲.۵ – روزی ۱</li><li>آمیودارون ۲۰۰ – روزی نصف</li></ul>
+          <a href="#" class="text-primary">مشاهده کامل نسخه</a>
+        </div>
+      </li>
+
+      <li class="mb-3 d-flex align-items-start">
+        <div class="me-3 fs-4 text-info">📊</div>
+        <div>
+          <strong>۱۴۰۳/۰۲/۲۵ – نتیجه Holter</strong><br>
+          AF burden: ۱۸٪ | شوک: ۲ مورد<br>
+          <a href="#" class="text-primary">مشاهده PDF تست</a>
+        </div>
+      </li>
+
+      <li class="mb-3 d-flex align-items-start">
+        <div class="me-3 fs-4 text-danger">⚠️</div>
+        <div>
+          <strong>۱۴۰۳/۰۲/۲۵ – هشدار سیستم</strong><br>
+          افت ناگهانی EF از ۳۵٪ → ۲۸٪ + AF در حال افزایش
+        </div>
+      </li>
+
+      <li class="mb-3 d-flex align-items-start">
+        <div class="me-3 fs-4 text-primary">🩺</div>
+        <div>
+          <strong>۱۴۰۳/۰۲/۲۲ – معاینه حضوری</strong><br>
+          پیشنهاد CRT داده شد | EF بررسی شود ماه بعد<br>
+          <a href="#" class="text-primary">مشاهده یادداشت پزشک</a>
+        </div>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+  const chartData = {
+    ef: {
+      id: 'chart_ef',
+      label: 'EF Trend (%)',
+      data: [40, 35, 30, 28],
+      labels: ['1402/10', '1402/11', '1402/12', '1403/01'],
+      color: 'red'
+    },
+    bp: {
+      id: 'chart_bp',
+      label: 'SBP (mmHg)',
+      data: [130, 140, 150, 155],
+      labels: ['صبح', 'ظهر', 'عصر', 'شب'],
+      color: 'orange'
+    },
+    hr: {
+      id: 'chart_hr',
+      label: 'HR (bpm)',
+      data: [70, 85, 90, 105],
+      labels: ['Day 1', 'Day 2', 'Day 3', 'Day 4'],
+      color: 'blue'
+    },
+    af: {
+      id: 'chart_af',
+      label: 'AF Burden (%)',
+      data: [5, 9, 14, 18],
+      labels: ['1402/11', '1402/12', '1403/01', '1403/02'],
+      color: 'purple'
+    }
+  };
+
+  Object.values(chartData).forEach(cfg => {
+    const ctx = document.getElementById(cfg.id).getContext('2d');
+    new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: cfg.labels,
+        datasets: [{
+          label: cfg.label,
+          data: cfg.data,
+          borderColor: cfg.color,
+          backgroundColor: cfg.color + '33',
+          fill: true,
+          tension: 0.3
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: { display: false }
+        },
+        scales: {
+          y: {
+            beginAtZero: false
+          }
+        }
+      }
+    });
+  });
+
+  function showGraph(type) {
+    document.getElementById(`chart_${type}`).scrollIntoView({ behavior: "smooth" });
+  }
+</script>
+
+<!-- محاسبه مجموع دارو -->
+<script>
+  const doseFields = ["med_dose", "med_freq", "med_days"];
+  doseFields.forEach(name => {
+    const el = document.querySelector(`[name="${name}"]`);
+    if (el) el.addEventListener("input", calculateTotalDose);
+  });
+
+  function calculateTotalDose() {
+    const dose = parseFloat(document.querySelector('[name="med_dose"]').value) || 0;
+    const freq = parseFloat(document.querySelector('[name="med_freq"]').value) || 0;
+    const days = parseFloat(document.querySelector('[name="med_days"]').value) || 0;
+    const total = dose * freq * days;
+    document.querySelector('[name="med_total"]').value = total ? `${total} mg` : '';
+  }
+</script>
+
+<!-- هشدارهای هوشمند بالینی -->
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const ef = 28;
+    const qrs = 135;
+    const af = 18;
+    const shocks = 3;
+    const age = 75;
+    const anticoagulant = true;
+
+    let alerts = [];
+
+    if (ef < 35 && qrs > 120) alerts.push("پیشنهاد CRT — EF پایین و QRS بالا.");
+    if (shocks >= 3 && af > 15) alerts.push("هشدار storm آریتمی — شوک و AF بالا.");
+    if (age > 70 && anticoagulant) alerts.push("هشدار خون‌ریزی احتمالی — سن بالا و داروی ضدانعقاد.");
+
+    if (alerts.length) {
+      const box = document.querySelector('.alert-danger ul');
+      alerts.forEach(msg => {
+        const li = document.createElement("li");
+        li.textContent = msg;
+        box.appendChild(li);
+      });
+    }
+  });
+</script>
+</body>
+</html>

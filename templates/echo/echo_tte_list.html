@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}لیست اکو عمومی (TTE){% endblock %}
+
+{% block content %}
+<h2 class="mb-4 text-center">لیست اکو عمومی (TTE)</h2>
+
+<div class="card">
+    <!-- هدر -->
+    <div class="card-header d-flex flex-column flex-md-row justify-content-between align-items-center gap-2">
+        <h5 class="mb-0">گزارش‌های TTE ثبت‌شده</h5>
+        <div class="d-flex flex-wrap gap-2 align-items-center">
+            <!-- تعداد نمایش -->
+            <select id="per-page-select" class="form-select form-select-sm" style="width: 100px;">
+                <option value="10">10 تایی</option>
+                <option value="25">25 تایی</option>
+                <option value="50" selected>50 تایی</option>
+                <option value="100">100 تایی</option>
+            </select>
+
+            <!-- خروجی PDF -->
+            <button class="btn btn-outline-danger btn-sm">🖨 خروجی PDF</button>
+        </div>
+    </div>
+
+    <!-- جدول -->
+    <div class="card-body pt-0">
+        <div class="table-responsive">
+            <table class="table table-striped table-hover">
+                <thead>
+                    <tr>
+                        <th>نام بیمار</th>
+                        <th>کد ملی</th>
+                        <th>تاریخ ثبت</th>
+                        <th>EF</th>
+                        <th>تأیید پزشک</th>
+                        <th class="text-center">عملیات</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for report in reports %}
+                    <tr>
+                        <td>{{ report.patient.full_name }}</td>
+                        <td>{{ report.patient.national_id }}</td>
+                        <td>{{ report.created_at|date:"Y/m/d H:i" }}</td>
+                        <td>{{ report.ejection_fraction|default:"-" }}</td>
+                        <td>
+                            {% if report.is_approved_by_doctor %}
+                                <span class="badge bg-success">تأیید شده</span>
+                            {% else %}
+                                <span class="badge bg-warning text-dark">در انتظار تأیید</span>
+                            {% endif %}
+                        </td>
+                        <td class="text-center">
+                            <div class="dropdown">
+                                <button class="btn btn-sm btn-outline-secondary dropdown-toggle" data-bs-toggle="dropdown">
+                                    عملیات
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" href="{% url 'echo:tte-detail' report.id %}">👁 مشاهده</a></li>
+                                    <li><a class="dropdown-item text-danger" href="{% url 'echo:tte-delete' report.id %}">🗑 حذف</a></li>
+                                </ul>
+                            </div>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr><td colspan="6" class="text-center text-muted">⛔ هیچ گزارشی ثبت نشده است.</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

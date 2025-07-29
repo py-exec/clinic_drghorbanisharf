@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}لیست مرخصی‌ها{% endblock %}
+
+{% block content %}
+<h2 class="mb-4 text-center">لیست درخواست‌های مرخصی</h2>
+
+<div class="card">
+    <!-- هدر -->
+    <div class="card-header d-flex flex-column flex-md-row justify-content-between align-items-center gap-2">
+        <h5 class="mb-0">درخواست‌های مرخصی ثبت‌شده</h5>
+        <div class="d-flex flex-wrap gap-2 align-items-center">
+            <a href="{% url 'staffs:leave-create' %}" class="btn btn-primary btn-sm">➕ ثبت مرخصی</a>
+            <select class="form-select form-select-sm" style="width: 100px;">
+                <option value="10">10 تایی</option>
+                <option value="25">25 تایی</option>
+                <option value="50" selected>50 تایی</option>
+                <option value="100">100 تایی</option>
+            </select>
+        </div>
+    </div>
+
+    <!-- جدول -->
+    <div class="card-body pt-0">
+        <div class="table-responsive">
+            <table class="table table-striped table-hover">
+                <thead>
+                <tr>
+                    <th>کارمند</th>
+                    <th>تاریخ شروع</th>
+                    <th>تاریخ پایان</th>
+                    <th>نوع</th>
+                    <th>توضیحات</th>
+                    <th class="text-center">عملیات</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for leave in leaves %}
+                <tr>
+                    <td>{{ leave.staff.user.get_full_name }}</td>
+                    <td>{{ leave.start_date|date:"Y/m/d" }}</td>
+                    <td>{{ leave.end_date|date:"Y/m/d" }}</td>
+                    <td>{{ leave.leave_type }}</td>
+                    <td>{{ leave.reason|default:"-" }}</td>
+                    <td class="text-center">
+                        <div class="dropdown">
+                            <button class="btn btn-sm btn-outline-secondary dropdown-toggle" data-bs-toggle="dropdown">
+                                عملیات
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="{% url 'staffs:leave-update' leave.id %}">✏️
+                                    ویرایش</a></li>
+                                <li><a class="dropdown-item text-danger"
+                                       href="{% url 'staffs:leave-delete' leave.id %}">🗑 حذف</a></li>
+                            </ul>
+                        </div>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="6" class="text-center text-muted">⛔ مرخصی‌ای ثبت نشده است.</td>
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

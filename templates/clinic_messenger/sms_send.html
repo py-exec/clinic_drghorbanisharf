@@ -1,0 +1,126 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}ارسال پیامک گروهی و تکی{% endblock %}
+
+{% block content %}
+<h4 class="py-3 mb-4">
+    <span class="text-muted fw-light">پیام‌رسان /</span> ارسال پیامک
+</h4>
+
+<div class="row">
+    <div class="col-xl-12">
+        <div class="nav-align-top mb-4">
+            <ul class="nav nav-pills mb-3" role="tablist">
+                <li class="nav-item">
+                    <button type="button" class="nav-link active" role="tab" data-bs-toggle="tab"
+                            data-bs-target="#navs-pills-bulk" aria-controls="navs-pills-bulk" aria-selected="true">
+                        <i class="bx bx-group me-1"></i> ارسال گروهی (کمپین)
+                    </button>
+                </li>
+                <li class="nav-item">
+                    <button type="button" class="nav-link" role="tab" data-bs-toggle="tab"
+                            data-bs-target="#navs-pills-single" aria-controls="navs-pills-single" aria-selected="false">
+                        <i class="bx bx-user me-1"></i> ارسال تکی
+                    </button>
+                </li>
+            </ul>
+            <div class="tab-content">
+                <!-- Bulk SMS Tab -->
+                <div class="tab-pane fade show active" id="navs-pills-bulk" role="tabpanel">
+                    <h5 class="card-title">ارسال پیامک اطلاع‌رسانی گروهی</h5>
+                    <p>در این بخش می‌توانید بر اساس فیلترهای مختلف، به گروهی از کاربران پیامک ارسال کنید.</p>
+
+                    <form method="post" action="{% url 'clinic_messenger:sms_send_bulk' %}">
+                        {% csrf_token %}
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="recipient-group" class="form-label">گروه گیرندگان</label>
+                                    <select id="recipient-group" name="recipient_group" class="form-select">
+                                        <option value="all_patients">تمام بیماران</option>
+                                        <option value="all_doctors">تمام پزشکان</option>
+                                        <option value="all_staff">تمام پرسنل</option>
+                                        <option value="patients_with_appointment">بیماران دارای نوبت در تاریخ مشخص
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div id="appointment-date-filter" class="mb-3" style="display: none;">
+                                    <label for="appointment-date" class="form-label">تاریخ نوبت</label>
+                                    <input type="text" id="appointment-date" name="appointment_date"
+                                           class="form-control flatpickr-input" placeholder="YYYY-MM-DD">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="bulk-message-body" class="form-label">متن پیام</label>
+                            <textarea id="bulk-message-body" name="body" class="form-control" rows="5"
+                                      placeholder="متن پیام خود را اینجا وارد کنید..."></textarea>
+                            <div class="form-text">
+                                می‌توانید از متغیرهای زیر استفاده کنید: <code>{{نام کامل}}</code>, <code>{{نام}}</code>,
+                                <code>{{نام خانوادگی}}</code>, <code>{{تاریخ نوبت}}</code>, <code>{{ساعت نوبت}}</code>
+                            </div>
+                        </div>
+
+                        <div class="d-flex align-items-center">
+                            <button type="submit" class="btn btn-primary me-3">
+                                <i class="bx bx-paper-plane me-1"></i>
+                                ارسال پیامک گروهی
+                            </button>
+                            <div id="recipient-count-preview" class="text-muted">
+                                <!-- تعداد گیرندگان پس از انتخاب فیلترها در اینجا نمایش داده می‌شود -->
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Single SMS Tab -->
+                <div class="tab-pane fade" id="navs-pills-single" role="tabpanel">
+                    <h5 class="card-title">ارسال پیامک تکی</h5>
+                    <p>ارسال سریع پیامک به یک شماره موبایل خاص.</p>
+                    <form method="post" action="{% url 'clinic_messenger:sms_send' %}">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label for="single-to" class="form-label">شماره گیرنده</label>
+                            <input type="text" id="single-to" name="to" class="form-control" placeholder="09123456789">
+                        </div>
+                        <div class="mb-3">
+                            <label for="single-body" class="form-label">متن پیام</label>
+                            <textarea id="single-body" name="body" class="form-control" rows="3"></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bx bx-send me-1"></i>
+                            ارسال پیامک
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // Initialize flatpickr for date selection
+        flatpickr(document.getElementById('appointment-date'), {
+            dateFormat: "Y-m-d",
+        });
+
+        const recipientGroupSelect = document.getElementById('recipient-group');
+        const dateFilter = document.getElementById('appointment-date-filter');
+
+        recipientGroupSelect.addEventListener('change', function () {
+            if (this.value === 'patients_with_appointment') {
+                dateFilter.style.display = 'block';
+            } else {
+                dateFilter.style.display = 'none';
+            }
+        });
+    });
+</script>
+{% endblock %}

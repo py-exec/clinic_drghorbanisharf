@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <title>گزارش کارمندان</title>
+    <style>
+        body {
+            font-family: 'Tahoma', sans-serif;
+            direction: rtl;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            font-size: 13px;
+        }
+
+        th, td {
+            border: 1px solid #333;
+            padding: 6px;
+            text-align: center;
+        }
+
+        th {
+            background-color: #f0f0f0;
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        small {
+            display: block;
+            text-align: center;
+            color: #777;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+
+<h2>📄 گزارش لیست کارمندان</h2>
+<small>تاریخ تولید: {{ date|date:"Y/m/d H:i" }}</small>
+
+<table>
+    <thead>
+    <tr>
+        <th>نام</th>
+        <th>کد ملی</th>
+        <th>شماره موبایل</th>
+        <th>موقعیت شغلی</th>
+        <th>وضعیت</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for staff in staffs %}
+    <tr>
+        <td>{{ staff.user.get_full_name }}</td>
+        <td>{{ staff.user.national_code }}</td>
+        <td>{{ staff.user.phone_number }}</td>
+        <td>{{ staff.position.title }}</td>
+        <td>{{ staff.is_active|yesno:"فعال,غیرفعال" }}</td>
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+</body>
+</html>

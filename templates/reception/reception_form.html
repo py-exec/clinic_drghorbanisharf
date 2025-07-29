@@ -1,0 +1,259 @@
+{% extends "base.html" %}
+{% load static %}
+{% load humanize %}
+
+{% block title %}ثبت پذیرش جدید{% endblock %}
+
+{% block content %}
+    <h4 class="py-3 mb-4">
+        <span class="text-muted fw-light">پذیرش /</span> ثبت پذیرش برای "{{ patient.user.get_full_name }}"
+    </h4>
+
+    <div class="card">
+        <div class="card-body">
+            <form method="post" novalidate id="reception-form">
+                {% csrf_token %}
+
+                {% if form.non_field_errors %}
+                    <div class="alert alert-danger">
+                        {% for error in form.non_field_errors %}
+                            <div>{{ error }}</div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+
+                <!-- 👤 اطلاعات بیمار -->
+                <fieldset class="border p-3 mb-4 rounded">
+                    <legend class="w-auto px-2 small">👤 اطلاعات بیمار</legend>
+                    <div class="row g-3">
+                        <div class="col-md-4">
+                            <label class="form-label">نام کامل</label>
+                            <input type="text" class="form-control" value="{{ patient.user.get_full_name }}" readonly>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">کد ملی</label>
+                            <input type="text" class="form-control" value="{{ patient.user.national_code }}" readonly>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">شماره پرونده</label>
+                            <input type="text" class="form-control" value="{{ patient.record_number }}" readonly>
+                        </div>
+                    </div>
+                </fieldset>
+
+                <!-- 📋 اطلاعات پذیرش -->
+                <fieldset class="border p-3 mb-4 rounded">
+                    <legend class="w-auto px-2 small">📋 اطلاعات پذیرش</legend>
+                    <div class="row g-3">
+                        <div class="col-md-4">
+                            <label for="{{ form.service_level.id_for_label }}" class="form-label">
+                                {{ form.service_level.label }}
+                                {% if form.service_level.field.required %}
+                                    <span class="text-danger">*</span>
+                                {% endif %}
+                            </label>
+                            {{ form.service_level }}
+                            {% for error in form.service_level.errors %}
+                                <div class="text-danger small">{{ error }}</div>
+                            {% endfor %}
+                        </div>
+
+                        <div class="col-md-8">
+                            <label class="form-label">
+                                {{ form.services.label }}
+                                {% if form.services.field.required %}
+                                    <span class="text-danger">*</span>
+                                {% endif %}
+                            </label>
+                            <div class="form-check-container border rounded p-3"
+                                 style="max-height: 200px; overflow-y: auto;">
+                                {% for service in form.fields.services.queryset %}
+                                    <div class="form-check mb-2">
+                                        <input type="checkbox"
+                                               name="services"
+                                               value="{{ service.pk }}"
+                                               id="service_{{ service.pk }}"
+                                               class="form-check-input"
+                                               data-amount="{{ service.amount }}"
+                                               {% if service in form.initial.services %}checked{% endif %}
+                                        >
+                                        <label class="form-check-label" for="service_{{ service.pk }}">
+                                            {{ service }}
+                                        </label>
+                                    </div>
+                                {% empty %}
+                                    <div class="alert alert-warning mb-0 small">
+                                        هیچ خدمتی برای انتخاب در دسترس نیست.
+                                    </div>
+                                {% endfor %}
+                            </div>
+
+
+                            {% for error in form.services.errors %}
+                                <div class="text-danger small">{{ error }}</div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </fieldset>
+
+                <!-- 💳 اطلاعات مالی -->
+                <fieldset class="border p-3 mb-4 rounded">
+                    <legend class="w-auto px-2 small">💳 اطلاعات مالی و پرداخت</legend>
+                    <div class="row g-3">
+                        <div class="col-md-3">
+                            <label class="form-label">مجموع هزینه خدمات (ریال)</label>
+                            <input type="text" id="total-cost" class="form-control"
+                                   value="{{ form.initial.total_service_cost|default:"0"|intcomma }}" readonly>
+                        </div>
+
+                        <div class="col-md-3">
+                            <label for="{{ form.cash_amount.id_for_label }}" class="form-label">
+                                {{ form.cash_amount.label }}
+                            </label>
+                            {{ form.cash_amount }}
+                            {% for error in form.cash_amount.errors %}
+                                <div class="text-danger small">{{ error }}</div>
+                            {% endfor %}
+                        </div>
+
+                        <div class="col-md-3">
+                            <label for="{{ form.card_amount.id_for_label }}" class="form-label">
+                                {{ form.card_amount.label }}
+                            </label>
+                            <input type="text" id="{{ form.card_amount.id_for_label }}"
+                                   name="{{ form.card_amount.name }}" class="form-control"
+                                   value="{{ form.card_amount.value|default:"0" }}" readonly>
+                            {% for error in form.card_amount.errors %}
+                                <div class="text-danger small">{{ error }}</div>
+                            {% endfor %}
+                        </div>
+
+                        <div class="col-md-3">
+                            <label class="form-label">جمع پرداختی (ریال)</label>
+                            <input type="text" id="total-paid" class="form-control"
+                                   value="{{ form.initial.total_payment|default:"0"|intcomma }}" readonly>
+                        </div>
+                    </div>
+                </fieldset>
+
+                <!-- 📝 یادداشت -->
+                <fieldset class="border p-3 mb-4 rounded">
+                    <legend class="w-auto px-2 small">📝 یادداشت</legend>
+                    <div class="row">
+                        <div class="col-12">
+                            <label for="{{ form.notes.id_for_label }}" class="form-label">
+                                {{ form.notes.label }}
+                            </label>
+                            {{ form.notes }}
+                            {% for error in form.notes.errors %}
+                                <div class="text-danger small">{{ error }}</div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </fieldset>
+
+                <!-- دکمه‌ها -->
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <a href="{% url 'reception:list' %}" class="btn btn-secondary">بازگشت</a>
+                    </div>
+                    <div>
+                        <button type="submit" class="btn btn-primary">💾 ذخیره پذیرش</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block extra_js %}
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const serviceCheckboxes = document.querySelectorAll("input[type=checkbox][name^='services']");
+            const cashInput = document.getElementById("id_cash_amount");
+            const cardInput = document.getElementById("id_card_amount");
+            const totalServiceCostInput = document.getElementById("total-cost");
+            const totalPaidInput = document.getElementById("total-paid");
+            const form = document.getElementById("reception-form");
+
+            // اطمینان از رید‌اونلی بودن کارت‌خوان
+            if (cardInput) {
+                cardInput.readOnly = true;
+            }
+
+            function parseIntSafe(val) {
+                return parseInt(val.replace(/,/g, '')) || 0;
+            }
+
+            function getAmountFromService(el) {
+                const amount = el.getAttribute("data-amount");
+                return parseInt(amount || "0", 10);
+            }
+
+            function calculateServiceTotal() {
+                let total = 0;
+                serviceCheckboxes.forEach(cb => {
+                    if (cb.checked) {
+                        total += getAmountFromService(cb);
+                    }
+                });
+                return total;
+            }
+
+            function calculateAndUpdate() {
+                const totalServices = calculateServiceTotal();
+                const cash = parseIntSafe(cashInput.value || "0");
+                const card = Math.max(totalServices - cash, 0);
+                const totalPaid = cash + card;
+
+                // 👇 مقدار عددی خام بدون جداکننده برای ارسال به سرور
+                cardInput.value = card;
+
+                // 👇 فقط نمایش فرمت‌شده برای فیلدهای readonly یا نمایش عمومی
+                totalServiceCostInput.value = totalServices.toLocaleString("fa-IR");
+                totalPaidInput.value = totalPaid.toLocaleString("fa-IR");
+
+                // پاکسازی وضعیت قبلی
+                [cashInput, totalPaidInput].forEach(input => {
+                    input.classList.remove("is-invalid");
+                    input.setCustomValidity("");
+                });
+
+                // اعتبارسنجی منفی بودن یا بیشتر بودن پرداختی
+                if (cash < 0) {
+                    cashInput.classList.add("is-invalid");
+                    cashInput.setCustomValidity("مقدار نقدی نمی‌تواند منفی باشد.");
+                } else if (totalPaid > totalServices) {
+                    totalPaidInput.classList.add("is-invalid");
+                    totalPaidInput.setCustomValidity("جمع پرداختی از هزینه خدمات بیشتر است.");
+                }
+            }
+
+
+            // لیسنرها
+            serviceCheckboxes.forEach(cb => {
+                cb.addEventListener("change", calculateAndUpdate);
+            });
+
+            cashInput.addEventListener("input", function () {
+                // حذف کاراکترهای غیرمجاز
+                this.value = this.value.replace(/[^\d]/g, '');
+                calculateAndUpdate();
+            });
+
+            form.addEventListener("submit", function (e) {
+                calculateAndUpdate();
+                if (!form.checkValidity()) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    alert("لطفاً خطاهای فرم را اصلاح کنید.");
+                }
+            });
+
+            // اجرای اولیه
+            calculateAndUpdate();
+        });
+    </script>
+{% endblock %}
+

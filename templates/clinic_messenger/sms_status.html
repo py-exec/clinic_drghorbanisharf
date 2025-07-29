@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}وضعیت سرویس پیامک{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2 class="mb-4 text-center">📡 وضعیت اتصال سرویس پیامک</h2>
+
+    <div class="card shadow-sm p-4">
+        {% if status.success %}
+        <div class="alert alert-success d-flex justify-content-between align-items-center">
+            <div>
+                <strong>💰 موجودی:</strong> {{ status.credit|floatformat:0 }} ریال
+                <br>
+                <strong>سرویس‌دهنده:</strong> {{ status.provider }}
+            </div>
+            <a href="{% url 'clinic_messenger:sms-status' %}" class="btn btn-outline-primary">🔄 بروزرسانی</a>
+        </div>
+        {% else %}
+        <div class="alert alert-danger">
+            {{ status.message }}
+            <br>
+            <a href="{% url 'clinic_messenger:sms-status' %}" class="btn btn-sm btn-danger mt-2">🔄 تلاش مجدد</a>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

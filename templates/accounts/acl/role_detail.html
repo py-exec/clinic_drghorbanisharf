@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% block title %}مشاهده نقش - {{ object.name }}{% endblock %}
+
+{% block content %}
+    <h4 class="py-3 mb-4">
+        <span class="text-muted fw-light">مدیریت دسترسی /</span> مشاهده نقش "{{ object.name }}"
+    </h4>
+
+    <div class="card">
+        <div class="card-body">
+            <!-- مشخصات کلی -->
+            <div class="row mb-4">
+                <div class="col-md-4">
+                    <strong>نام نقش:</strong> {{ object.name }}
+                </div>
+                <div class="col-md-4">
+                    <strong>کد نقش:</strong> <code>{{ object.code }}</code>
+                </div>
+                <div class="col-md-4">
+                    <strong>توضیح:</strong> {{ object.description|default:"-" }}
+                </div>
+            </div>
+
+            <!-- دسترسی‌ها -->
+            <div class="mb-4">
+                <h6 class="fw-bold mb-3">🔐 سطح دسترسی‌ها</h6>
+                {% if object.permissions.all %}
+                    <ul class="list-group">
+                        {% for perm in object.permissions.all %}
+                            <li class="list-group-item small">
+                                {{ perm.content_type.app_label }} → {{ perm.name }}
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <div class="alert alert-warning small">این نقش هنوز هیچ سطح دسترسی ندارد.</div>
+                {% endif %}
+            </div>
+
+            <!-- دکمه‌ها -->
+            <div class="d-flex justify-content-between">
+                <a href="{% url 'accounts:role-list' %}" class="btn btn-secondary">بازگشت</a>
+                <a href="{% url 'accounts:role-update' object.pk %}" class="btn btn-primary">✏️ ویرایش نقش</a>
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}لیست پزشکان{% endblock %}
+
+{% block content %}
+<h2 class="mb-4 text-center">لیست پزشکان</h2>
+
+<div class="card">
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <h5 class="mb-0">پزشکان ثبت‌شده</h5>
+        <a href="{% url 'doctors:doctor-create' %}" class="btn btn-success btn-sm">➕ افزودن پزشک جدید</a>
+    </div>
+
+    <div class="card-body pt-0">
+        <div class="table-responsive">
+            <table class="table table-striped table-hover align-middle">
+                <thead>
+                <tr>
+                    <th>نام کامل</th>
+                    <th>شماره نظام</th>
+                    <th>تخصص</th>
+                    <th>وضعیت</th>
+                    <th class="text-center">عملیات</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for doctor in doctors %}
+                <tr>
+                    <td>{{ doctor.user.get_full_name }}</td>
+                    <td>{{ doctor.medical_code }}</td>
+                    <td>{{ doctor.specialty }}</td>
+                    <td>
+                        {% if doctor.is_active %}
+                        <span class="badge bg-success">فعال</span>
+                        {% else %}
+                        <span class="badge bg-secondary">غیرفعال</span>
+                        {% endif %}
+                    </td>
+                    <td class="text-center">
+                        <div class="dropdown">
+                            <button class="btn btn-sm btn-outline-secondary dropdown-toggle" data-bs-toggle="dropdown">
+                                عملیات
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="{% url 'doctors:doctor-detail' doctor.pk %}">👁
+                                    مشاهده</a></li>
+                                <li><a class="dropdown-item" href="{% url 'doctors:doctor-update' doctor.pk %}">✏️
+                                    ویرایش</a></li>
+                                <li><a class="dropdown-item text-danger"
+                                       href="{% url 'doctors:doctor-delete' doctor.pk %}">🗑 حذف</a></li>
+                            </ul>
+                        </div>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="5" class="text-center text-muted">⛔ هیچ پزشکی ثبت نشده است.</td>
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

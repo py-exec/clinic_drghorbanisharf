@@ -1,0 +1,23 @@
+{% load static %}
+{% load menu_tags %}
+
+<ul class="menu-inner py-1 glass-navbar">
+    {% for item in menu_tree %}
+        <li class="menu-item
+                   {% if item.children %}has-sub{% endif %}
+                   {% if item.active %}active open{% endif %}">
+            <a href="{{ item.url|default:'#' }}"
+               class="menu-link {% if item.children %}menu-toggle{% endif %}"
+               {% if item.type == 'external_link' %}target="_blank"{% endif %}>
+                <i class="menu-icon tf-icons bx {{ item.icon }}"></i>
+                <div><strong>{{ item.title }}</strong></div>
+            </a>
+            {% if item.children %}
+                <ul class="menu-sub">
+                    {% render_sub_menu children=item.children %}
+                </ul>
+            {% else %}
+            {% endif %}
+        </li>
+    {% endfor %}
+</ul>

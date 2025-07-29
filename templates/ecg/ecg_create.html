@@ -1,0 +1,367 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}داشبورد کلینیک آریتمی{% endblock %}
+{% block content %}
+<h1 class="text-center">نوار قلب</h1>
+<!-- Vertical Wizard -->
+<div class="col-12 mb-4">
+  <div class="bs-stepper wizard-vertical wizard-numbered vertical mt-2">
+    <!-- اطلاعات پایه و ارجاع -->
+    <div class="bs-stepper-header">
+      <div class="step" data-target="#account-details-1">
+        <button type="button" class="step-trigger">
+          <span class="bs-stepper-circle">1</span>
+          <span class="bs-stepper-label">اطلاعات پایه و ارجاع</span>
+        </button>
+      </div>
+
+      <!--مشخصات نوار ECG-->
+      <div class="line"></div>
+      <div class="step" data-target="#personal-info-1">
+        <button type="button" class="step-trigger">
+          <span class="bs-stepper-circle">2</span>
+          <span class="bs-stepper-label">مشخصات نوار ECG</span>
+        </button>
+      </div>
+
+      <!--  تحلیل اولیه ECG -->
+      <div class="line"></div>
+      <div class="step" data-target="#social-links-1">
+        <button type="button" class="step-trigger">
+          <span class="bs-stepper-circle">3</span>
+          <span class="bs-stepper-label"> تحلیل اولیه ECG</span>
+        </button>
+      </div>
+
+      <!--  بارگذاری و نهایی‌سازی -->
+      <div class="line"></div>
+      <div class="step" data-target="#finalization">
+        <button type="button" class="step-trigger">
+          <span class="bs-stepper-circle">4</span>
+          <span class="bs-stepper-label">بارگذاری و نهایی ‌سازی</span>
+        </button>
+      </div>
+
+
+    </div>
+    <div class="bs-stepper-content">
+      <form method="post">
+
+        <!-- اطلاعات پایه و ارجاع -->
+        <div id="account-details-1" class="content">
+          <div class="content-header mb-3">
+            <h6 class="mb-1">اطلاعات پایه و ارجاع</h6>
+<!--            <small>جزئیات حساب خود را وارد کنید.</small>-->
+          </div>
+          <div class="row g-3">
+<div class="col-sm-6">
+  <label class="form-label" for="username-vertical">نام بیمار</label>
+  <input type="text" id="username-vertical" class="form-control text-start" placeholder=".نام و نام خانوادگی را وارد کنید" dir="ltr" name="patient_name" value="{{ patient.full_name }}" readonly>
+</div>
+
+<div class="col-sm-6">
+  <label class="form-label">کد ملی</label>
+  <input type="tel" class="form-control text-start national-code" name="national_id" maxlength="10" placeholder="کد ملی ۱۰ رقمی" value="{{ patient.national_id }}" readonly>
+</div>
+
+<div class="col-sm-6">
+  <label class="form-label">سن</label>
+  <input type="text" class="form-control" name="age" value="{{ patient.age }}" readonly>
+</div>
+
+<div class="col-sm-6">
+  <label>جنسیت</label>
+  <select class="form-select" name="gender" disabled>
+    <option {% if patient.gender == "male" %}selected{% endif %}>مرد</option>
+    <option {% if patient.gender == "female" %}selected{% endif %}>زن</option>
+  </select>
+</div>
+
+<div class="col-sm-6">
+  <label class="form-label">شماره پرونده</label>
+  <input type="text" class="form-control text-start" dir="ltr" name="file_number" value="{{ patient.record_number }}" readonly>
+</div>
+
+            <div class="col-sm-6">
+              <label class="form-label" for="username-vertical">پزشک ارجاع‌دهنده</label>
+              <input type="text"  class="form-control text-start"  dir="ltr" name="ref_doctor">
+            </div>
+
+
+
+            <div class="col-sm-6">
+              <label class="form-label" for="username-vertical">شماره نظام پزشکی</label>
+              <input type="text"  class="form-control text-start"  dir="ltr" name="ref_mcn">
+            </div>
+
+            <div class="col-sm-6">
+              <label class="form-label" for="username-vertical">علت ارجاع به ECG</label>
+              <input type="text"  class="form-control text-start"  dir="ltr" name="ecg_reason">
+            </div>
+
+
+            <div class="col-sm-6">
+              <label>سابقه بیماری قلبی</label>
+              <select class="form-select" name="cardiac_history">
+                <option>AF</option>
+                <option>MI</option>
+                <option>CHF</option>
+                <option>VT</option>
+                <option>Other</option>
+              </select>
+            </div>
+
+            <div class="col-12 d-flex justify-content-between">
+              <button class="btn btn-label-secondary btn-prev" disabled>
+                <i class="bx bx-chevron-left bx-sm ms-sm-n2"></i>
+                <span class="d-sm-inline-block d-none">قبلی</span>
+              </button>
+              <button class="btn btn-primary btn-next">
+                <span class="d-sm-inline-block d-none me-sm-1">بعدی</span>
+                <i class="bx bx-chevron-right bx-sm me-sm-n2"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+        <!-- اطلاعات پایه و ارجاع -->
+
+        <!--مشخصات نوار ECG-->
+        <div id="personal-info-1" class="content">
+          <div class="content-header mb-3">
+            <h6 class="mb-1">مشخصات نوار ECG</h6>
+            <small>مشخصات نوار ECG را وارد کنید.</small>
+          </div>
+          <div class="row g-3">
+            <div class="col-sm-6">
+              <label>نوار</label>
+              <select class="form-select" name="ecg_type">
+                <option>انتخاب کنید</option>
+                <option>۱۲ لید</option>
+                <option>ریتم</option>
+                <option>استرس</option>
+              </select>
+            </div>
+
+            <div class="col-sm-6">
+              <label>وضعیت بیمار هنگام ثبت</label>
+              <select class="form-select" name="patient_position">
+                <option>انتخاب کنید</option>
+                <option>خوابیده</option>
+                <option>نشسته</option>
+                <option>بعد از فعالیت</option>
+              </select>
+            </div>
+
+
+            <div class="col-sm-6">
+              <label>دمای اتاق</label>
+              <input type="number" class="form-control" name="room_temp">
+            </div>
+
+
+            <div class="col-sm-6">
+              <label>محل انجام نوار</label>
+              <input type="text" class="form-control" name="ecg_location">
+            </div>
+
+
+            <div class="col-sm-6">
+              <label>کیفیت نوار</label>
+              <select class="form-select" name="ecg_quality">
+                <option>انتخاب کنید</option>
+                <option>خوب</option>
+                <option>نویزدار</option>
+                <option>ناقص</option>
+              </select>
+            </div>
+
+            <div class="col-sm-6">
+              <label>مشکل تکنیکی؟</label>
+              <select class="form-select" name="tech_issue" onchange="toggleIssue()">
+                <option>انتخاب کنید</option>
+                <option value="خیر">خیر</option>
+                <option value="بله">بله</option>
+              </select>
+            </div>
+
+            <div class="col-md-12" id="issue_block" style="display:none;">
+              <label>توضیح مشکل</label>
+              <textarea class="form-control" rows="2" name="issue_desc"></textarea>
+            </div>
+
+            <div class="col-sm-6">
+              <label>شماره سریال دستگاه</label>
+              <input type="text" class="form-control" name="device_serial">
+            </div>
+
+            <div class="col-sm-6">
+              <label>زمان شروع</label>
+              <input type="datetime-local" class="form-control" name="start_time">
+            </div>
+
+            <div class="col-sm-6">
+              <label>زمان پایان</label>
+              <input type="datetime-local" class="form-control" name="end_time"></div>
+
+            <div class="col-12 d-flex justify-content-between">
+              <button class="btn btn-primary btn-prev">
+                <i class="bx bx-chevron-left bx-sm ms-sm-n2"></i>
+                <span class="d-sm-inline-block d-none">قبلی</span>
+              </button>
+              <button class="btn btn-primary btn-next">
+                <span class="d-sm-inline-block d-none me-sm-1">بعدی</span>
+                <i class="bx bx-chevron-right bx-sm me-sm-n2"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+        <!--مشخصات نوار ECG-->
+
+        <!--  تحلیل اولیه ECG -->
+        <div id="social-links-1" class="content">
+          <div class="content-header mb-3">
+            <h6 class="mb-1">تحلیل اولیه ECG</h6>
+<!--            <small>لینک های اجتماعی خود را وارد کنید.</small>-->
+          </div>
+          <div class="row g-3">
+
+            <div class="col-sm-4">
+              <label>HR (ضربان در دقیقه)</label>
+              <input type="number" class="form-control" name="hr">
+            </div>
+            <div class="col-sm-4">
+              <label>ریتم غالب</label>
+              <input type="text" class="form-control" name="rhythm">
+            </div>
+            <div class="col-sm-4">
+              <label>محور قلب (Axis)</label>
+              <input type="text" class="form-control" name="axis">
+            </div>
+            <div class="col-sm-4">
+              <label>QRS</label>
+              <input type="text" class="form-control" name="qrs">
+            </div>
+            <div class="col-sm-4">
+              <label>QTc</label>
+              <input type="text" class="form-control" name="qtc">
+            </div>
+            <div class="col-sm-4">
+              <label>P wave</label>
+              <input type="text" class="form-control" name="p_wave">
+            </div>
+            <div class="col-sm-4">
+              <label>ST-T تغییرات</label>
+              <input type="text" class="form-control" name="st_t">
+            </div>
+
+            <div class="col-sm-4">
+              <label>موج Q پاتولوژیک؟</label>
+              <select class="form-select" name="q_wave">
+                <option>انتخاب کنید</option>
+                <option>خیر</option>
+                <option>بله</option>
+              </select>
+            </div>
+
+            <div class="col-sm-4">
+              <label>U wave</label>
+              <select class="form-select" name="u_wave">
+                <option>انتخاب کنید</option>
+                <option>خیر</option>
+                <option>بله</option>
+              </select>
+            </div>
+
+            <div class="col-sm-12"><label>نظر تکنسین</label><textarea class="form-control" rows="2" name="tech_opinion"></textarea>
+            </div>
+
+
+            <div class="col-12 d-flex justify-content-between">
+              <button class="btn btn-primary btn-prev">
+                <i class="bx bx-chevron-left bx-sm ms-sm-n2"></i>
+                <span class="d-sm-inline-block d-none">قبلی</span>
+              </button>
+              <button class="btn btn-primary btn-next">
+                <span class="d-sm-inline-block d-none me-sm-1">بعدی</span>
+                <i class="bx bx-chevron-right bx-sm me-sm-n2"></i>
+              </button>
+            </div>
+
+          </div>
+        </div>
+        <!--  تحلیل اولیه ECG -->
+
+        <!--  بارگذاری و نهایی‌سازی -->
+        <div id="finalization" class="content">
+          <div class="content-header mb-3">
+            <h6 class="mb-1">بارگذاری و نهایی‌سازی</h6>
+<!--            <small>لینک های اجتماعی خود را وارد کنید.</small>-->
+          </div>
+          <div class="row g-3">
+
+            <div class="col-sm-6">
+              <label>آپلود فایل نوار قلب</label>
+              <input type="file" class="form-control" name="ecg_file" accept=".pdf,.jpg,.png">
+            </div>
+
+            <div class="col-sm-6">
+              <label>نیاز به تکرار نوار؟</label>
+              <select class="form-select" name="ecg_repeat" onchange="toggleRepeatReason()">
+                <option>انتخاب کنید</option>
+                <option value="خیر">خیر</option>
+                <option value="بله">بله</option>
+              </select>
+            </div>
+
+
+            <div class="col-sm-6" id="repeat_reason_block" style="display:none;">
+              <label>دلیل تکرار</label>
+              <input type="text" class="form-control" name="repeat_reason">
+            </div>
+
+
+            <div class="col-sm-6">
+              <label>نام و امضای تکنسین</label>
+              <input type="text" class="form-control" name="tech_signature">
+            </div>
+            <div class="col-sm-6">
+              <label>تایید پزشک ناظر</label>
+              <input type="text" class="form-control" name="doctor_signature">
+            </div>
+
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" name="consent" id="consent" required>
+              <label class="form-check-label" for="consent">
+                تأیید می‌کنم که اطلاعات وارد شده صحیح است .
+              </label>
+            </div>
+            <div class="form-section col-12">
+              <label>نتیجه تحلیل سیستم هوشمند:</label>
+              <textarea id="brain_output" class="form-control" rows="6" readonly
+                        style="background:#f0f0f0; color:#333;"></textarea>
+            </div>
+
+
+            <div class="col-12 d-flex justify-content-between">
+              <button class="btn btn-primary btn-prev">
+                <i class="bx bx-chevron-left bx-sm ms-sm-n2"></i>
+                <span class="d-sm-inline-block d-none">قبلی</span>
+              </button>
+              <button class="btn btn-success btn-submit" type="submit">ثبت</button>
+            </div>
+
+          </div>
+        </div>
+        <!--  بارگذاری و نهایی‌سازی -->
+      </form>
+    </div>
+  </div>
+</div>
+<!-- /Vertical Wizard -->
+{% endblock %}
+
+
+{% block extra_js %}
+<script src="{% static 'js/ECG.js' %}"></script>
+{% endblock %}
+

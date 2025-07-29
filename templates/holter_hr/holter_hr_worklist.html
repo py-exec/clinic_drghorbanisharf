@@ -1,0 +1,199 @@
+{% extends "base.html" %}
+{% load static %}
+{% load humanize %}
+
+{% block title %}📋 داشبورد کاری هلتر ضربان{% endblock %}
+
+{% block content %}
+<h4 class="py-3 mb-4">
+    <span class="text-muted fw-light">خدمات کلینیکی /</span> داشبورد کاری هلتر ضربان
+</h4>
+
+<!-- بخش آمار روزانه -->
+<div class="row g-4 mb-4">
+    <div class="col-sm-6 col-xl-4">
+        <div class="card">
+            <div class="card-body">
+                <div class="d-flex align-items-start justify-content-between">
+                    <div class="content-left">
+                        <span>گزارش‌های تکمیل شده (امروز)</span>
+                        <div class="d-flex align-items-end mt-2">
+                            <h3 class="mb-0 me-2">{{ done_today|intcomma }}</h3>
+                        </div>
+                        <small>تعداد گزارش‌های تحلیل شده</small>
+                    </div>
+                    <span class="badge bg-label-success rounded p-2">
+                        <i class="bx bx-check-double bx-sm"></i>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-6 col-xl-4">
+        <div class="card">
+            <div class="card-body">
+                <div class="d-flex align-items-start justify-content-between">
+                    <div class="content-left">
+                        <span>کل وظایف در صف</span>
+                        <div class="d-flex align-items-end mt-2">
+                            <h3 class="mb-0 me-2">{{ in_queue_total|intcomma }}</h3>
+                        </div>
+                        <small>مجموع بیماران در تمام صف‌ها</small>
+                    </div>
+                    <span class="badge bg-label-warning rounded p-2">
+                        <i class="bx bx-list-ul bx-sm"></i>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-6 col-xl-4">
+        <div class="card">
+            <div class="card-body">
+                <div class="d-flex align-items-start justify-content-between">
+                    <div class="content-left">
+                        <span>آرشیو گزارش‌ها</span>
+                        <div class="d-flex align-items-end mt-2">
+                            <a href="{% url 'holter_hr:holter_hr_archive' %}" class="btn btn-sm btn-outline-secondary">
+                                <i class="bx bx-archive me-1"></i> مشاهده آرشیو
+                            </a>
+                        </div>
+                        <small>دسترسی به تمام گزارش‌های ثبت شده</small>
+                    </div>
+                    <span class="badge bg-label-info rounded p-2">
+                        <i class="bx bx-history bx-sm"></i>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- تب‌های صف کاری -->
+<div class="nav-align-top mb-4">
+    <ul class="nav nav-pills mb-3" role="tablist">
+        <li class="nav-item">
+            <button type="button" class="nav-link active" role="tab" data-bs-toggle="tab"
+                    data-bs-target="#navs-pills-install">
+                <i class="bx bx-time-five me-1"></i> صف انتظار نصب
+                <span class="badge rounded-pill badge-center h-px-20 w-px-20 bg-warning ms-1">{{ waiting_for_install_list|length }}</span>
+            </button>
+        </li>
+        <li class="nav-item">
+            <button type="button" class="nav-link" role="tab" data-bs-toggle="tab" data-bs-target="#navs-pills-return">
+                <i class="bx bx-revision me-1"></i> منتظر بازگشت
+                <span class="badge rounded-pill badge-center h-px-20 w-px-20 bg-info ms-1">{{ waiting_for_return_list|length }}</span>
+            </button>
+        </li>
+        <li class="nav-item">
+            <button type="button" class="nav-link" role="tab" data-bs-toggle="tab" data-bs-target="#navs-pills-reading">
+                <i class="bx bx-file-find me-1"></i> منتظر خوانش
+                <span class="badge rounded-pill badge-center h-px-20 w-px-20 bg-primary ms-1">{{ waiting_for_reading_list|length }}</span>
+            </button>
+        </li>
+    </ul>
+    <div class="tab-content">
+        <!-- تب اول: صف انتظار نصب -->
+        <div class="tab-pane fade show active" id="navs-pills-install" role="tabpanel">
+            <div class="table-responsive text-nowrap">
+                <table class="table table-hover">
+                    <thead>
+                    <tr>
+                        <th>نام بیمار</th>
+                        <th>زمان پذیرش</th>
+                        <th class="text-center">عملیات</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for service in waiting_for_install_list %}
+                    <tr>
+                        <td><strong>{{ service.reception.patient.full_name }}</strong></td>
+                        <td title="{{ service.created_at|date:'Y/m/d - H:i' }}">{{ service.created_at|naturaltime }}
+                        </td>
+                        <td class="text-center">
+                            <a href="{% url 'holter_hr:holter_hr_install_create' service.pk %}"
+                               class="btn btn-success btn-sm">
+                                <i class="bx bxs-watch me-1"></i> ثبت نصب
+                            </a>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="3" class="text-center py-4">در حال حاضر بیماری در این صف نیست.</td>
+                    </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <!-- تب دوم: دستگاه‌های منتظر بازگشت -->
+        <div class="tab-pane fade" id="navs-pills-return" role="tabpanel">
+            <div class="table-responsive text-nowrap">
+                <table class="table table-hover">
+                    <thead>
+                    <tr>
+                        <th>نام بیمار</th>
+                        <th>زمان نصب</th>
+                        <th class="text-center">عملیات</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for installation in waiting_for_return_list %}
+                    <tr>
+                        <td><strong>{{ installation.patient.full_name }}</strong></td>
+                        <td title="{{ installation.install_datetime|date:'Y/m/d - H:i' }}">{{
+                            installation.install_datetime|naturaltime }}
+                        </td>
+                        <td class="text-center">
+                            <a href="{% url 'holter_hr:holter_hr_detail' installation.pk %}"
+                               class="btn btn-outline-secondary btn-sm" title="مشاهده جزئیات"><i class="bx bx-show"></i></a>
+                            <a href="{% url 'holter_hr:holter_hr_reception_create' installation.pk %}"
+                               class="btn btn-info btn-sm"><i class="bx bx-log-in-circle me-1"></i> ثبت دریافت</a>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="3" class="text-center py-4">در حال حاضر دستگاهی منتظر بازگشت نیست.</td>
+                    </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <!-- تب سوم: دستگاه‌های منتظر خوانش -->
+        <div class="tab-pane fade" id="navs-pills-reading" role="tabpanel">
+            <div class="table-responsive text-nowrap">
+                <table class="table table-hover">
+                    <thead>
+                    <tr>
+                        <th>نام بیمار</th>
+                        <th>زمان بازگشت</th>
+                        <th class="text-center">عملیات</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for installation in waiting_for_reading_list %}
+                    <tr>
+                        <td><strong>{{ installation.patient.full_name }}</strong></td>
+                        <td title="{{ installation.reception_record.receive_datetime|date:'Y/m/d - H:i' }}">{{
+                            installation.reception_record.receive_datetime|naturaltime }}
+                        </td>
+                        <td class="text-center">
+                            <a href="{% url 'holter_hr:holter_hr_detail' installation.pk %}"
+                               class="btn btn-outline-secondary btn-sm" title="مشاهده جزئیات"><i class="bx bx-show"></i></a>
+                            <a href="{% url 'holter_hr:holter_hr_reading_create' installation.pk %}"
+                               class="btn btn-primary btn-sm"><i class="bx bx-analyse me-1"></i> ثبت گزارش خوانش</a>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="3" class="text-center py-4">در حال حاضر دستگاهی منتظر خوانش نیست.</td>
+                    </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

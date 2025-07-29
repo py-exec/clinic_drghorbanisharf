@@ -1,0 +1,114 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}فرم خدمت{% endblock %}
+
+{% block content %}
+    <div class="container py-4">
+        <div class="card mb-4"> {# اضافه کردن card برای ظاهر بهتر #}
+            <div class="card-header">
+                <h2 class="mb-0">{{ view.object.pk|yesno:"ویرایش خدمت,ایجاد خدمت جدید" }}</h2>
+            </div>
+            <div class="card-body">
+                <form method="post" novalidate>
+                    {% csrf_token %}
+                    {% if form.non_field_errors %}
+                        <div class="alert alert-danger">
+                            {% for error in form.non_field_errors %}
+                                <p class="mb-0">{{ error }}</p>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+
+                    <div class="row g-3">
+                        <!-- code -->
+                        <div class="col-md-6">
+                            <label for="{{ form.code.id_for_label }}" class="form-label">
+                                {{ form.code.label }}{% if form.code.field.required %}
+                                    <span class="text-danger">*</span>{% endif %}
+                            </label>
+                            {{ form.code }}
+                            {% if form.code.errors %}{{ form.code.errors }}{% endif %}
+                        </div>
+
+                        <!-- name -->
+                        <div class="col-md-6">
+                            <label for="{{ form.name.id_for_label }}" class="form-label">
+                                {{ form.name.label }}{% if form.name.field.required %}
+                                    <span class="text-danger">*</span>{% endif %}
+                            </label>
+                            {{ form.name }}
+                            {% if form.name.errors %}{{ form.name.errors }}{% endif %}
+                        </div>
+
+                        <!-- duration_minutes -->
+                        <div class="col-md-6">
+                            <label for="{{ form.duration_minutes.id_for_label }}" class="form-label">
+                                {{ form.duration_minutes.label }}{% if form.duration_minutes.field.required %}
+                                    <span class="text-danger">*</span>{% endif %}
+                            </label>
+                            {{ form.duration_minutes }}
+                            {% if form.duration_minutes.errors %}{{ form.duration_minutes.errors }}{% endif %}
+                        </div>
+
+                        <!-- assigned_role -->
+                        <div class="col-md-6">
+                            <label for="{{ form.assigned_role.id_for_label }}" class="form-label">
+                                {{ form.assigned_role.label }}{% if form.assigned_role.field.required %}
+                                    <span class="text-danger">*</span>{% endif %}
+                            </label>
+                            {{ form.assigned_role }}
+                            {% if form.assigned_role.errors %}{{ form.assigned_role.errors }}{% endif %}
+                        </div>
+
+                        <!-- assigned_channel_group -->
+                        <div class="col-md-6">
+                            <label for="{{ form.model_path.id_for_label }}" class="form-label">
+                                {{ form.model_path.label }}{% if form.model_path.field.required %}
+                                    <span class="text-danger">*</span>{% endif %}
+                            </label>
+                            {{ form.model_path }}
+                            {% if form.model_path.errors %}{{ form.model_path.errors }}{% endif %}
+                        </div>
+
+                        <!-- description -->
+                        <div class="col-12">
+                            <label for="{{ form.description.id_for_label }}" class="form-label">
+                                {{ form.description.label }}{% if form.description.field.required %}
+                                    <span class="text-danger">*</span>{% endif %}
+                            </label>
+                            {{ form.description }}
+                            {% if form.description.errors %}{{ form.description.errors }}{% endif %}
+                        </div>
+
+                        <!-- is_active -->
+                        <div class="col-md-6 form-check mt-4 pt-2">
+                            {{ form.is_active }} {{ form.is_active.label_tag }}
+                            {% if form.is_active.errors %}{{ form.is_active.errors }}{% endif %}
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary mt-3">ذخیره</button>
+                    <a href="{% url 'reception:service_list' %}" class="btn btn-secondary mt-3">بازگشت</a>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block extra_js %}
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const formInputs = document.querySelectorAll('#patient-form input:not([type="checkbox"]):not([type="file"]), #patient-form select, #patient-form textarea');
+            const currentFormInputs = document.querySelectorAll('form[method="post"] input:not([type="checkbox"]):not([type="file"]), form[method="post"] select, form[method="post"] textarea');
+
+            // اضافه کردن کلاس form-control به تمام input, select, textarea ها
+            // این اسکریپت را می توان در base.html یا یک فایل JS مشترک قرار داد تا برای همه فرم ها اعمال شود
+            currentFormInputs.forEach(input => {
+                if (!input.classList.contains('form-control')) {
+                    input.classList.add('form-control');
+                }
+            });
+        });
+    </script>
+{% endblock %}

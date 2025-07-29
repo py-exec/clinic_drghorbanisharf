@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}حذف خدمت{% endblock %}
+
+{% block content %}
+<h4 class="py-3 mb-4">
+    <span class="text-muted fw-light">پذیرش / خدمات /</span> حذف خدمت
+</h4>
+
+<div class="card">
+    <div class="card-header">
+        <h5 class="card-title mb-0">تأیید حذف خدمت</h5>
+    </div>
+    <div class="card-body">
+        <p class="lead">آیا از حذف **"{{ object }}"** مطمئن هستید؟</p>
+        <p class="text-danger">توجه: این عملیات قابل بازگشت نیست.</p>
+
+        <form method="post" class="mt-4">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-danger me-2">
+                <i class="bx bx-trash me-1"></i> بله، حذف شود
+            </button>
+            <a href="{% url 'reception:service_list' %}" class="btn btn-secondary">
+                <i class="bx bx-x me-1"></i> انصراف
+            </a>
+        </form>
+    </div>
+</div>
+{% endblock %}

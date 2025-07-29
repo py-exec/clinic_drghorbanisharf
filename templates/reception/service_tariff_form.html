@@ -1,0 +1,136 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}فرم تعرفه{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="card mb-4">
+        <div class="card-header">
+            <h2 class="mb-0">{{ view.object.pk|yesno:"ویرایش تعرفه,ایجاد تعرفه جدید" }}</h2>
+        </div>
+        <div class="card-body">
+            <form method="post" novalidate>
+                {% csrf_token %}
+                {% if form.non_field_errors %}
+                <div class="alert alert-danger">
+                    {% for error in form.non_field_errors %}
+                    <p class="mb-0">{{ error }}</p>
+                    {% endfor %}
+                </div>
+                {% endif %}
+
+                <div class="row g-3">
+                    <div class="col-md-6"> {# فیلد service_type #}
+                        <label for="{{ form.service_type.id_for_label }}" class="form-label">
+                            {{ form.service_type.label }}{% if form.service_type.field.required %}<span class="text-danger">*</span>{% endif %}
+                        </label>
+                        {{ form.service_type }}
+                        {% if form.service_type.errors %}{{ form.service_type.errors }}{% endif %}
+                    </div>
+                    <div class="col-md-6"> {# فیلد amount #}
+                        <label for="{{ form.amount.id_for_label }}" class="form-label">
+                            {{ form.amount.label }}{% if form.amount.field.required %}<span class="text-danger">*</span>{% endif %}
+                        </label>
+                        {{ form.amount }}
+                        {% if form.amount.errors %}{{ form.amount.errors }}{% endif %}
+                    </div>
+                    <div class="col-md-6"> {# فیلد valid_from #}
+                        <label for="{{ form.valid_from.id_for_label }}" class="form-label">
+                            {{ form.valid_from.label }}{% if form.valid_from.field.required %}<span class="text-danger">*</span>{% endif %}
+                        </label>
+                        {{ form.valid_from }}
+                        {% if form.valid_from.errors %}{{ form.valid_from.errors }}{% endif %}
+                    </div>
+                    <div class="col-md-6"> {# فیلد valid_to #}
+                        <label for="{{ form.valid_to.id_for_label }}" class="form-label">
+                            {{ form.valid_to.label }}{% if form.valid_to.field.required %}<span class="text-danger">*</span>{% endif %}
+                        </label>
+                        {{ form.valid_to }}
+                        {% if form.valid_to.errors %}{{ form.valid_to.errors }}{% endif %}
+                    </div>
+                    <div class="col-md-6"> {# فیلد insurance_coverage #}
+                        <label for="{{ form.insurance_coverage.id_for_label }}" class="form-label">
+                            {{ form.insurance_coverage.label }}{% if form.insurance_coverage.field.required %}<span class="text-danger">*</span>{% endif %}
+                        </label>
+                        {{ form.insurance_coverage }}
+                        {% if form.insurance_coverage.errors %}{{ form.insurance_coverage.errors }}{% endif %}
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary mt-3">ذخیره</button>
+                <a href="{% url 'reception:tariff_list' %}" class="btn btn-secondary mt-3">بازگشت</a>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // 🎯 پیدا کردن همه فیلدهایی که نیاز به فرمت مبلغ دارند
+        const amountInputs = document.querySelectorAll('input.amount-input');
+
+        amountInputs.forEach(function (input) {
+            // تابع حذف غیر عدد (clean)
+            function cleanNumber(value) {
+                return value.replace(/\D/g, '');
+            }
+
+            // تابع فرمت با نقطه (separator)
+            function formatNumber(value) {
+                const cleaned = cleanNumber(value);
+                if (!cleaned || cleaned === '0') return cleaned;
+                return cleaned.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+            }
+
+            // 📌 هنگام تایپ (input)
+            input.addEventListener('input', function (e) {
+                const rawValue = e.target.value;
+                const cursorPos = e.target.selectionStart;
+
+                const digitsBeforeCursor = cleanNumber(rawValue.slice(0, cursorPos)).length;
+
+                const formattedValue = formatNumber(rawValue);
+                e.target.value = formattedValue;
+
+                // محاسبه موقعیت کرسر جدید
+                let currentDigits = 0;
+                let newCursor = 0;
+                while (currentDigits < digitsBeforeCursor && newCursor < formattedValue.length) {
+                    if (/\d/.test(formattedValue[newCursor])) {
+                        currentDigits++;
+                    }
+                    newCursor++;
+                }
+
+                e.target.setSelectionRange(newCursor, newCursor);
+            });
+
+            // 📌 هنگام blur یا paste
+            input.addEventListener('blur', function (e) {
+                e.target.value = formatNumber(e.target.value);
+            });
+
+            input.addEventListener('paste', function (e) {
+                const paste = e.clipboardData.getData('text');
+                if (!/\d/.test(paste)) {
+                    e.preventDefault();
+                }
+            });
+
+            // 📌 در زمان لود، فرمت کن (برای حالت edit)
+            input.value = formatNumber(input.value);
+
+            // 📌 در هنگام ارسال فرم، عدد نهایی را پاکسازی کن
+            const form = input.closest('form');
+            if (form) {
+                form.addEventListener('submit', function () {
+                    input.value = cleanNumber(input.value);
+                });
+            }
+        });
+    });
+</script>
+{% endblock %}

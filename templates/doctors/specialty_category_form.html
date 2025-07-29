@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block title %}{{ view.object|default:"افزودن" }} دسته تخصص{% endblock %}
+
+{% block content %}
+<h2 class="text-center mb-4">{{ view.object|yesno:"ویرایش دسته تخصص,افزودن دسته جدید" }}</h2>
+
+<div class="card">
+    <div class="card-body">
+        <form method="post">
+            {% csrf_token %}
+            <div class="row g-3">
+                {% for field in form.visible_fields %}
+                <div class="col-md-12">
+                    <label class="form-label">{{ field.label }}</label>
+                    {{ field }}
+                    {% if field.help_text %}
+                    <div class="form-text text-muted">{{ field.help_text }}</div>
+                    {% endif %}
+                    {% for error in field.errors %}
+                    <div class="text-danger small">{{ error }}</div>
+                    {% endfor %}
+                </div>
+                {% endfor %}
+            </div>
+
+            <div class="mt-4 d-flex justify-content-between">
+                <a href="{% url 'doctors:specialty-category-list' %}" class="btn btn-secondary">بازگشت</a>
+                <button type="submit" class="btn btn-primary">💾 ذخیره</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

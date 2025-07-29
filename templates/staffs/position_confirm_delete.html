@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block title %}حذف موقعیت شغلی{% endblock %}
+
+{% block content %}
+<div class="alert alert-warning text-center">
+    <h5 class="mb-3">⚠ آیا از حذف موقعیت <strong>{{ object.title }}</strong> اطمینان دارید؟</h5>
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger">بله، حذف شود</button>
+        <a href="{% url 'staffs:position-list' %}" class="btn btn-secondary">انصراف</a>
+    </form>
+</div>
+{% endblock %}

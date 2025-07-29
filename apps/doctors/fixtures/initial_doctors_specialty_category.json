@@ -1,0 +1,35 @@
+[
+{
+  "model": "doctors.specialtycategory",
+  "pk": 1,
+  "fields": {
+    "title": "تخصص‌های داخلی",
+    "description": "شامل بیماری‌های داخلی مانند قلب، گوارش و ریه"
+  }
+},
+{
+  "model": "doctors.specialtycategory",
+  "pk": 2,
+  "fields": {
+    "title": "تخصص‌های جراحی",
+    "description": "شامل جراحی عمومی، ارتوپدی، مغز و اعصاب و ..."
+  }
+},
+{
+  "model": "doctors.specialtycategory",
+  "pk": 3,
+  "fields": {
+    "title": "تخصص‌های کودکان",
+    "description": "شامل بیماری‌های مربوط به اطفال و نوزادان"
+  }
+},
+{
+  "model": "doctors.specialtycategory",
+  "pk": 4,
+  "fields": {
+    "title": "تخصص‌های روان",
+    "description": "شامل روان‌پزشکی و روان‌شناسی بالینی"
+  }
+}
+]
+

@@ -1,0 +1,134 @@
+[
+  {
+    "model": "doctors.specialtycategory",
+    "pk": 1,
+    "fields": {
+      "title": "تخصص‌های داخلی",
+      "description": "شامل بیماری‌های داخلی مانند قلب، گوارش و ریه"
+    }
+  },
+  {
+    "model": "doctors.specialtycategory",
+    "pk": 2,
+    "fields": {
+      "title": "تخصص‌های جراحی",
+      "description": "شامل جراحی عمومی، ارتوپدی، مغز و اعصاب و ..."
+    }
+  },
+  {
+    "model": "doctors.specialtycategory",
+    "pk": 3,
+    "fields": {
+      "title": "تخصص‌های کودکان",
+      "description": "شامل بیماری‌های مربوط به اطفال و نوزادان"
+    }
+  },
+  {
+    "model": "doctors.specialtycategory",
+    "pk": 4,
+    "fields": {
+      "title": "تخصص‌های روان",
+      "description": "شامل روان‌پزشکی و روان‌شناسی بالینی"
+    }
+  },
+  {
+    "model": "doctors.specialty",
+    "pk": 1,
+    "fields": {
+      "title": "قلب و عروق",
+      "description": "درمان بیماری‌های قلبی و عروقی",
+      "slug": "cardiology",
+      "category": 1
+    }
+  },
+  {
+    "model": "doctors.specialty",
+    "pk": 2,
+    "fields": {
+      "title": "گوارش",
+      "description": "درمان مشکلات دستگاه گوارش",
+      "slug": "gastroenterology",
+      "category": 1
+    }
+  },
+  {
+    "model": "doctors.specialty",
+    "pk": 3,
+    "fields": {
+      "title": "ریه",
+      "description": "درمان بیماری‌های تنفسی",
+      "slug": "pulmonology",
+      "category": 1
+    }
+  },
+  {
+    "model": "doctors.specialty",
+    "pk": 4,
+    "fields": {
+      "title": "ارتوپدی",
+      "description": "درمان شکستگی‌ها و بیماری‌های استخوان و مفاصل",
+      "slug": "orthopedics",
+      "category": 2
+    }
+  },
+  {
+    "model": "doctors.specialty",
+    "pk": 5,
+    "fields": {
+      "title": "جراحی مغز و اعصاب",
+      "description": "عمل‌های جراحی روی مغز، نخاع و اعصاب محیطی",
+      "slug": "neurosurgery",
+      "category": 2
+    }
+  },
+  {
+    "model": "doctors.specialty",
+    "pk": 6,
+    "fields": {
+      "title": "جراحی عمومی",
+      "description": "عمل‌های عمومی بدن مانند آپاندیس، فتق و کیسه صفرا",
+      "slug": "general-surgery",
+      "category": 2
+    }
+  },
+  {
+    "model": "doctors.specialty",
+    "pk": 7,
+    "fields": {
+      "title": "اطفال",
+      "description": "پزشکی مربوط به نوزادان، کودکان و نوجوانان",
+      "slug": "pediatrics",
+      "category": 3
+    }
+  },
+  {
+    "model": "doctors.specialty",
+    "pk": 8,
+    "fields": {
+      "title": "نوزادان",
+      "description": "درمان بیماری‌های نوزادی",
+      "slug": "neonatology",
+      "category": 3
+    }
+  },
+  {
+    "model": "doctors.specialty",
+    "pk": 9,
+    "fields": {
+      "title": "روان‌پزشکی",
+      "description": "درمان اختلالات روانی با دارو",
+      "slug": "psychiatry",
+      "category": 4
+    }
+  },
+  {
+    "model": "doctors.specialty",
+    "pk": 10,
+    "fields": {
+      "title": "روان‌شناسی بالینی",
+      "description": "درمان اختلالات روانی با رویکرد رفتاری و مشاوره",
+      "slug": "clinical-psychology",
+      "category": 4
+    }
+  }
+]

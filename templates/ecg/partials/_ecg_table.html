@@ -1,0 +1,51 @@
+<div class="table-responsive">
+            <table class="table table-striped table-hover">
+                <thead>
+                    <tr>
+                        <th>بیمار</th>
+                        <th>کد ملی</th>
+                        <th>تاریخ ثبت</th>
+                        <th>نوع نوار</th>
+                        <th>HR</th>
+                        <th>ریتم</th>
+                        <th class="text-center">عملیات</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for r in reports %}
+                    <tr>
+                        <td>{{ r.patient.full_name }}</td>
+                        <td>{{ r.patient.national_id }}</td>
+                        <td>{{ r.created_at|date:"Y/m/d H:i" }}</td>
+                        <td>{{ r.get_ecg_type_display }}</td>
+                        <td>{{ r.hr }}</td>
+                        <td>{{ r.rhythm }}</td>
+                        <td class="text-center">
+  <div class="dropdown">
+    <button class="btn btn-sm btn-outline-secondary dropdown-toggle" data-bs-toggle="dropdown">
+      عملیات
+    </button>
+    <ul class="dropdown-menu">
+      <li>
+        <a class="dropdown-item text-primary" href="{% url 'ecg:ecg-create' r.patient.id %}">
+          ▶️ شروع عملیات
+        </a>
+      </li>
+      {% if r.service and r.service.status != "cancelled" %}
+      <li>
+        <form method="post" action="{% url 'reception:service-cancel' r.service.id %}" onsubmit="return confirm('آیا از کنسلی این خدمت مطمئن هستید؟')">
+          {% csrf_token %}
+          <button type="submit" class="dropdown-item text-danger">🚫 کنسل</button>
+        </form>
+      </li>
+      {% endif %}
+    </ul>
+  </div>
+</td>
+                    </tr>
+                    {% empty %}
+                    <tr><td colspan="7" class="text-center text-muted">⛔ موردی یافت نشد.</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>

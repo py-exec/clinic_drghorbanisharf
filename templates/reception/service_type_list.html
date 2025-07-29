@@ -1,0 +1,126 @@
+{% extends "base.html" %}
+{% load static %}
+{% load humanize %} {# اضافه شده: برای استفاده از intcomma اگر در آینده نیاز شد #}
+
+{% block title %}لیست خدمات{% endblock %}
+
+{% block content %}
+<h4 class="py-3 mb-4">
+    <span class="text-muted fw-light">پذیرش /</span> لیست خدمات
+</h4>
+
+<div class="card">
+    <div class="card-header d-flex flex-wrap justify-content-between align-items-center gap-3">
+        <h5 class="card-title mb-0">لیست خدمات</h5>
+        <div class="d-flex flex-wrap gap-2 align-items-center">
+
+            {# در این جدول کوچک، شاید نیاز به انتخاب ستون‌ها نباشد، اما اگر خواستید، کپی کنید #}
+            {# <div class="dropdown"> ... </div> #}
+
+            <a href="{% url 'reception:service_create' %}" class="btn btn-success btn-sm">
+                <i class="bx bx-plus me-1"></i> اضافه کردن خدمت جدید
+            </a>
+
+            {# اگر نیاز به دکمه‌های PDF یا جستجوی پیشرفته دارید، اینجا اضافه کنید #}
+            {# <button id="download-pdf-btn" class="btn btn-outline-danger btn-sm"> ... </button> #}
+            <button class="btn btn-outline-secondary btn-sm" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#advanced-search-collapse" aria-expanded="false"
+                    aria-controls="advanced-search-collapse">
+                <i class="bx bx-search-alt me-1"></i> جستجو و فیلتر
+            </button>
+        </div>
+    </div>
+
+    <div class="card-body border-top pt-3">
+        <div class="collapse" id="advanced-search-collapse">
+            <form id="service-search-form" class="row g-3 mb-4" method="get">
+                <div class="col-md-4">
+                    <input type="text" name="search" class="form-control form-control-sm"
+                           placeholder="نام یا کد خدمت..." value="{{ request.GET.search|default:'' }}">
+                </div>
+                <div class="col-md-3">
+                    <select name="is_active" class="form-select form-select-sm">
+                        <option value="">وضعیت (همه)</option>
+                        <option value="True" {% if request.GET.is_active == 'True' %}selected{% endif %}>فعال</option>
+                        <option value="False" {% if request.GET.is_active == 'False' %}selected{% endif %}>غیرفعال</option>
+                    </select>
+                </div>
+                <div class="col-md-3 d-flex gap-2">
+                    <button type="submit" class="btn btn-primary btn-sm w-100">اعمال فیلتر</button>
+                    <a href="{% url 'reception:service_list' %}" class="btn btn-outline-secondary btn-sm w-100">ریست</a>
+                </div>
+            </form>
+        </div>
+
+        <div class="table-responsive text-nowrap">
+            <table class="table table-hover table-striped" id="services-table">
+                <thead>
+                <tr>
+                    <th>کد</th>
+                    <th>نام</th>
+                    <th>مدت (دقیقه)</th>
+                    <th>فعال؟</th>
+                    <th class="text-center">عملیات</th>
+                </tr>
+                </thead>
+                <tbody id="services-body">
+                {% for s in services %} {# context_object_name از views.py #}
+                <tr data-id="{{ s.pk }}">
+                    <td>{{ s.code }}</td>
+                    <td><strong>{{ s.name }}</strong></td>
+                    <td>{{ s.duration_minutes }}</td>
+                    <td>{{ s.is_active|yesno:"✅,❌" }}</td>
+                    <td class="text-center">
+                        <div class="dropdown">
+                            <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
+                                <i class="bx bx-dots-vertical-rounded"></i>
+                            </button>
+                            <div class="dropdown-menu">
+                                {# اگر صفحه جزئیات خدمت دارید #}
+                                {# <a class="dropdown-item" href="{% url 'reception:service_detail' s.pk %}"><i class="bx bx-show-alt me-1"></i> مشاهده</a> #}
+                                <a class="dropdown-item" href="{% url 'reception:service_update' s.pk %}">
+                                    <i class="bx bx-edit-alt me-1"></i> ویرایش
+                                </a>
+                                <a class="dropdown-item text-danger"
+                                   href="{% url 'reception:service_delete' s.pk %}">
+                                    <i class="bx bx-trash me-1"></i> حذف
+                                </a>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="5" class="text-center text-muted py-4">⛔ خدمتی یافت نشد.</td>
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        {# اگر pagination را در views.py پیاده‌سازی کرده‌اید، آن را اینجا اضافه کنید #}
+        {# Example: {% if page_obj.has_other_pages %} ... {% endif %} #}
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // اگر نیاز به مدیریت ستون ها دارید، کد JS مربوط به آن را از patient_list.html کپی کنید.
+        // در غیر این صورت، این بخش نیازی به JS خاصی ندارد.
+        console.log("Service Type List page loaded.");
+
+        // اگر فیلد is_active را در فرم جستجو دارید و نیاز به اعمال class form-select-sm دارید
+        const selectElements = document.querySelectorAll('form#service-search-form select');
+        selectElements.forEach(select => {
+            if (!select.classList.contains('form-select')) {
+                select.classList.add('form-select');
+            }
+            if (!select.classList.contains('form-select-sm')) {
+                select.classList.add('form-select-sm');
+            }
+        });
+    });
+</script>
+{% endblock %}

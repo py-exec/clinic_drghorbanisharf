@@ -1,0 +1,170 @@
+{% extends "base.html" %}
+{% load static %}
+{% load humanize %}
+
+{% block title %}📋 داشبورد کاری تست تیلت{% endblock %}
+
+{% block content %}
+<h4 class="py-3 mb-4">
+    <span class="text-muted fw-light">خدمات کلینیکی /</span> داشبورد کاری تست تیلت
+</h4>
+
+<!-- بخش آمار روزانه -->
+<div class="row g-4 mb-4">
+    <div class="col-sm-6 col-xl-4">
+        <div class="card">
+            <div class="card-body">
+                <div class="d-flex align-items-start justify-content-between">
+                    <div class="content-left">
+                        <span>انجام شده امروز</span>
+                        <div class="d-flex align-items-end mt-2">
+                            <h3 class="mb-0 me-2">{{ done_today|intcomma }}</h3>
+                        </div>
+                        <small>تعداد گزارش‌های تکمیل شده</small>
+                    </div>
+                    <span class="badge bg-label-success rounded p-2">
+                        <i class="bx bx-check-double bx-sm"></i>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-6 col-xl-4">
+        <div class="card">
+            <div class="card-body">
+                <div class="d-flex align-items-start justify-content-between">
+                    <div class="content-left">
+                        <span>در صف انتظار</span>
+                        <div class="d-flex align-items-end mt-2">
+                            <h3 class="mb-0 me-2">{{ in_queue|intcomma }}</h3>
+                        </div>
+                        <small>بیماران پذیرش شده امروز</small>
+                    </div>
+                    <span class="badge bg-label-warning rounded p-2">
+                        <i class="bx bx-time-five bx-sm"></i>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-6 col-xl-4">
+        <div class="card">
+            <div class="card-body">
+                <div class="d-flex align-items-start justify-content-between">
+                    <div class="content-left">
+                        <span>کل نوبت‌های امروز</span>
+                        <div class="d-flex align-items-end mt-2">
+                            <h3 class="mb-0 me-2">{{ total_scheduled|intcomma }}</h3>
+                        </div>
+                        <small>تعداد نوبت‌های برنامه‌ریزی شده</small>
+                    </div>
+                    <span class="badge bg-label-info rounded p-2">
+                        <i class="bx bx-calendar-event bx-sm"></i>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- جدول لیست انتظار لحظه‌ای -->
+<div class="card">
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <h5 class="mb-0">لیست انتظار بیماران (امروز)</h5>
+        <a href="{% url 'tilt:tilt_report_archive' %}" class="btn btn-outline-secondary btn-sm">
+            <i class="bx bx-archive me-1"></i> آرشیو گزارش‌ها
+        </a>
+    </div>
+    <div class="table-responsive text-nowrap">
+        <table class="table table-hover">
+            <thead>
+            <tr>
+                <th>نام بیمار</th>
+                <th>کد پذیرش</th>
+                <th>زمان پذیرش</th>
+                <th>وضعیت خدمت</th>
+                <th class="text-center">عملیات</th>
+            </tr>
+            </thead>
+            <tbody id="waiting-list-table-body">
+            {% for service in waiting_list %}
+            <tr id="service-row-{{ service.pk }}">
+                <td><strong>{{ service.reception.patient.full_name }}</strong></td>
+                <td>{{ service.reception.admission_code }}</td>
+                <td>{{ service.created_at|date:"H:i" }}</td>
+                <td><span class="badge bg-label-primary me-1">{{ service.get_status_display }}</span></td>
+                <td class="text-center">
+                    <a href="{% url 'tilt:tilt_create' service.pk %}" class="btn btn-primary btn-sm">
+                        <i class="bx bx-edit-alt me-1"></i> شروع و ثبت گزارش
+                    </a>
+                </td>
+            </tr>
+            {% empty %}
+            <tr id="no-patient-row">
+                <td colspan="5" class="text-center py-4">در حال حاضر بیماری در صف انتظار نیست.</td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const waitingListTableBody = document.getElementById('waiting-list-table-body');
+        const noPatientRow = document.getElementById('no-patient-row');
+
+        // اتصال به WebSocket
+        const tiltSocket = new WebSocket(`ws://${window.location.host}/ws/reception/updates/`);
+
+        tiltSocket.onopen = function (e) {
+            console.log("WebSocket for Tilt Worklist connected successfully.");
+        };
+
+        tiltSocket.onmessage = function (e) {
+            const data = JSON.parse(e.data);
+            const service = data.service;
+
+            // فقط به پیام‌های مربوط به خدمت "تست تیلت" واکنش نشان بده
+            if (service && service.service_name === "تست تیلت") {
+                const serviceRow = document.getElementById(`service-row-${service.id}`);
+
+                // اگر یک خدمت جدید ایجاد شد و در لیست نبود، آن را اضافه کن
+                if (data.action === 'created' && !serviceRow) {
+                    if (noPatientRow) {
+                        noPatientRow.remove();
+                    }
+                    const newRow = `
+                    <tr id="service-row-${service.id}">
+                        <td><strong>${service.patient_name}</strong></td>
+                        <td>${service.reception_code}</td>
+                        <td>${new Date(service.created_at).toLocaleTimeString('fa-IR')}</td>
+                        <td><span class="badge bg-label-primary me-1">${service.status}</span></td>
+                        <td class="text-center">
+                            <a href="/services/tilt/create/for-service/${service.id}/" class="btn btn-primary btn-sm">
+                                <i class="bx bx-edit-alt me-1"></i> شروع و ثبت گزارش
+                            </a>
+                        </td>
+                    </tr>
+                `;
+                    waitingListTableBody.insertAdjacentHTML('beforeend', newRow);
+                }
+                // اگر یک خدمت "انجام شد" یا "کنسل شد"، آن را از لیست حذف کن
+                else if (serviceRow && (service.status_code === 'done' || service.status_code === 'cancelled')) {
+                    serviceRow.remove();
+                    if (waitingListTableBody.children.length === 0) {
+                        waitingListTableBody.innerHTML = '<tr id="no-patient-row"><td colspan="5" class="text-center py-4">در حال حاضر بیماری در صف انتظار نیست.</td></tr>';
+                    }
+                }
+            }
+        };
+
+        tiltSocket.onclose = function (e) {
+            console.error('Tilt worklist WebSocket closed unexpectedly.');
+        };
+    });
+</script>
+{% endblock %}

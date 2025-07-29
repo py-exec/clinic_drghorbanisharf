@@ -1,0 +1,139 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}پروفایل من{% endblock %}
+
+{% block content %}
+<div class="content-wrapper">
+    <h1 class="text-center my-4">پروفایل کاربری</h1>
+
+    <!-- Header -->
+    <div class="card mb-4">
+        <div class="user-profile-header-banner">
+            <img src="{% static 'assets/img/pages/profile-banner.png' %}" class="rounded-top w-100" alt="بنر پروفایل">
+        </div>
+        <div class="user-profile-header d-flex flex-column flex-md-row align-items-center p-3">
+            <div class="profile-img-wrapper me-md-4 text-center">
+                {% if user.profile_image %}
+                <img src="{{ user.profile_image.url }}"
+                     class="rounded-circle user-profile-img shadow"
+                     alt="عکس کاربر"
+                     width="120"
+                     height="120">
+                {% else %}
+                <img src="{% static 'assets/img/avatars/avatar.png' %}"
+                     class="rounded-circle user-profile-img shadow"
+                     alt="بدون تصویر"
+                     width="120"
+                     height="120">
+                {% endif %}
+            </div>
+            <div class="flex-grow-1 mt-3 mt-md-0">
+                <h3 class="mb-1">{{ user.get_full_name }}</h3>
+                <p class="text-muted mb-1">{{ user.role.name|default:"بدون نقش" }}</p>
+                <p class="mb-0 text-muted">تاریخ عضویت: {{ user.date_joined|date:"Y/m/d H:i" }}</p>
+                <p class="mb-0 text-muted">آخرین فعالیت: {{ user.last_seen|date:"Y/m/d H:i" }}</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- جزئیات بیشتر -->
+    <div class="row">
+        <div class="col-md-6 mb-4">
+            <div class="card">
+                <div class="card-header"><h5 class="mb-0">اطلاعات شخصی</h5></div>
+                <div class="card-body">
+                    <ul class="list-unstyled mb-0">
+                        <li class="mb-2"><strong>نام کامل:</strong> {{ user.get_full_name }}</li>
+                        <li class="mb-2"><strong>کد ملی:</strong> {{ user.national_code }}</li>
+                        <li class="mb-2"><strong>نام مستعار:</strong> {{ user.nickname|default:"-" }}</li>
+                        <li class="mb-2"><strong>وضعیت:</strong> {{ user.is_active|yesno:"فعال,غیرفعال" }}</li>
+                        <li class="mb-2"><strong>تأیید شده توسط ادمین:</strong> {{ user.is_verified|yesno:"بله,خیر" }}
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- اطلاعات تماس + تایید موبایل -->
+        <div class="col-md-6 mb-4">
+            <div class="card">
+                <div class="card-header"><h5 class="mb-0">اطلاعات تماس</h5></div>
+                <div class="card-body">
+                    <ul class="list-unstyled mb-0">
+                        <li class="mb-2 d-flex align-items-center">
+                            <strong class="me-2">شماره موبایل:</strong>
+                            <span id="phone-number">{{ user.phone_number }}</span>
+                            <span id="phone-status"
+                                  class="ms-2 badge {% if user.phone_verified %}bg-success{% else %}bg-warning text-dark{% endif %}">
+                                {% if user.phone_verified %}تأیید شده{% else %}نیاز به تأیید{% endif %}
+                            </span>
+                            {% if not user.phone_verified %}
+                            <button id="send-otp-btn" class="btn btn-sm btn-outline-primary ms-2">ارسال کد</button>
+                            {% endif %}
+                        </li>
+                        <li class="mb-2"><strong>ایمیل:</strong> {{ user.email|default:"—" }}</li>
+                        <li class="mb-2"><strong>آدرس:</strong> {{ user.address|default:"—" }}</li>
+                        <li class="mb-2"><strong>آخرین IP:</strong> {{ user.ip_address|default:"—" }}</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL OTP -->
+<div class="modal fade" id="otpModal" tabindex="-1" aria-labelledby="otpModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <form id="otp-form" class="modal-content">
+            {% csrf_token %}
+            <div class="modal-header">
+                <h5 class="modal-title">تأیید شماره موبایل</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="بستن"></button>
+            </div>
+            <div class="modal-body">
+                <p>کد ارسال شده به {{ user.phone_number }} را وارد کنید:</p>
+                <input type="text" name="code" class="form-control" placeholder="کد تأیید" required>
+                <input type="hidden" name="phone" value="{{ user.phone_number }}">
+                <input type="hidden" name="purpose" value="verify">
+                <div id="otp-error" class="text-danger mt-2" style="display:none;"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-success">تأیید</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">بستن</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(function () {
+        // ارسال OTP
+        $("#send-otp-btn").on("click", function () {
+            $.post("{% url 'accounts:send-otp' %}", {
+                phone: "{{ user.phone_number }}",
+                purpose: "verify",
+                csrfmiddlewaretoken: "{{ csrf_token }}",
+            }).done(function (data) {
+                $("#otpModal").modal("show");
+            }).fail(function () {
+                alert("ارسال پیامک با خطا مواجه شد.");
+            });
+        });
+
+        // بررسی OTP
+        $("#otp-form").on("submit", function (e) {
+            e.preventDefault();
+            $.post("{% url 'accounts:verify-otp' %}", $(this).serialize())
+                .done(function (data) {
+                    $("#otpModal").modal("hide");
+                    $("#phone-status").removeClass("bg-warning text-dark").addClass("bg-success").text("تأیید شده");
+                    $("#send-otp-btn").remove(); // حذف دکمه ارسال
+                })
+                .fail(function (xhr) {
+                    $("#otp-error").text("کد وارد شده نادرست است.").show();
+                });
+        });
+    });
+</script>
+{% endblock %}

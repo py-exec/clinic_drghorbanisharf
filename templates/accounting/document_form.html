@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}📁 آپلود سند{% endblock %}
+
+{% block content %}
+    <h4 class="py-3 mb-4">
+        <span class="text-muted fw-light">حسابداری /</span> آپلود سند
+    </h4>
+
+    <div class="card">
+        <div class="card-body">
+            <form method="post" enctype="multipart/form-data" novalidate>
+                {% csrf_token %}
+
+                {% if form.non_field_errors %}
+                    <div class="alert alert-danger mb-3">
+                        {% for error in form.non_field_errors %}
+                            <div>{{ error }}</div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+
+                <fieldset class="border p-3 mb-4 rounded">
+                    <legend class="w-auto px-2 small">📋 اطلاعات سند</legend>
+                    <div class="row g-3">
+
+                        <!-- فاکتور -->
+                        <div class="col-md-6">
+                            <label for="{{ form.invoice.id_for_label }}" class="form-label">
+                                {{ form.invoice.label }}
+                                {% if form.invoice.field.required %}<span class="text-danger">*</span>{% endif %}
+                            </label>
+                            {{ form.invoice }}
+                            {% for error in form.invoice.errors %}
+                                <div class="text-danger small">{{ error }}</div>
+                            {% endfor %}
+                        </div>
+
+                        <!-- تراکنش -->
+                        <div class="col-md-6">
+                            <label for="{{ form.transaction.id_for_label }}" class="form-label">
+                                {{ form.transaction.label }}
+                                {% if form.transaction.field.required %}<span class="text-danger">*</span>{% endif %}
+                            </label>
+                            {{ form.transaction }}
+                            {% for error in form.transaction.errors %}
+                                <div class="text-danger small">{{ error }}</div>
+                            {% endfor %}
+                        </div>
+
+                        <!-- نوع سند -->
+                        <div class="col-md-6">
+                            <label for="{{ form.doc_type.id_for_label }}" class="form-label">
+                                {{ form.doc_type.label }}
+                                {% if form.doc_type.field.required %}<span class="text-danger">*</span>{% endif %}
+                            </label>
+                            {{ form.doc_type }}
+                            {% for error in form.doc_type.errors %}
+                                <div class="text-danger small">{{ error }}</div>
+                            {% endfor %}
+                        </div>
+
+                        <!-- فایل -->
+                        <div class="col-md-6">
+                            <label for="{{ form.file.id_for_label }}" class="form-label">
+                                {{ form.file.label }}
+                                {% if form.file.field.required %}<span class="text-danger">*</span>{% endif %}
+                            </label>
+                            {{ form.file }}
+                            {% for error in form.file.errors %}
+                                <div class="text-danger small">{{ error }}</div>
+                            {% endfor %}
+                        </div>
+
+                        <!-- کاربر آپلودکننده -->
+                        <div class="col-md-6">
+                            <label for="{{ form.uploaded_by.id_for_label }}" class="form-label">
+                                {{ form.uploaded_by.label }}
+                            </label>
+                            {{ form.uploaded_by }}
+                            {% for error in form.uploaded_by.errors %}
+                                <div class="text-danger small">{{ error }}</div>
+                            {% endfor %}
+                        </div>
+
+                    </div>
+                </fieldset>
+
+                <div class="d-flex justify-content-between">
+                    <a href="{% url 'accounting:document_list' %}" class="btn btn-secondary">🔙 بازگشت</a>
+                    <button type="submit" class="btn btn-primary">💾 ذخیره سند</button>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,258 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}تست ورزش بیماران کلینیک آریتمی{% endblock %}
+
+{% block content %}
+<!--..............................-->
+<h1 class="text-center">اکوی تخصصی مری</h1>
+<!-- Vertical Wizard -->
+<div class="col-12 mb-4">
+    <!--  <small class="text-light fw-semibold lh-2">عمودی</small>-->
+    <div class="bs-stepper wizard-vertical wizard-numbered vertical mt-2">
+        <div class="bs-stepper-header">
+            <!-- بخش ۱: اطلاعات بیمار و علت ارجاع -->
+            <div class="step" data-target="#section-demographics">
+                <button type="button" class="step-trigger">
+                    <span class="bs-stepper-circle">1</span>
+                    <span class="bs-stepper-label">اطلاعات بیمار و علت ارجاع</span>
+                </button>
+            </div>
+
+            <!-- بخش ۲: وضعیت حین انجام -->
+            <div class="line"></div>
+            <div class="step" data-target="#personal-info-1">
+                <button type="button" class="step-trigger">
+                    <span class="bs-stepper-circle">2</span>
+                    <span class="bs-stepper-label">وضعیت حین انجام</span>
+                </button>
+            </div>
+            <!-- بخش ۳: یافته‌های تصویری -->
+            <div class="line"></div>
+            <div class="step" data-target="#social-links-1">
+                <button type="button" class="step-trigger">
+                    <span class="bs-stepper-circle">3</span>
+                    <span class="bs-stepper-label">یافته‌های تصویری</span>
+                </button>
+            </div>
+
+            <!-- بخش ۴:  نظر پزشک و نتیجه‌گیری -->
+            <div class="line"></div>
+            <div class="step" data-target="#Valves">
+                <button type="button" class="step-trigger">
+                    <span class="bs-stepper-circle">4</span>
+                    <span class="bs-stepper-label">نظر پزشک و نتیجه‌گیری</span>
+                </button>
+            </div>
+
+        </div>
+        <div class="bs-stepper-content">
+            <form method="post">
+                <!-- بخش ۱:اطلاعات بیمار و علت ارجاع-->
+                <div id="section-demographics" class="content">
+                    <div class="content-header mb-3">
+                        <h6 class="mb-1">اطلاعات بیمار</h6>
+                        <small>اطلاعات بیمار و علت ارجاع را وارد کنید.</small>
+                    </div>
+                    <div class="row g-3">
+                        <div class="col-sm-6">
+                            <label>نام بیمار</label>
+                            <input type="text" name="patient_name"
+                                                                             class="form-control">
+                        </div>
+                        <div class="col-sm-6"><label>سابقه آریتمی (AF)</label>
+                            <select name="history_af" class="form-select">
+                                <option value="">انتخاب کنید</option>
+                                <option>ندارد</option>
+                                <option>دارد</option>
+                            </select></div>
+                        <div class="col-sm-6"><label>سابقه سکته مغزی</label>
+                            <select name="history_stroke" class="form-select">
+                                <option value="">انتخاب کنید</option>
+                                <option>ندارد</option>
+                                <option>دارد</option>
+                            </select></div>
+                        <div class="col-sm-6"><label>داروی ضد انعقاد مصرف می‌شود؟</label>
+                            <select name="anticoagulant" class="form-select">
+                                <option value="">انتخاب کنید</option>
+                                <option>بله</option>
+                                <option>خیر</option>
+                            </select></div>
+                        <div class="col-sm-12">
+                            <label>علت درخواست TEE</label>
+                            <textarea name="indication" class="form-control" rows="2">
+                    </textarea></div>
+                        <div class="col-12 d-flex justify-content-between">
+                            <button class="btn btn-label-secondary btn-prev" disabled type="button">
+                                <i class="bx bx-chevron-left bx-sm ms-sm-n2"></i>
+                                <span class="d-sm-inline-block d-none">قبلی</span>
+                            </button>
+                            <button class="btn btn-primary btn-next" type="button">
+                                <span class="d-sm-inline-block d-none me-sm-1">بعدی</span>
+                                <i class="bx bx-chevron-right bx-sm me-sm-n2"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <!-- بخش ۱:اطلاعات بیمار و علت ارجاع-->
+
+                <!-- بخش ۲: وضعیت حین انجام -->
+                <div id="personal-info-1" class="content">
+                    <div class="content-header mb-3">
+                        <h6 class="mb-1">وضعیت حین انجام</h6>
+                        <!--            <small>اطلاعات شخصی خود را وارد کنید.</small>-->
+                    </div>
+                    <div class="row g-3">
+                        <div class="col-sm-6"><label>داروی آرام‌بخش استفاده شد</label>
+                            <select name="sedation" class="form-select">
+                                <option value="">انتخاب کنید</option>
+                                <option>Midazolam</option>
+                                <option>Propofol</option>
+                                <option>Lidocaine</option>
+                                <option>بدون آرام‌بخش</option>
+                            </select></div>
+                        <div class="col-sm-6"><label>پاسخ بیمار به پروب مری</label>
+                            <select name="gag_reflex" class="form-select">
+                                <option value="">انتخاب کنید</option>
+                                <option>نرمال</option>
+                                <option>تحمل پایین</option>
+                                <option>نیاز به توقف</option>
+                            </select></div>
+                        <div class="col-sm-6"><label>کیفیت تصویر</label>
+                            <select name="image_quality" class="form-select">
+                                <option value="">انتخاب کنید</option>
+                                <option>عالی</option>
+                                <option>متوسط</option>
+                                <option>ضعیف</option>
+                            </select></div>
+                        <div class="col-md-12"><label>عوارض حین انجام</label>
+                            <textarea name="complications" class="form-control" rows="2"></textarea></div>
+                        <div class="col-12 d-flex justify-content-between">
+                            <button class="btn btn-primary btn-prev">
+                                <i class="bx bx-chevron-left bx-sm ms-sm-n2"></i>
+                                <span class="d-sm-inline-block d-none">قبلی</span>
+                            </button>
+                            <button class="btn btn-primary btn-next" type="button">
+                                <span class="d-sm-inline-block d-none me-sm-1">بعدی</span>
+                                <i class="bx bx-chevron-right bx-sm me-sm-n2"></i>
+                            </button>
+                        </div>
+                        </div>
+                    </div>
+                <!-- بخش ۲: وضعیت حین انجام -->
+
+
+                <!-- بخش ۳: یافته‌های تصویری -->
+                <div id="social-links-1" class="content">
+                    <div class="content-header mb-3">
+                        <h6 class="mb-1">یافته‌های تصویری</h6>
+                        <!--            <small>لینک های اجتماعی خود را وارد کنید.</small>-->
+                    </div>
+                    <div class="row g-3">
+                        <div class="col-sm-6"><label>لخته در LA / LAA</label>
+                            <select name="laa_thrombus" class="form-select">
+                                <option value="">انتخاب کنید</option>
+                                <option>مشاهده نشد</option>
+                                <option>لخته مشکوک</option>
+                                <option>لخته واضح</option>
+                            </select></div>
+                        <div class="col-sm-6"><label>Vegetation دریچه‌ای</label>
+                            <select name="vegetation" class="form-select">
+                                <option value="">انتخاب کنید</option>
+                                <option>ندارد</option>
+                                <option>دیده شد</option>
+                                <option>مشکوک</option>
+                            </select></div>
+                        <div class="col-sm-6"><label>PFO یا ASD</label>
+                            <select name="pfo" class="form-select">
+                                <option value="">انتخاب کنید</option>
+                                <option>مثبت</option>
+                                <option>منفی</option>
+                                <option>انجام نشد</option>
+                            </select></div>
+                        <div class="col-sm-6"><label>حرکت دریچه مصنوعی</label>
+                            <select name="prosthetic_motion" class="form-select">
+                                <option value="">انتخاب کنید</option>
+                                <option>نرمال</option>
+                                <option>محدود</option>
+                                <option>غیرطبیعی</option>
+                                <option>ندارد</option>
+                            </select></div>
+
+                        <div class="col-12 d-flex justify-content-between">
+                            <button class="btn btn-primary btn-prev">
+                                <i class="bx bx-chevron-left bx-sm ms-sm-n2"></i>
+                                <span class="d-sm-inline-block d-none">قبلی</span>
+                            </button>
+                            <button class="btn btn-primary btn-next" type="button">
+                                <span class="d-sm-inline-block d-none me-sm-1">بعدی</span>
+                                <i class="bx bx-chevron-right bx-sm me-sm-n2"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <!-- بخش ۳: RV و فشار ریوی -->
+
+
+                <!-- بخش ۴:  نظر پزشک و نتیجه‌گیری -->
+                <div id="Valves" class="content">
+                    <div class="content-header mb-3">
+                        <h6 class="mb-1"> نظر پزشک و نتیجه‌گیری</h6>
+                        <!--            <small>اطلاعات شخصی خود را وارد کنید.</small>-->
+                    </div>
+                    <div class="row g-3">
+                        <div class="col-sm-6"><label>پیشنهاد بعدی</label>
+                            <select name="next_step" class="form-select">
+                                <option value="">انتخاب کنید</option>
+                                <option>ادامه داروی ضدانعقاد</option>
+                                <option>ارجاع به جراحی</option>
+                                <option>MRI قلب</option>
+                                <option>نیاز به بررسی مجدد</option>
+                            </select></div>
+                        <div class="col-sm-6"><label>نام پزشک</label><input name="physician_name" class="form-control"
+                                                                            type="text"></div>
+
+                        <div class="col-sm-6"><label>تاریخ انجام</label><input name="exam_date" class="form-control"
+                                                                               type="date"></div>
+                        <div class="col-sm-6"><label>آپلود تصویر/ویدیو</label><input name="upload_video" class="form-control"
+                                                                                     type="file"></div>
+                        <div class="col-sm-12"><label>تفسیر نهایی پزشک</label><textarea name="final_comment"
+                                                                                        class="form-control"
+                                                                                        rows="3"></textarea></div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="consent" id="consent" required>
+                            <label class="form-check-label" for="consent">
+                                تأیید می‌کنم که اطلاعات وارد شده صحیح است .
+                            </label>
+                        </div>
+                        <div class="form-section col-12">
+                            <h5>۵. تحلیل هوشمند مغز TEE</h5>
+                            <label>نتیجه تحلیل سیستم هوشمند:</label>
+                            <textarea id="brain_output" class="form-control" rows="6" readonly
+                                      style="background:#f0f0f0; color:#333;"></textarea>
+                        </div>
+                        <div class="col-12 d-flex justify-content-between">
+                            <button class="btn btn-primary btn-prev">
+                                <i class="bx bx-chevron-left bx-sm ms-sm-n2"></i>
+                                <span class="d-sm-inline-block d-none">قبلی</span>
+                            </button>
+                            <button class="btn btn-success btn-submit" type="submit">ثبت فرم TEE</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- بخش ۴:  نظر پزشک و نتیجه‌گیری -->
+
+            </form>
+        </div>
+    </div>
+</div>
+<!-- /Vertical Wizard -->
+
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/tee_form_with_brain.js' %}"></script>
+{% endblock %}
+
+
+

@@ -1,0 +1,245 @@
+[
+  {
+    "model": "accounts.accesspermission",
+    "pk": 1,
+    "fields": {
+      "name": "View Patient",
+      "code": "patient.view_patient",
+      "description": "دسترسی به مشاهده لیست بیماران"
+    }
+  },
+  {
+    "model": "accounts.accesspermission",
+    "pk": 2,
+    "fields": {
+      "name": "Add Patient",
+      "code": "patient.add_patient",
+      "description": "دسترسی به افزودن بیمار جدید"
+    }
+  },
+  {
+    "model": "accounts.accesspermission",
+    "pk": 3,
+    "fields": {
+      "name": "View Appointment",
+      "code": "appointments.view_appointment",
+      "description": "دسترسی به مشاهده تقویم نوبت‌ها"
+    }
+  },
+  {
+    "model": "accounts.accesspermission",
+    "pk": 4,
+    "fields": {
+      "name": "View Reception",
+      "code": "reception.view_reception",
+      "description": "دسترسی به مشاهده لیست پذیرش‌ها"
+    }
+  },
+  {
+    "model": "accounts.accesspermission",
+    "pk": 5,
+    "fields": {
+      "name": "Add Reception",
+      "code": "reception.add_reception",
+      "description": "دسترسی به ثبت پذیرش جدید"
+    }
+  },
+  {
+    "model": "accounts.accesspermission",
+    "pk": 6,
+    "fields": {
+      "name": "View ECG",
+      "code": "ecg.view_ecg",
+      "description": "دسترسی به مشاهده گزارش‌های نوار قلب"
+    }
+  },
+  {
+    "model": "accounts.accesspermission",
+    "pk": 7,
+    "fields": {
+      "name": "View Holter HR",
+      "code": "holter_hr.view_holterhr",
+      "description": "دسترسی به مشاهده گزارش‌های هولتر ریتم"
+    }
+  },
+  {
+    "model": "accounts.accesspermission",
+    "pk": 8,
+    "fields": {
+      "name": "View Holter BP",
+      "code": "holter_bp.view_holterbp",
+      "description": "دسترسی به مشاهده گزارش‌های هولتر فشار"
+    }
+  },
+  {
+    "model": "accounts.accesspermission",
+    "pk": 9,
+    "fields": {
+      "name": "View Procedure",
+      "code": "procedures.view_procedure",
+      "description": "دسترسی به مشاهده پروسیجرها"
+    }
+  },
+  {
+    "model": "accounts.accesspermission",
+    "pk": 10,
+    "fields": {
+      "name": "View Prescription",
+      "code": "prescriptions.view_prescription",
+      "description": "دسترسی به مشاهده ارزیابی‌های پزشک"
+    }
+  },
+  {
+    "model": "accounts.accesspermission",
+    "pk": 11,
+    "fields": {
+      "name": "View Stress Test",
+      "code": "stress.view_stresstest",
+      "description": "دسترسی به مشاهده گزارش‌های تست ورزش"
+    }
+  },
+  {
+    "model": "accounts.accesspermission",
+    "pk": 12,
+    "fields": {
+      "name": "View Tilt Test",
+      "code": "tilt.view_tilttest",
+      "description": "دسترسی به مشاهده گزارش‌های تست تیلت"
+    }
+  },
+  {
+    "model": "accounts.accesspermission",
+    "pk": 13,
+    "fields": {
+      "name": "View TTE",
+      "code": "tte.view_tte",
+      "description": "دسترسی به مشاهده گزارش‌های اکو TTE"
+    }
+  },
+  {
+    "model": "accounts.accesspermission",
+    "pk": 14,
+    "fields": {
+      "name": "View TEE",
+      "code": "tee.view_tee",
+      "description": "دسترسی به مشاهده گزارش‌های اکو TEE"
+    }
+  },
+  {
+    "model": "accounts.accesspermission",
+    "pk": 15,
+    "fields": {
+      "name": "View Invoice",
+      "code": "accounting.view_invoice",
+      "description": "دسترسی به مشاهده فاکتورها"
+    }
+  },
+  {
+    "model": "accounts.accesspermission",
+    "pk": 16,
+    "fields": {
+      "name": "View Transaction",
+      "code": "accounting.view_transaction",
+      "description": "دسترسی به مشاهده تراکنش‌ها"
+    }
+  },
+  {
+    "model": "accounts.accesspermission",
+    "pk": 17,
+    "fields": {
+      "name": "View Account",
+      "code": "accounting.view_account",
+      "description": "دسترسی به مشاهده حساب‌های مالی"
+    }
+  },
+  {
+    "model": "accounts.accesspermission",
+    "pk": 18,
+    "fields": {
+      "name": "View Item",
+      "code": "inventory.view_item",
+      "description": "دسترسی به مشاهده کالاهای انبار"
+    }
+  },
+  {
+    "model": "accounts.accesspermission",
+    "pk": 19,
+    "fields": {
+      "name": "View Inventory",
+      "code": "inventory.view_inventory",
+      "description": "دسترسی به مشاهده موجودی انبار"
+    }
+  },
+  {
+    "model": "accounts.accesspermission",
+    "pk": 20,
+    "fields": {
+      "name": "View Doctor",
+      "code": "doctors.view_doctor",
+      "description": "دسترسی به مشاهده لیست پزشکان"
+    }
+  },
+  {
+    "model": "accounts.accesspermission",
+    "pk": 21,
+    "fields": {
+      "name": "View Specialty",
+      "code": "doctors.view_specialty",
+      "description": "دسترسی به مشاهده لیست تخصص‌ها"
+    }
+  },
+  {
+    "model": "accounts.accesspermission",
+    "pk": 22,
+    "fields": {
+      "name": "View Staff",
+      "code": "staffs.view_staff",
+      "description": "دسترسی به مشاهده لیست پرسنل"
+    }
+  },
+  {
+    "model": "accounts.accesspermission",
+    "pk": 23,
+    "fields": {
+      "name": "View Attendance Record",
+      "code": "staffs.view_attendancerecord",
+      "description": "دسترسی به مشاهده لیست حضور و غیاب"
+    }
+  },
+  {
+    "model": "accounts.accesspermission",
+    "pk": 24,
+    "fields": {
+      "name": "View Leave Request",
+      "code": "staffs.view_leaverequest",
+      "description": "دسترسی به مشاهده لیست مرخصی‌ها"
+    }
+  },
+  {
+    "model": "accounts.accesspermission",
+    "pk": 25,
+    "fields": {
+      "name": "View User",
+      "code": "accounts.view_user",
+      "description": "دسترسی به مشاهده لیست کاربران"
+    }
+  },
+  {
+    "model": "accounts.accesspermission",
+    "pk": 26,
+    "fields": {
+      "name": "View Role",
+      "code": "accounts.view_role",
+      "description": "دسترسی به مشاهده لیست نقش‌ها"
+    }
+  },
+  {
+    "model": "accounts.accesspermission",
+    "pk": 27,
+    "fields": {
+      "name": "View Permission",
+      "code": "accounts.view_permission",
+      "description": "دسترسی به مشاهده لیست مجوزها"
+    }
+  }
+]

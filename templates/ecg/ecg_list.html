@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}لیست نوار قلب (ECG){% endblock %}
+
+{% block content %}
+<h2 class="mb-4 text-center">لیست نوار قلب (ECG)</h2>
+
+<div class="card">
+    <!-- هدر -->
+    <div class="card-header d-flex flex-column flex-md-row justify-content-between align-items-center gap-2">
+        <h5 class="mb-0">گزارش‌های ECG ثبت‌شده</h5>
+        <div class="d-flex flex-wrap gap-2 align-items-center">
+
+            <!-- تعداد نمایش -->
+            <select id="per-page-select" class="form-select form-select-sm" style="width: 100px;">
+                <option value="10">10 تایی</option>
+                <option value="25">25 تایی</option>
+                <option value="50" selected>50 تایی</option>
+                <option value="100">100 تایی</option>
+            </select>
+
+            <!-- افزودن -->
+            <a href="{% url 'ecg:ecg-create' patient_id=1 %}" class="btn btn-success btn-sm">
+                ➕ افزودن ECG
+            </a>
+
+            <!-- PDF -->
+            <button class="btn btn-outline-danger btn-sm">🖨 خروجی PDF</button>
+        </div>
+    </div>
+
+    <!-- جدول -->
+    <div class="card-body pt-0">
+        <div id="ecg-table">
+  {% include "ecg/partials/_ecg_table.html" %}
+        </div>
+
+    </div>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+const ecgSocket = new WebSocket(`ws://${window.location.host}/ws/reception/list/`);
+
+ecgSocket.onopen = () => console.log("✅ WebSocket ECG وصل شد");
+ecgSocket.onclose = () => console.warn("❌ WebSocket ECG قطع شد");
+ecgSocket.onerror = (err) => console.error("🚫 خطا در WebSocket ECG:", err);
+
+ecgSocket.onmessage = function(event) {
+  const data = JSON.parse(event.data);
+  console.log("📩 پیام WebSocket دریافت شد:", data);
+
+  if (data.service_type === "ecg" && ["created", "updated", "deleted"].includes(data.action)) {
+    console.log("🔄 درخواست بروزرسانی جدول ECG...");
+    fetch("/ecg/partial/table/")
+      .then(res => {
+        if (!res.ok) throw new Error("❌ وضعیت پاسخ fetch نامناسب بود!");
+        return res.json();
+      })
+      .then(data => {
+        console.log("✅ جدول ECG دریافت شد:", data);
+        document.getElementById("ecg-table").innerHTML = data.html;
+      })
+      .catch(err => console.error("❌ خطا در بروزرسانی جدول ECG:", err));
+  } else {
+    console.log("ℹ️ این پیام ربطی به ECG نداشت یا اکشن معتبر نبود.");
+  }
+};
+</script>
+{% endblock %}

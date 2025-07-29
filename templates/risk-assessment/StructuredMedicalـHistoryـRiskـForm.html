@@ -1,0 +1,1143 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %} ارزیابی بالینی پیشرفته{% endblock %}
+
+
+{% block content %}
+<h2 class="mb-4 text-center">ارزیابی بالینی پیشرفته</h2>
+<!-- Vertical Wizard -->
+<div class="col-12 mb-4">
+    <!--    <small class="text-light fw-semibold lh-2">عمودی</small>-->
+    <div class="bs-stepper wizard-vertical wizard-numbered vertical mt-2">
+        <!-- بخش ۱: مشخصات شخصی -->
+        <div class="bs-stepper-header">
+            <div class="step" data-target="#section-demographics">
+                <button type="button" class="step-trigger">
+                    <span class="bs-stepper-circle">1</span>
+                    <span class="bs-stepper-label">مشخصات شخصی</span>
+                </button>
+            </div>
+
+            <!-- بخش ۲: ارزیابی سلامت -->
+            <div class="line"></div>
+            <div class="step" data-target="#section-vitals">
+                <button type="button" class="step-trigger">
+                    <span class="bs-stepper-circle">2</span>
+                    <span class="bs-stepper-label">ارزیابی سلامت</span>
+                </button>
+            </div>
+
+
+            <!-- بخش ۳: سابقه پزشکی و خانوادگی -->
+            <div class="line"></div>
+            <div class="step" data-target="#section-history">
+                <button type="button" class="step-trigger">
+                    <span class="bs-stepper-circle">3</span>
+                    <span class="bs-stepper-label">سابقه پزشکی و خانوادگی</span>
+                </button>
+            </div>
+
+            <!-- بخش ۴: سبک زندگی -->
+            <div class="line"></div>
+            <div class="step" data-target="#section-lifestyle">
+                <button type="button" class="step-trigger">
+                    <span class="bs-stepper-circle">4</span>
+                    <span class="bs-stepper-label">سبک زندگی</span>
+                </button>
+            </div>
+
+
+            <!-- بخش -: ماژول دیابت -->
+            <div class="line"></div>
+            <div class="step" data-target="#module-diabetes" id="module-diabetes-row">
+                <button type="button" class="step-trigger">
+                    <span class="bs-stepper-circle">-</span>
+                    <span class="bs-stepper-label">ماژول دیابت</span>
+                </button>
+            </div>
+
+            <!-- بخش -: ماژول فشار خون -->
+            <div class="line"></div>
+            <div class="step" data-target="#module-hypertension" id="module-hypertension-row">
+                <button type="button" class="step-trigger">
+                    <span class="bs-stepper-circle">-</span>
+                    <span class="bs-stepper-label">ماژول فشار خون</span>
+                </button>
+            </div>
+
+            <!-- بخش -: ماژول آریتمی -->
+            <div class="line"></div>
+            <div class="step" data-target="#module-arrhythmia" id="module-arrhythmia-row">
+                <button type="button" class="step-trigger">
+                    <span class="bs-stepper-circle">-</span>
+                    <span class="bs-stepper-label">ماژول آریتمی</span>
+                </button>
+            </div>
+
+            <!-- بخش 5: آزمایش های انجام شده -->
+            <div class="line"></div>
+            <div class="step" data-target="#section-paraclinic">
+                <button type="button" class="step-trigger">
+                    <span class="bs-stepper-circle">5</span>
+                    <span class="bs-stepper-label">آزمایش های انجام شده</span>
+                </button>
+            </div>
+
+            <!-- بخش 6: نتایج آزمایش خون -->
+            <div class="line"></div>
+            <div class="step" data-target="#lab-tests">
+                <button type="button" class="step-trigger">
+                    <span class="bs-stepper-circle">6</span>
+                    <span class="bs-stepper-label">نتایج آزمایش خون</span>
+                </button>
+            </div>
+
+            <!-- بخش -: اطلاعات دستگاه باطری -->
+            <div class="line"></div>
+            <div class="step" data-target="#device-info" id="step-device">
+                <button type="button" class="step-trigger">
+                    <span class="bs-stepper-circle">-</span>
+                    <span class="bs-stepper-label">اطلاعات دستگاه باطری</span>
+                </button>
+            </div>
+
+            <!-- بخش -: آنژیو، استنت، MI، EF -->
+            <div class="line"></div>
+            <div class="step" data-target="#angiography-info" id="step-angiography">
+                <button type="button" class="step-trigger">
+                    <span class="bs-stepper-circle">-</span>
+                    <span class="bs-stepper-label">آنژیو، استنت، MI، EF</span>
+                </button>
+            </div>
+
+            <!-- بخش 7: داروهای مصرفی -->
+            <div class="line"></div>
+            <div class="step" data-target="#medications">
+                <button type="button" class="step-trigger">
+                    <span class="bs-stepper-circle">7</span>
+                    <span class="bs-stepper-label">لیست دارو ها</span>
+                </button>
+            </div>
+
+
+        </div>
+
+        <div class="bs-stepper-content">
+            <form method="post">
+                <div class="row">
+                    <!-- بخش ۱:مشخصات شخصی-->
+                    <div id="section-demographics" class="content">
+                        <div class="content-header mb-3">
+                            <h6 class="mb-1">اطلاعات شخصی</h6>
+                            <small>اطلاعات شخصی را وارد کنید.</small>
+                        </div>
+                        <div class="row g-3">
+                            <div class="col-sm-6">
+                                <label class="form-label" for="username-vertical">نام و نام خانوادگی</label>
+                                <input type="text" id="username-vertical" name="fullname"
+                                       class="form-control text-start"
+                                       placeholder="نام و نام خانوادگی خود را وارد کنید" dir="ltr">
+                            </div>
+
+                            <div class="col-sm-6">
+                                <label class="form-label" for="date-of-birth">تاریخ تولد</label>
+                                <input type="tel" id="date-of-birth" class="form-control text-start"
+                                       placeholder="1333/3/3"
+                                       dir="ltr">
+                            </div>
+
+
+                            <div class="col-sm-6 form-password-toggle">
+                                <label class="form-label" for="national_id">کد ملی</label>
+                                <div class="input-group input-group-merge">
+                                    <input type="number" id="national_id" class="form-control text-start"
+                                           name="national_id"
+                                           placeholder="0012456789" dir="ltr">
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <label>شماره پرونده</label>
+                                <input type="text" class="form-control" name="record_number" value="{{ record_number }}"
+                                       readonly disabled>
+                            </div>
+                            <div class="col-12 d-flex justify-content-between">
+                                <button class="btn btn-label-secondary btn-prev" disabled type="button">
+                                    <i class="bx bx-chevron-left bx-sm ms-sm-n2"></i>
+                                    <span class="d-sm-inline-block d-none">قبلی</span>
+                                </button>
+                                <button class="btn btn-primary btn-next" type="button">
+                                    <span class="d-sm-inline-block d-none me-sm-1">بعدی</span>
+                                    <i class="bx bx-chevron-right bx-sm me-sm-n2"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- بخش ۱: اطلاعات دموگرافیک و پایه سلامت -->
+
+                    <!-- بخش ۲: علائم حیاتی و وضعیت بالینی -->
+                    <div id="section-vitals" class="content">
+                        <div class="content-header mb-3">
+                            <h6 class="mb-1">ارزیابی سلامت</h6>
+                            <small>سلامت بدن خود را ارزیابی کنید.</small>
+                        </div>
+                        <div class="row g-3">
+                            <div class="col-sm-6">
+                                <label class="form-label" for="blood-pressure">فشار خون (میلی‌متر جیوه)</label>
+                                <input type="tel" id="blood-pressure" class="form-control" name="bp"
+                                       placeholder="مثلاً 120/80">
+                            </div>
+
+                            <div class="col-sm-6">
+                                <label class="form-label" for="heartbeat">ضربان قلب (bpm)</label>
+                                <input type="tel" id="heartbeat" class="form-control" name="hr">
+                            </div>
+
+                            <div class="col-sm-6">
+                                <label class="form-label" for="blood-oxygen">اکسیژن خون (SpO2)</label>
+                                <input type="number" id="blood-oxygen" class="form-control" name="spo2">
+                            </div>
+
+
+                            <div class="col-sm-6">
+                                <label class="form-label" for="body-temperature">دمای بدن (°C)</label>
+                                <input type="number" id="body-temperature" class="form-control" name="temp">
+                            </div>
+
+
+                            <div class="col-sm-6">
+                                <label class="form-label" for="breathing">تعداد تنفس در دقیقه</label>
+                                <input type="number" id="breathing" class="form-control" name="rr">
+                            </div>
+
+
+                            <div class="col-sm-6">
+                                <label class="form-label" for="vigilance">وضعیت هوشیاری</label>
+                                <select id="vigilance" class="form-select" name="consciousness">
+                                    <option>انتخاب کنید</option>
+                                    <option>هوشیار کامل</option>
+                                    <option>پاسخ به صدا</option>
+                                    <option>پاسخ به درد</option>
+                                    <option>بی‌هوش</option>
+                                </select>
+                            </div>
+
+                            <div class="col-sm-6">
+                                <label class="form-label" for="height">قد (سانتی‌متر)</label>
+                                <div class="input-group">
+                                    <input type="number" id="height" class="form-control phone-number-mask"
+                                           placeholder="180cm" dir="ltr" oninput="calcBMI()">
+                                </div>
+                            </div>
+
+
+                            <div class="col-sm-6">
+                                <label class="form-label" for="weight">وزن (کیلوگرم)</label>
+                                <div class="input-group">
+                                    <input type="number" id="weight" class="form-control phone-number-mask"
+                                           placeholder="80kg" dir="ltr" oninput="calcBMI()">
+                                </div>
+                            </div>
+
+
+                            <div class="col-sm-6">
+                                <label class="form-label" for="bmi">BMI (محاسبه‌شده)</label>
+                                <div class="input-group">
+                                    <input type="number" id="bmi" class="form-control phone-number-mask"
+                                           placeholder="180cm"
+                                           dir="ltr" readonly>
+                                </div>
+                            </div>
+
+                            <div class="col-12 d-flex justify-content-between">
+                                <button class="btn btn-primary btn-prev" type="button">
+                                    <i class="bx bx-chevron-left bx-sm ms-sm-n2"></i>
+                                    <span class="d-sm-inline-block d-none">قبلی</span>
+                                </button>
+                                <button class="btn btn-primary btn-next" type="button">
+                                    <span class="d-sm-inline-block d-none me-sm-1">بعدی</span>
+                                    <i class="bx bx-chevron-right bx-sm me-sm-n2"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- بخش ۲: علائم حیاتی و وضعیت بالینی -->
+
+
+                    <!-- بخش ۳: سابقه پزشکی و خانوادگی -->
+                    <div id="section-history" class="content">
+                        <div class="content-header mb-3">
+                            <h6 class="mb-1">سابقه پزشکی و خانوادگی را وارد کنید.</h6>
+                            <!--                        <small>لینک های اجتماعی خود را وارد کنید.</small>-->
+                        </div>
+                        <div class="row g-3">
+                            <div class="col-sm-12">
+                                <small class="text-light fw-semibold d-block"> سابقه بیماری‌های مزمن</small>
+                                <div class="form-check form-check-inline mt-3">
+                                    <input class="form-check-input" type="checkbox" id="diabetes" name="hx[]"
+                                           value="diabetes">
+                                    <label class="form-check-label" for="diabetes">دیابت</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="checkbox" id="blood-pressure2" name="hx[]"
+                                           value="htn">
+                                    <label class="form-check-label" for="blood-pressure2">فشار خون</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="checkbox" id="Arrhythmia" name="hx[]"
+                                           value="arrhythmia">
+                                    <label class="form-check-label" for="Arrhythmia">آریتمی</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="checkbox" id="kidney" name="hx[]"
+                                           value="kidney">
+                                    <label class="form-check-label" for="kidney">کلیه</label>
+                                </div>
+
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="checkbox" id="thyroid" name="hx[]"
+                                           value="thyroid">
+                                    <label class="form-check-label" for="thyroid">تیروئید</label>
+                                </div>
+
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="checkbox" id="blood-fat" name="hx[]"
+                                           value="chol">
+                                    <label class="form-check-label" for="blood-fat"> چربی خون</label>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-12">
+                                <label>سابقه جراحی</label>
+                                <textarea type="text" class="form-control" aria-label="With textarea"
+                                          name="surgery"></textarea>
+                            </div>
+
+                            <div class="col-sm-12">
+                                <label>تاریخ آخرین جراحی</label>
+                                <textarea type="date" class="form-control" aria-label="With textarea"
+                                          name="surgery_date"></textarea>
+                            </div>
+
+                            <div class="col-sm-12">
+                                <label>سابقه بستری در بیمارستان</label>
+                                <textarea class="form-control" aria-label="With textarea" name="hospitalization"
+                                          rows="2"></textarea>
+                            </div>
+
+                            <div class="col-sm-12">
+                                <label>آلرژی یا حساسیت دارویی</label>
+                                <textarea class="form-control" aria-label="With textarea" name="allergy"
+                                          rows="2"></textarea>
+                            </div>
+
+                            <div class="col-sm-12">
+                                <label>سابقه خانوادگی بیماری‌های قلبی یا متابولیک</label>
+                                <textarea class="form-control" aria-label="With textarea" name="family_hx"
+                                          rows="2"></textarea>
+                            </div>
+                        </div>
+                        <br>
+                        <div class="col-12 d-flex justify-content-between">
+                            <button class="btn btn-primary btn-prev" type="button">
+                                <i class="bx bx-chevron-left bx-sm ms-sm-n2"></i>
+                                <span class="d-sm-inline-block d-none">قبلی</span>
+                            </button>
+                            <button class="btn btn-primary btn-next" type="button">
+                                <span class="d-sm-inline-block d-none me-sm-1">بعدی</span>
+                                <i class="bx bx-chevron-right bx-sm me-sm-n2"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <!-- بخش ۳: سابقه پزشکی و خانوادگی -->
+
+                    <!-- بخش ۴: سبک زندگی -->
+                    <div id="section-lifestyle" class="content">
+                        <div class="content-header mb-3">
+                            <h6 class="mb-1">سبک زندگی و عوامل خطر</h6>
+                            <!--                        <small>لینک های اجتماعی خود را وارد کنید.</small>-->
+                        </div>
+                        <div class="row g-3">
+                            <div class="col-sm-6">
+                                <label class="form-label" for="Tobacco">استفاده از دخانیات</label>
+                                <select id="Tobacco" class="form-select" name="smoking">
+                                    <option>انتخاب کنید</option>
+                                    <option>هرگز</option>
+                                    <option>قبلاً مصرف می‌کردم</option>
+                                    <option>هم‌اکنون مصرف می‌کنم</option>
+                                </select>
+                            </div>
+
+                            <div class="col-sm-6">
+                                <label class="form-label" for="alcohol">مصرف الکل</label>
+                                <select id="alcohol" class="form-select" name="alcohol">
+                                    <option>انتخاب کنید</option>
+                                    <option>ندارم</option>
+                                    <option>کم</option>
+                                    <option>متوسط</option>
+                                    <option>زیاد</option>
+                                </select>
+                            </div>
+
+                            <div class="col-sm-6">
+                                <label class="form-label" for="activity">فعالیت فیزیکی روزانه</label>
+                                <select id="activity" class="form-select" name="activity">
+                                    <option>انتخاب کنید</option>
+                                    <option>کم (کمتر از ۳۰ دقیقه/هفته)</option>
+                                    <option>متوسط</option>
+                                    <option>زیاد (حداقل ۳۰ دقیقه روزانه)</option>
+                                </select>
+                            </div>
+
+                            <div class="col-sm-6">
+                                <label class="form-label" for="sleep">وضعیت خواب</label>
+                                <select id="sleep" class="form-select" name="sleep">
+                                    <option>انتخاب کنید</option>
+                                    <option>عادی</option>
+                                    <option>بی‌خوابی / اختلال خواب</option>
+                                    <option>آپنه خواب / خر و پف شدید</option>
+                                </select>
+                            </div>
+
+                            <div class="col-sm-12">
+                                <label>الگوی رژیم غذایی</label>
+                                <textarea type="text" class="form-control" aria-label="With textarea" name="diet"
+                                          placeholder="مثلاً کم‌چرب، پرنمک، پرقند، گیاه‌خواری و..."></textarea>
+                            </div>
+                        </div>
+                        <br>
+                        <div class="col-12 d-flex justify-content-between">
+                            <button class="btn btn-primary btn-prev" type="button">
+                                <i class="bx bx-chevron-left bx-sm ms-sm-n2"></i>
+                                <span class="d-sm-inline-block d-none">قبلی</span>
+                            </button>
+                            <button class="btn btn-primary btn-next" type="button">
+                                <span class="d-sm-inline-block d-none me-sm-1">بعدی</span>
+                                <i class="bx bx-chevron-right bx-sm me-sm-n2"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <!-- بخش ۴: سبک زندگی -->
+
+                    <!-- بخش -: ماژول دیابت -->
+                    <div id="module-diabetes" class="content">
+                        <div class="content-header mb-3">
+                            <h6 class="mb-1">ماژول تخصصی دیابت</h6>
+                            <!--                        <small>لینک های اجتماعی خود را وارد کنید.</small>-->
+                        </div>
+                        <div class="row g-3">
+                            <div class="col-sm-4">
+                                <label class="form-label">وضعیت هوشیاری</label>
+                                <select class="form-select" name="diabetes_type">
+                                    <option>انتخاب کنید</option>
+                                    <option>نوع ۱</option>
+                                    <option>نوع ۲</option>
+                                    <option>دیابت بارداری</option>
+                                    <option>ثانویه</option>
+                                </select>
+                            </div>
+
+                            <div class="col-sm-4">
+                                <label>تاریخ تشخیص:</label>
+                                <input type="date" class="form-control" name="diabetes_date">
+                            </div>
+
+                            <div class="col-sm-4">
+                                <label class="form-label">درمان فعلی</label>
+                                <select class="form-select" name="diabetes_treatment">
+                                    <option>انتخاب کنید</option>
+                                    <option>رژیم غذایی</option>
+                                    <option>داروهای خوراکی</option>
+                                    <option>انسولین</option>
+                                    <option>ترکیبی</option>
+                                </select>
+                            </div>
+
+                            <div class="col-sm-12">
+                                <small class="text-light fw-semibold d-block">داروهای مصرفی</small>
+                                <div class="form-check form-check-inline mt-3">
+                                    <input class="form-check-input" type="checkbox" name="diab_drug[]"
+                                           value="metformin">
+                                    <label class="form-check-label">متفورمین</label>
+                                </div>
+
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="checkbox" name="diab_drug[]" value="insulin">
+                                    <label class="form-check-label">انسولین</label>
+                                </div>
+
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="checkbox" name="diab_drug[]" value="sglt2">
+                                    <label class="form-check-label">SGLT2</label>
+                                </div>
+
+
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="checkbox" name="diab_drug[]" value="glp1">
+                                    <label class="form-check-label">GLP-1</label>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-4">
+                                <label>HbA1c (%):</label>
+                                <input type="number" class="form-control" name="hba1c">
+                            </div>
+
+                            <div class="col-sm-4">
+                                <label>FBS (mg/dL):</label>
+                                <input type="number" class="form-control" name="fbs">
+                            </div>
+
+                            <div class="col-sm-4">
+                                <label>PPBS (mg/dL):</label>
+                                <input type="number" class="form-control" name="ppbs">
+                            </div>
+
+                            <div class="col-sm-12">
+                                <small class="text-light fw-semibold d-block">عوارض شناخته‌شده</small>
+                                <div class="form-check form-check-inline mt-3">
+                                    <input class="form-check-input" type="checkbox" name="diab_comp[]"
+                                           value="neuropathy">
+                                    <label class="form-check-label">نوروپاتی</label>
+                                </div>
+
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="checkbox" name="diab_comp[]"
+                                           value="retinopathy">
+                                    <label class="form-check-label">رتینوپاتی</label>
+                                </div>
+
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="checkbox" name="diab_comp[]"
+                                           value="nephropathy">
+                                    <label class="form-check-label">نفروپاتی</label>
+                                </div>
+
+
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="checkbox" name="diab_comp[]"
+                                           value="footulcer">
+                                    <label class="form-check-label">زخم پا</label>
+                                </div>
+
+
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="checkbox" name="diab_comp[]" value="hypo">
+                                    <label class="form-check-label">هیپوگلیسمی</label>
+                                </div>
+
+
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="checkbox" name="diab_comp[]" value="hyper">
+                                    <label class="form-check-label">هیپرگلیسمی</label>
+                                </div>
+                            </div>
+
+                            <div class="col-12 d-flex justify-content-between">
+                                <button class="btn btn-primary btn-prev" type="button">
+                                    <i class="bx bx-chevron-left bx-sm ms-sm-n2"></i>
+                                    <span class="d-sm-inline-block d-none">قبلی</span>
+                                </button>
+                                <button class="btn btn-primary btn-next" type="button">
+                                    <span class="d-sm-inline-block d-none me-sm-1">بعدی</span>
+                                    <i class="bx bx-chevron-right bx-sm me-sm-n2"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- بخش -: ماژول دیابت -->
+
+                    <!-- بخش -: ماژول فشار خون -->
+                    <div id="module-hypertension" class="content">
+                        <div class="content-header mb-3">
+                            <h6 class="mb-1">ماژول فشار خون</h6>
+                            <!--                        <small>لینک های اجتماعی خود را وارد کنید.</small>-->
+                        </div>
+                        <div class="row g-3">
+
+
+                            <div class="col-sm-6">
+                                <label>تاریخ تشخیص:</label>
+                                <input type="date" class="form-control" name="htn_date">
+                            </div>
+
+                            <div class="col-sm-6">
+                                <label class="form-label">سطح فشار خون فعلیوضعیت هوشیاری</label>
+                                <select class="form-select" name="htn_level">
+                                    <option>انتخاب کنید</option>
+                                    <option>نرمال</option>
+                                    <option>مرحله ۱</option>
+                                    <option>مرحله ۲</option>
+                                    <option>بحران فشار</option>
+                                </select>
+                            </div>
+
+                            <div class="col-sm-6">
+                                <label>میانگین فشار خون خانگی</label>
+                                <input type="number" class="form-control" name="htn_avg" placeholder="مثلاً 135/85">
+                            </div>
+
+                            <div class="col-sm-6">
+                                <label class="form-label">فشار مقاوم به درمان</label>
+                                <select class="form-select" name="htn_resistant">
+                                    <option>انتخاب کنید</option>
+                                    <option>خیر</option>
+                                    <option>بله</option>
+                                </select>
+                            </div>
+
+
+                            <div class="col-sm-12">
+                                <small class="text-light fw-semibold d-block">داروهای مصرفی</small>
+                                <div class="form-check form-check-inline mt-3">
+                                    <input class="form-check-input" type="checkbox" name="htn_drug[]" value="ACEI">
+                                    <label class="form-check-label">ACEI</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="checkbox" name="htn_drug[]" value="ARB">
+                                    <label class="form-check-label">ARB</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="checkbox" name="htn_drug[]" value="BB">
+                                    <label class="form-check-label">بتابلاکر</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="checkbox" name="htn_drug[]" value="CCB">
+                                    <label class="form-check-label">CCB</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="checkbox" name="htn_drug[]" value="Diuretic">
+                                    <label class="form-check-label">دیورتیک</label>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-12">
+                                <small class="text-light fw-semibold d-block">عوارض فشار خون</small>
+                                <div class="form-check form-check-inline mt-3">
+                                    <input class="form-check-input" type="checkbox" name="htn_comp[]" value="LVH">
+                                    <label class="form-check-label">هیپرتروفی بطن</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="checkbox" name="htn_comp[]" value="nephro">
+                                    <label class="form-check-label">نارسایی کلیوی</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="checkbox" name="htn_comp[]" value="stroke">
+                                    <label class="form-check-label">سکته مغزی</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="checkbox" name="htn_comp[]" value="retino">
+                                    <label class="form-check-label">رتینوپاتی</label>
+                                </div>
+                            </div>
+
+                            <div class="col-12 d-flex justify-content-between">
+                                <button class="btn btn-primary btn-prev" type="button">
+                                    <i class="bx bx-chevron-left bx-sm ms-sm-n2"></i>
+                                    <span class="d-sm-inline-block d-none">قبلی</span>
+                                </button>
+                                <button class="btn btn-primary btn-next" type="button">
+                                    <span class="d-sm-inline-block d-none me-sm-1">بعدی</span>
+                                    <i class="bx bx-chevron-right bx-sm me-sm-n2"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- بخش -: ماژول فشار خون -->
+
+                    <!-- بخش -: ماژول آریتمی -->
+                    <div id="module-arrhythmia" class="content">
+                        <div class="content-header mb-3">
+                            <h6 class="mb-1"> ماژول آریتمی</h6>
+                            <!--                        <small>لینک های اجتماعی خود را وارد کنید.</small>-->
+                        </div>
+                        <div class="row g-3">
+
+
+                            <div class="col-sm-6">
+                                <label>نوع آریتمی</label>
+                                <input type="text" class="form-control" name="arrhythmia_type"
+                                       placeholder="مثلاً فیبریلاسیون دهلیزی">
+                            </div>
+
+                            <div class="col-sm-6">
+                                <label class="form-label">روش تشخیص</label>
+                                <select class="form-select" name="arrhythmia_diagnosed_by">
+                                    <option>انتخاب کنید</option>
+                                    <option>ECG</option>
+                                    <option>هولتر ریتم</option>
+                                    <option>EP Study</option>
+                                    <option>اکو</option>
+                                </select>
+                            </div>
+
+                            <div class="col-sm-12">
+                                <small class="text-light fw-semibold d-block">داروها و درمان‌های انجام‌شده</small>
+                                <div class="form-check form-check-inline mt-3">
+                                    <input class="form-check-input" type="checkbox" name="arrhyth_drug[]" value="BB">
+                                    <label class="form-check-label">بتابلاکر</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="checkbox" name="arrhyth_drug[]"
+                                           value="Amiodarone">
+                                    <label class="form-check-label">آمیودارو</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="checkbox" name="arrhyth_drug[]"
+                                           value="Digoxin">
+                                    <label class="form-check-label">دیگوکسین</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="checkbox" name="arrhyth_drug[]" value="ICD">
+                                    <label class="form-check-label">ICD / پیس‌میکر</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="checkbox" name="arrhyth_drug[]"
+                                           value="Ablation">
+                                    <label class="form-check-label">ابلیشن</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="checkbox" name="arrhyth_drug[]" value="NOAC">
+                                    <label class="form-check-label">NOAC</label>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-6">
+                                <label class="form-label">علائم همراه</label>
+                                <select class="form-select" name="arrhythmia_symptoms">
+                                    <option>انتخاب کنید</option>
+                                    <option>بدون علامت</option>
+                                    <option>سنکوپ</option>
+                                    <option>تنگی نفس</option>
+                                    <option>درد قفسه سینه</option>
+                                    <option>تپش قلب شدید</option>
+                                </select>
+                            </div>
+                            <div class="col-12 d-flex justify-content-between">
+                                <button class="btn btn-primary btn-prev" type="button">
+                                    <i class="bx bx-chevron-left bx-sm ms-sm-n2"></i>
+                                    <span class="d-sm-inline-block d-none">قبلی</span>
+                                </button>
+                                <button class="btn btn-primary btn-next" type="button">
+                                    <span class="d-sm-inline-block d-none me-sm-1">بعدی</span>
+                                    <i class="bx bx-chevron-right bx-sm me-sm-n2"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- بخش -: ماژول آریتمی -->
+
+                    <!-- بخش 5: آزمایش های انجام شده -->
+                    <div id="section-paraclinic" class="content">
+                        <div class="content-header mb-3">
+                            <h6 class="mb-1">آزمایش های انجام شده</h6>
+                            <!--                        <small>لینک های اجتماعی خود را وارد کنید.</small>-->
+                        </div>
+                        <div class="row g-3">
+
+                            <div class="col-sm-6">
+                                <label class="form-label">آیا بیمار آنژیو گرافی انجام داده است ؟</label>
+                                <select class="form-select" id="has_angiography" name="has_angiography">
+                                    <option value="no">خیر</option>
+                                    <option value="yes">بله</option>
+                                </select>
+                            </div>
+
+                            <div class="col-sm-6">
+                                <label class="form-label">آیا بیمار دستگاه باطری دارد؟</label>
+                                <select class="form-select" id="has_device" name="has_device">
+                                    <option value="no">خیر</option>
+                                    <option value="yes">بله</option>
+                                </select>
+                            </div>
+
+
+                            <div class="col-sm-6">
+                                <label class="form-label">نوار قلب (ECG)</label>
+                                <select class="form-select" name="ecg">
+                                    <option>انتخاب کنید</option>
+                                    <option>انجام نشده</option>
+                                    <option>نرمال</option>
+                                    <option>فیبریلاسیون دهلیزی</option>
+                                    <option>بلوک AV</option>
+                                    <option>PVC / VT</option>
+                                    <option>سایر</option>
+                                </select>
+                            </div>
+
+                            <div class="col-sm-6">
+                                <label class="form-label">هولتر ریتم</label>
+                                <select class="form-select" name="holter_rhythm">
+                                    <option>انتخاب کنید</option>
+                                    <option>انجام نشده</option>
+                                    <option>نرمال</option>
+                                    <option>آریتمی مکرر</option>
+                                    <option>سنکوپ ثبت شده</option>
+                                    <option>سایر</option>
+                                </select>
+                            </div>
+
+                            <div class="col-sm-6">
+                                <label class="form-label">هولتر فشار</label>
+                                <select class="form-select" name="holter_bp">
+                                    <option>انتخاب کنید</option>
+                                    <option>انجام نشده</option>
+                                    <option>نرمال</option>
+                                    <option>هایپرتنشن شبانه</option>
+                                    <option>هایپرتنشن مقاوم</option>
+                                    <option>افت فشار وضعیتی</option>
+                                </select>
+                            </div>
+
+                            <div class="col-sm-6">
+                                <label class="form-label">اکو</label>
+                                <select class="form-select" name="echo">
+                                    <option>انتخاب کنید</option>
+                                    <option>انجام نشده</option>
+                                    <option>EF نرمال</option>
+                                    <option>EF کاهش‌یافته</option>
+                                    <option>اختلال دیستولیک</option>
+                                    <option>مشکل دریچه‌ای</option>
+                                </select>
+                            </div>
+
+                            <div class="col-sm-6">
+                                <label class="form-label">اکوی تخصصی / TEE</label>
+                                <select class="form-select" name="tee">
+                                    <option>انتخاب کنید</option>
+                                    <option>انجام نشده</option>
+                                    <option>انجام نشده</option>
+                                    <option>نرمال</option>
+                                    <option>لخته در دهلیز</option>
+                                    <option>نارسایی شدید دریچه‌ای</option>
+                                </select>
+                            </div>
+
+
+                            <div class="col-12 d-flex justify-content-between">
+                                <button class="btn btn-primary btn-prev" type="button">
+                                    <i class="bx bx-chevron-left bx-sm ms-sm-n2"></i>
+                                    <span class="d-sm-inline-block d-none">قبلی</span>
+                                </button>
+                                <button class="btn btn-primary btn-next" type="button">
+                                    <span class="d-sm-inline-block d-none me-sm-1">بعدی</span>
+                                    <i class="bx bx-chevron-right bx-sm me-sm-n2"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- بخش 5: پاراکلینیک -->
+
+                    <!-- بخش 6: نتایج آزمایش خون -->
+                    <div id="lab-tests" class="content">
+                        <div class="content-header mb-3">
+                            <h6 class="mb-1"> نتایج آزمایش خون</h6>
+                            <!--                        <small>لینک های اجتماعی خود را وارد کنید.</small>-->
+                        </div>
+                        <div class="row g-3">
+                            <div class="col-sm-3">
+                                <label>HbA1c</label>
+                                <input type="number" step="0.1" class="form-control" name="lab_hba1c">
+                            </div>
+                            <div class="col-sm-3">
+                                <label>FBS</label>
+                                <input type="number" class="form-control" name="lab_fbs">
+                            </div>
+                            <div class="col-sm-3">
+                                <label>PPBS</label>
+                                <input type="number" class="form-control" name="lab_ppbs">
+                            </div>
+                            <div class="col-sm-3">
+                                <label>LDL</label>
+                                <input type="number" class="form-control" name="lab_ldl">
+                            </div>
+
+                            <div class="col-sm-3">
+                                <label>HDL</label>
+                                <input type="number" class="form-control" name="lab_hdl">
+                            </div>
+                            <div class="col-sm-3">
+                                <label>Chol</label>
+                                <input type="number" class="form-control" name="lab_chol">
+                            </div>
+                            <div class="col-sm-3">
+                                <label>TG</label>
+                                <input type="number" class="form-control" name="lab_tg">
+                            </div>
+                            <div class="col-sm-3">
+                                <label>Cr</label>
+                                <input type="number" class="form-control" name="lab_cr">
+                            </div>
+
+                            <div class="col-sm-3">
+                                <label>TSH</label>
+                                <input type="number" class="form-control" name="lab_tsh">
+                            </div>
+                            <div class="col-sm-3">
+                                <label>Hb</label>
+                                <input type="number" class="form-control" name="lab_hb">
+                            </div>
+                            <div class="col-sm-3">
+                                <label>WBC</label>
+                                <input type="number" class="form-control" name="lab_wbc">
+                            </div>
+                            <div class="col-sm-3">
+                                <label>CRP</label>
+                                <input type="number" class="form-control" name="lab_crp">
+                            </div>
+
+
+                            <div class="col-sm-3">
+                                <label>ESR</label>
+                                <input type="number" class="form-control" name="lab_esr">
+                            </div>
+                            <div class="col-sm-3">
+                                <label>INR</label>
+                                <input type="number" class="form-control" name="lab_inr">
+                            </div>
+                            <div class="col-sm-3">
+                                <label>CRP</label>
+                                <input type="number" class="form-control" name="lab_crp">
+                            </div>
+                            <div class="col-sm-3">
+                                <label>Sodium</label>
+                                <input type="number" class="form-control" name="lab_na">
+                            </div>
+                            <div class="col-sm-3">
+                                <label>Potassium</label>
+                                <input type="number" class="form-control" name="lab_k">
+                            </div>
+                            <div class="col-sm-3">
+                                <label>Calcium</label>
+                                <input type="number" class="form-control" name="lab_ca">
+                            </div>
+
+                            <div class="col-sm-8">
+                                <label>آپلود فایل‌ها:</label>
+                                <input type="file" class="form-control" name="documents[]" multiple>
+                            </div>
+                            <div class="col-sm-6">
+                                <label>نام مرکز آزمایش</label>
+                                <input type="text" class="form-control" name="laboratory">
+                            </div>
+                            <div class="col-sm-6">
+                                <label>تاریخ آزمایش</label>
+                                <input type="date" class="form-control" name="Test-date">
+                            </div>
+                            <div class="col-sm-12">
+                                <label>توضیحات فایل‌ها</label>
+                                <textarea class="form-control" name="doc_notes" rows="2"
+                                          placeholder="مثلاً گزارش اکو، آزمایش‌ها، نامه ارجاع..."></textarea>
+                            </div>
+
+
+                            <div class="col-12 d-flex justify-content-between">
+                                <button class="btn btn-primary btn-prev" type="button">
+                                    <i class="bx bx-chevron-left bx-sm ms-sm-n2"></i>
+                                    <span class="d-sm-inline-block d-none">قبلی</span>
+                                </button>
+                                <button class="btn btn-primary btn-next" type="button">
+                                    <span class="d-sm-inline-block d-none me-sm-1">بعدی</span>
+                                    <i class="bx bx-chevron-right bx-sm me-sm-n2"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- بخش 6: آزمایش خون کامل -->
+
+
+                    <!-- بخش -: اطلاعات دستگاه -->
+                    <div id="device-info" class="content">
+                        <div class="content-header mb-3">
+                            <h6 class="mb-1">اطلاعات ماژول دستگاه کاشته‌شده (باطری قلب)</h6>
+                            <!--                        <small>لینک های اجتماعی خود را وارد کنید.</small>-->
+                        </div>
+                        <div class="row g-3">
+
+
+                            <div class="col-sm-6" id="device-details">
+                                <label class="form-label">نوع دستگاه</label>
+                                <select class="form-select" name="device_type">
+                                    <option>انتخاب کنید</option>
+                                    <option>Pacemaker</option>
+                                    <option>ICD</option>
+                                    <option>CRT</option>
+                                    <option>CRT-D</option>
+                                </select>
+                            </div>
+
+                            <div class="col-sm-6">
+                                <label>مارک دستگاه</label>
+                                <input type="text" class="form-control" name="device_brand">
+                            </div>
+
+                            <div class="col-sm-6">
+                                <label>مدل دستگاه:</label>
+                                <input type="text" class="form-control" name="device_model">
+                            </div>
+
+                            <div class="col-sm-6">
+                                <label>سریال‌نامبر:</label>
+                                <input type="text" class="form-control" name="device_serial">
+                            </div>
+
+                            <div class="col-sm-6">
+                                <label>تعداد لید (Leads):</label>
+                                <input type="number" class="form-control" name="device_leads">
+                            </div>
+
+                            <div class="col-sm-6">
+                                <label>تاریخ کاشت:</label>
+                                <input type="date" class="form-control" name="device_implant_date">
+                            </div>
+
+                            <div class="col-12 d-flex justify-content-between">
+                                <button class="btn btn-primary btn-prev" type="button">
+                                    <i class="bx bx-chevron-left bx-sm ms-sm-n2"></i>
+                                    <span class="d-sm-inline-block d-none">قبلی</span>
+                                </button>
+                                <button class="btn btn-primary btn-next" type="button">
+                                    <span class="d-sm-inline-block d-none me-sm-1">بعدی</span>
+                                    <i class="bx bx-chevron-right bx-sm me-sm-n2"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- بخش -: اطلاعات دستگاه -->
+
+                    <!-- بخش -: آنژیو، استنت، MI، EF -->
+                    <div id="angiography-info" class="content">
+                        <div class="content-header mb-3">
+                            <h6 class="mb-1">اطلاعات آنژیوگرافی و نارسایی قلبی</h6>
+                            <!--                        <small>لینک های اجتماعی خود را وارد کنید.</small>-->
+                        </div>
+                        <div class="row g-3">
+
+                            <div id="angiography-details" class="col-sm-12">
+                                <div class="row g-2 mb-2">
+                                    <div class="col-sm-6">
+                                        <label>تاریخ آنژیوگرافی</label>
+                                        <input type="date" class="form-control" name="angiography_date">
+                                    </div>
+
+                                    <div class="col-sm-6">
+                                        <label>تعداد استنت‌های کاشته‌شده:</label>
+                                        <input type="number" class="form-control" name="stent_count">
+                                    </div>
+
+                                    <div class="col-sm-6">
+                                        <label>رگ‌های آسیب‌دیده (مثلاً LAD, RCA):</label>
+                                        <input type="text" class="form-control" name="blocked_vessels">
+                                    </div>
+
+                                    <div class="col-sm-6">
+                                        <label>درصد عملکرد قلب (EF):</label>
+                                        <input type="number" step="0.1" class="form-control" name="ef_percent">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <label class="form-label">سابقه سکته قلبی (MI)</label>
+                                <select class="form-select" name="has_mi">
+                                    <option>ندارد</option>
+                                    <option>دارد - قدیمی</option>
+                                    <option>دارد - اخیر</option>
+                                </select>
+                            </div>
+
+                            <div class="col-sm-6">
+                                <label class="form-label">نارسایی قلبی</label>
+                                <select class="form-select" name="has_heart_failure">
+                                    <option>ندارد</option>
+                                    <option>HFpEF (EF حفظ‌شده)</option>
+                                    <option>HFrEF (EF کاهش‌یافته)</option>
+                                    <option>سابقه بستری به علت نارسایی</option>
+                                </select>
+                            </div>
+
+                            <div class="col-12 d-flex justify-content-between">
+                                <button class="btn btn-primary btn-prev" type="button">
+                                    <i class="bx bx-chevron-left bx-sm ms-sm-n2"></i>
+                                    <span class="d-sm-inline-block d-none">قبلی</span>
+                                </button>
+                                <button class="btn btn-primary btn-next" type="button">
+                                    <span class="d-sm-inline-block d-none me-sm-1">بعدی</span>
+                                    <i class="bx bx-chevron-right bx-sm me-sm-n2"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- بخش -: آنژیو، استنت، MI، EF -->
+
+
+                    <!-- بخش 7: لیست دارو ها -->
+                    <div id="medications" class="content">
+                        <div class="content-header mb-3">
+                            <h6 class="mb-1">لیست دارو ها</h6>
+                            <!--                        <small>لینک های اجتماعی خود را وارد کنید.</small>-->
+                        </div>
+                        <div class="row g-3">
+
+                            <div class="col-sm-12" id="medication-list">
+                                <label>لیست داروهای فعلی:</label>
+                                <div class="row g-2 mb-2">
+                                    <div class="col-md-4">
+                                        <input type="text" class="form-control" placeholder="نام دارو">
+                                    </div>
+                                    <div class="col-md-4">
+                                        <input type="text" class="form-control" placeholder="دوز (مثلاً 50mg)">
+                                    </div>
+                                    <div class="col-md-4">
+                                        <input type="text" class="form-control" placeholder="تعداد دفعات مصرف">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <button class="btn btn-outline-primary btn-sm" type="button" onclick="addMedication()">
+                                    افزودن دارو
+                                </button>
+                            </div>
+
+                            <div class="col-sm-12">
+                                <label>داروهای OTC / بدون نسخه</label>
+                                <textarea class="form-control" name="otc" rows="2"></textarea>
+                            </div>
+
+
+                            <div class="col-sm-12">
+                                <label>مکمل‌ها / داروهای گیاهی</label>
+                                <textarea class="form-control" name="supplements" rows="2"></textarea>
+                            </div>
+
+                            <div class="col-sm-12">
+                                <label>سابقه عدم تحمل دارویی (عوارض / آلرژی):</label>
+                                <textarea class="form-control" name="drug_allergy" rows="2"></textarea>
+                            </div>
+                        </div>
+
+                        <div class="form-section col-12">
+                            <label>نتیجه تحلیل سیستم هوشمند:</label>
+                            <textarea id="brain_output" class="form-control" rows="6" readonly
+                                      style="background:#f0f0f0; color:#333;"></textarea>
+                        </div>
+                        <br>
+
+                        <div class="col-12 d-flex justify-content-between">
+                            <button class="btn btn-primary btn-prev" type="button">
+                                <i class="bx bx-chevron-left bx-sm ms-sm-n2"></i>
+                                <span class="d-sm-inline-block d-none">قبلی</span>
+                            </button>
+                            <button class="btn btn-success btn-submit" type="submit">ارسال</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<!-- بخش ۱۴: داروهای مصرفی -->
+{% endblock %}
+
+
+{% block extra_js %}
+<script src="{% static 'js/StructuredMedicalـHistoryـRiskـForm.js' %}"></script>
+{% endblock %}

@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}لیست امانت تجهیزات{% endblock %}
+
+{% block content %}
+<h2 class="mb-4 text-center">امانت‌های ثبت‌شده</h2>
+
+<div class="card">
+  <!-- هدر کارت -->
+  <div class="card-header d-flex flex-column flex-md-row justify-content-between align-items-center gap-2">
+    <h5 class="mb-0">لیست تجهیزات امانت‌داده‌شده</h5>
+    <div class="d-flex flex-wrap gap-2 align-items-center">
+      <select class="form-select form-select-sm" style="width: 100px;">
+        <option>10</option>
+        <option>25</option>
+        <option selected>50</option>
+        <option>100</option>
+      </select>
+
+      <form method="get" class="d-flex align-items-center">
+        <input type="search" name="q" value="{{ request.GET.q }}" class="form-control form-control-sm" placeholder="🔍 جستجو نام بیمار / تجهیز" />
+      </form>
+
+      <button class="btn btn-outline-danger btn-sm" onclick="window.print()">🖨 چاپ</button>
+    </div>
+  </div>
+
+  <!-- جدول -->
+  <div class="card-body pt-0">
+    <div class="table-responsive">
+      <table class="table table-striped table-hover align-middle">
+        <thead>
+          <tr>
+            <th>تجهیز</th>
+            <th>بیمار</th>
+            <th>کد بیمار</th>
+            <th>تاریخ امانت</th>
+            <th>تاریخ بازگشت</th>
+            <th>وضعیت</th>
+            <th>مسئول</th>
+            <th class="text-center">عملیات</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for loan in loans %}
+          <tr>
+            <td>{{ loan.item.name }}</td>
+            <td>{{ loan.patient }}</td>
+            <td>{{ loan.external_patient_id|default:"-" }}</td>
+            <td>{{ loan.loan_date|date:"Y/m/d" }}</td>
+            <td>{{ loan.return_date|date:"Y/m/d" }}</td>
+            <td>
+              <span class="badge
+                {% if loan.status == 'loaned' %}bg-warning text-dark
+                {% elif loan.status == 'returned' %}bg-success
+                {% elif loan.status == 'damaged' %}bg-danger
+                {% elif loan.status == 'lost' %}bg-dark
+                {% endif %}">
+                {{ loan.get_status_display }}
+              </span>
+            </td>
+            <td>{{ loan.staff }}</td>
+            <td class="text-center">
+              <a href="{% url 'inventory:item_detail' loan.item.pk %}" class="btn btn-sm btn-outline-primary">👁 مشاهده</a>
+            </td>
+          </tr>
+          {% empty %}
+          <tr><td colspan="8" class="text-center text-muted">⛔ هیچ امانتی ثبت نشده است.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,151 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}
+{% if form.instance.pk %}
+ویرایش گزارش خوانش هلتر
+{% else %}
+ثبت گزارش خوانش هلتر
+{% endif %}
+{% endblock %}
+
+{% block content %}
+<h4 class="py-3 mb-4">
+    <span class="text-muted fw-light">هلتر فشار /</span>
+    {% if form.instance.pk %}
+    ویرایش گزارش خوانش
+    {% else %}
+    ثبت گزارش خوانش
+    {% endif %}
+</h4>
+
+<div class="row">
+    <div class="col-md-10 mx-auto">
+        <div class="card mb-4">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">فرم خوانش و تحلیل برای بیمار: {{ installation.patient.full_name }}</h5>
+                <small class="text-muted">کد پیگیری نصب: {{ installation.tracking_code }}</small>
+            </div>
+            <div class="card-body">
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+
+                    <!-- نمایش خطاهای کلی فرم -->
+                    {% if form.non_field_errors %}
+                    <div class="alert alert-danger">
+                        {% for error in form.non_field_errors %}
+                        <p class="mb-0">{{ error }}</p>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="{{ form.read_datetime.id_for_label }}" class="form-label">{{
+                                form.read_datetime.label }}</label>
+                            {{ form.read_datetime }}
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="{{ form.interpreted_by.id_for_label }}" class="form-label">{{
+                                form.interpreted_by.label }}</label>
+                            {{ form.interpreted_by }}
+                        </div>
+                    </div>
+
+                    <hr class="my-4">
+                    <h6 class="mb-3 text-muted">مقادیر فشار خون سیستولیک (Systolic)</h6>
+                    <div class="row">
+                        <div class="col-md-3 mb-3">
+                            <label for="{{ form.avg_systolic_bp.id_for_label }}" class="form-label">{{
+                                form.avg_systolic_bp.label }}</label>
+                            {{ form.avg_systolic_bp }}
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <label for="{{ form.min_systolic_bp.id_for_label }}" class="form-label">{{
+                                form.min_systolic_bp.label }}</label>
+                            {{ form.min_systolic_bp }}
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <label for="{{ form.min_systolic_time.id_for_label }}" class="form-label">{{
+                                form.min_systolic_time.label }}</label>
+                            {{ form.min_systolic_time }}
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <label for="{{ form.max_systolic_bp.id_for_label }}" class="form-label">{{
+                                form.max_systolic_bp.label }}</label>
+                            {{ form.max_systolic_bp }}
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <label for="{{ form.max_systolic_time.id_for_label }}" class="form-label">{{
+                                form.max_systolic_time.label }}</label>
+                            {{ form.max_systolic_time }}
+                        </div>
+                    </div>
+
+                    <hr class="my-4">
+                    <h6 class="mb-3 text-muted">مقادیر فشار خون دیاستولیک (Diastolic)</h6>
+                    <div class="row">
+                        <div class="col-md-3 mb-3">
+                            <label for="{{ form.avg_diastolic_bp.id_for_label }}" class="form-label">{{
+                                form.avg_diastolic_bp.label }}</label>
+                            {{ form.avg_diastolic_bp }}
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <label for="{{ form.min_diastolic_bp.id_for_label }}" class="form-label">{{
+                                form.min_diastolic_bp.label }}</label>
+                            {{ form.min_diastolic_bp }}
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <label for="{{ form.min_diastolic_time.id_for_label }}" class="form-label">{{
+                                form.min_diastolic_time.label }}</label>
+                            {{ form.min_diastolic_time }}
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <label for="{{ form.max_diastolic_bp.id_for_label }}" class="form-label">{{
+                                form.max_diastolic_bp.label }}</label>
+                            {{ form.max_diastolic_bp }}
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <label for="{{ form.max_diastolic_time.id_for_label }}" class="form-label">{{
+                                form.max_diastolic_time.label }}</label>
+                            {{ form.max_diastolic_time }}
+                        </div>
+                    </div>
+
+                    <hr class="my-4">
+                    <h6 class="mb-3 text-muted">خلاصه و نتیجه نهایی</h6>
+                    <div class="row">
+                        <div class="col-12 mb-3">
+                            <label for="{{ form.summary.id_for_label }}" class="form-label">{{ form.summary.label
+                                }}</label>
+                            {{ form.summary }}
+                        </div>
+                        <div class="col-12 mb-3">
+                            <label for="{{ form.report_file.id_for_label }}" class="form-label">{{
+                                form.report_file.label }}</label>
+                            {{ form.report_file }}
+                            {% if form.instance.report_file %}
+                            <div class="form-text mt-1">فایل فعلی: <a href="{{ form.instance.report_file.url }}"
+                                                                      target="_blank">{{ form.instance.report_file.name
+                                }}</a></div>
+                            {% endif %}
+                        </div>
+                        <div class="col-12 mb-3">
+                            <label for="{{ form.notes.id_for_label }}" class="form-label">{{ form.notes.label }}</label>
+                            {{ form.notes }}
+                        </div>
+                    </div>
+
+                    <div class="mt-4">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bx bx-save me-1"></i>
+                            ذخیره گزارش خوانش
+                        </button>
+                        <a href="{{ installation.get_absolute_url }}" class="btn btn-secondary">بازگشت به جزئیات</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

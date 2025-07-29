@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %}حذف رکورد حضور{% endblock %}
+
+{% block content %}
+<div class="alert alert-warning text-center">
+    <h5 class="mb-3">⚠ آیا از حذف رکورد حضور کارمند <strong>{{ object.staff.get_full_name }}</strong> در تاریخ <strong>{{
+        object.date }}</strong> مطمئن هستید؟</h5>
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger">بله، حذف شود</button>
+        <a href="{% url 'staffs:attendance-list' %}" class="btn btn-secondary">انصراف</a>
+    </form>
+</div>
+{% endblock %}

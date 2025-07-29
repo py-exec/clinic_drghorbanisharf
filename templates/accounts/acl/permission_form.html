@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}ویرایش سطح دسترسی: {{ form.instance.name }}{% endblock %}
+
+{% block content %}
+    <h4 class="py-3 mb-4">
+        <span class="text-muted fw-light">مدیریت دسترسی /</span> ویرایش سطح دسترسی
+    </h4>
+
+    <div class="card">
+        <div class="card-body">
+            <form method="post" novalidate>
+                {% csrf_token %}
+
+                {% if form.non_field_errors %}
+                    <div class="alert alert-danger">
+                        {% for error in form.non_field_errors %}
+                            <div>{{ error }}</div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label for="{{ form.name.id_for_label }}" class="form-label">
+                            {{ form.name.label }}
+                            {% if form.name.field.required %}
+                                <span class="text-danger">*</span>
+                            {% endif %}
+                        </label>
+                        {{ form.name }}
+                        {% for error in form.name.errors %}
+                            <div class="text-danger small">{{ error }}</div>
+                        {% endfor %}
+                    </div>
+
+                    <div class="col-md-6">
+                        <label for="{{ form.codename.id_for_label }}" class="form-label">
+                            {{ form.codename.label }}
+                            {% if form.codename.field.required %}
+                                <span class="text-danger">*</span>
+                            {% endif %}
+                        </label>
+                        {{ form.codename }}
+                        {% for error in form.codename.errors %}
+                            <div class="text-danger small">{{ error }}</div>
+                        {% endfor %}
+                    </div>
+
+                    <div class="col-md-6">
+                        <label for="{{ form.content_type.id_for_label }}" class="form-label">
+                            {{ form.content_type.label }}
+                            {% if form.content_type.field.required %}
+                                <span class="text-danger">*</span>
+                            {% endif %}
+                        </label>
+                        {{ form.content_type }}
+                        {% for error in form.content_type.errors %}
+                            <div class="text-danger small">{{ error }}</div>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <div class="d-flex justify-content-between mt-4">
+                    <a href="{% url 'accounts:permission-list' %}" class="btn btn-secondary">بازگشت</a>
+                    <button type="submit" class="btn btn-primary">💾 ذخیره تغییرات</button>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock %}

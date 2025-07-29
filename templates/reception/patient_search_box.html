@@ -1,0 +1,101 @@
+<div class="position-relative">
+  <input id="patient-search" type="text" class="form-control form-control-sm" placeholder="جستجو (نام، موبایل، کد ملی)" autocomplete="off">
+  <div id="search-loader" class="position-absolute top-50 end-0 translate-middle-y me-2 d-none">
+    <div class="spinner-border spinner-border-sm text-primary" role="status"></div>
+  </div>
+  <ul id="patient-suggestions" class="list-group position-absolute w-100 shadow-sm bg-white border" style="z-index: 1000; top: 100%; display: none;"></ul>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  const input = document.getElementById("patient-search");
+  const list = document.getElementById("patient-suggestions");
+  const loader = document.getElementById("search-loader");
+  let timeout = null;
+  let selectedIndex = -1;
+
+  function clearSuggestions() {
+    list.innerHTML = "";
+    list.style.display = "none";
+    selectedIndex = -1;
+  }
+
+  input.addEventListener("input", function () {
+    clearTimeout(timeout);
+    const query = this.value.trim();
+    if (!query || query.length < 2) {
+      clearSuggestions();
+      return;
+    }
+
+    loader.classList.remove("d-none");
+
+    timeout = setTimeout(() => {
+      fetch(`/patient/api/patients/search/?q=${encodeURIComponent(query)}`)
+        .then(res => res.json())
+        .then(data => {
+  list.innerHTML = "";
+  loader.classList.add("d-none");
+
+  data.results.forEach((p, i) => {
+    const li = document.createElement("li");
+    li.className = "list-group-item list-group-item-action d-flex justify-content-between align-items-center";
+    li.dataset.index = i;
+    li.innerHTML = `
+      <span>${p.full_name} - ${p.mobile}</span>
+      <a class="btn btn-sm btn-success" href="/reception/create/?patient_id=${p.id}">ثبت پذیرش</a>
+    `;
+    list.appendChild(li);
+  });
+
+  // ➕ دکمه ایجاد بیمار همیشه نمایش داده شود
+  const createLi = document.createElement("li");
+  createLi.className = "list-group-item text-muted d-flex justify-content-between align-items-center";
+  createLi.innerHTML = `
+    <span>👤 هنوز مطمئن نیستید؟</span>
+    <a href="/patient/register/?q=${query}" class="btn btn-sm btn-outline-primary">➕ ایجاد بیمار</a>
+  `;
+  list.appendChild(createLi);
+
+  list.style.display = "block";
+})
+        .catch(() => {
+          loader.classList.add("d-none");
+          list.innerHTML = `<li class="list-group-item text-danger">⛔ خطا در دریافت اطلاعات</li>`;
+          list.style.display = "block";
+        });
+    }, 300);
+  });
+
+  // کیبورد
+  input.addEventListener("keydown", function (e) {
+    const items = list.querySelectorAll("li");
+    if (items.length === 0) return;
+
+    if (e.key === "ArrowDown") {
+      e.preventDefault();
+      selectedIndex = (selectedIndex + 1) % items.length;
+    } else if (e.key === "ArrowUp") {
+      e.preventDefault();
+      selectedIndex = (selectedIndex - 1 + items.length) % items.length;
+    } else if (e.key === "Enter") {
+      e.preventDefault();
+      const selected = items[selectedIndex];
+      if (selected) {
+        const btn = selected.querySelector("a.btn-success");
+        if (btn) window.location.href = btn.href;
+      }
+    }
+
+    items.forEach((item, idx) => {
+      item.classList.toggle("active", idx === selectedIndex);
+    });
+  });
+
+  document.addEventListener("click", function (e) {
+    if (!list.contains(e.target) && e.target !== input) {
+      clearSuggestions();
+    }
+  });
+});
+</script>

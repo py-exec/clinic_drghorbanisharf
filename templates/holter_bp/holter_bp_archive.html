@@ -1,0 +1,185 @@
+{% extends "base.html" %}
+{% load static %}
+{% load humanize %}
+
+{% block title %}🗄️ آرشیو گزارش‌های هلتر فشار{% endblock %}
+
+{% block content %}
+<h4 class="py-3 mb-4">
+    <span class="text-muted fw-light">هلتر فشار /</span> آرشیو گزارش‌ها
+</h4>
+
+<div class="card">
+    <!-- هدر کارت و ابزارهای مدیریتی -->
+    <div class="card-header">
+        <div class="d-flex flex-wrap justify-content-between align-items-center gap-3">
+            <h5 class="card-title mb-0">آرشیو تمام گزارش‌های هلتر فشار</h5>
+
+            <div class="d-flex flex-wrap align-items-center gap-2">
+                <!-- دکمه انتخاب ستون‌ها -->
+                <div class="dropdown">
+                    <button class="btn btn-outline-secondary btn-sm dropdown-toggle" type="button" id="column-toggler"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="bx bx-table me-1"></i> نمایش ستون‌ها
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="column-toggler" id="column-list">
+                        <li><label class="dropdown-item"><input type="checkbox" class="form-check-input me-2"
+                                                                data-column="patient" checked> بیمار</label></li>
+                        <li><label class="dropdown-item"><input type="checkbox" class="form-check-input me-2"
+                                                                data-column="tracking_code" checked> کد پیگیری</label>
+                        </li>
+                        <li><label class="dropdown-item"><input type="checkbox" class="form-check-input me-2"
+                                                                data-column="install_datetime" checked> زمان نصب</label>
+                        </li>
+                        <li><label class="dropdown-item"><input type="checkbox" class="form-check-input me-2"
+                                                                data-column="return_datetime"> زمان بازگشت</label></li>
+                        <li><label class="dropdown-item"><input type="checkbox" class="form-check-input me-2"
+                                                                data-column="read_datetime"> زمان خوانش</label></li>
+                        <li><label class="dropdown-item"><input type="checkbox" class="form-check-input me-2"
+                                                                data-column="status" checked> وضعیت</label></li>
+                    </ul>
+                </div>
+
+                <!-- دکمه بازگشت -->
+                <a href="{% url 'holter_bp:holter_bp_worklist' %}" class="btn btn-secondary btn-sm">
+                    <i class="bx bx-arrow-back me-1"></i> بازگشت به داشبورد کاری
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- جدول گزارش‌ها -->
+    <div class="card-body">
+        <div class="table-responsive text-nowrap">
+            <table class="table table-hover table-striped" id="archive-table">
+                <thead>
+                <tr>
+                    <th data-column="patient">بیمار</th>
+                    <th data-column="tracking_code">کد پیگیری</th>
+                    <th data-column="install_datetime">زمان نصب</th>
+                    <th data-column="return_datetime">زمان بازگشت</th>
+                    <th data-column="read_datetime">زمان خوانش</th>
+                    <th data-column="status" class="text-center">وضعیت</th>
+                    <th class="text-center">عملیات</th>
+                </tr>
+                </thead>
+                <tbody class="table-border-bottom-0">
+                {% for installation in page_obj %}
+                <tr>
+                    <td data-column="patient"><strong>{{ installation.patient.full_name|default:"-" }}</strong></td>
+                    <td data-column="tracking_code">{{ installation.tracking_code }}</td>
+                    <td data-column="install_datetime" title="{{ installation.install_datetime|date:'Y/m/d - H:i' }}">{{
+                        installation.install_datetime|naturaltime }}
+                    </td>
+                    <td data-column="return_datetime"
+                        title="{{ installation.reception_record.receive_datetime|date:'Y/m/d - H:i' }}">{{
+                        installation.reception_record.receive_datetime|naturaltime|default:"-" }}
+                    </td>
+                    <td data-column="read_datetime" title="{{ installation.reading.read_datetime|date:'Y/m/d - H:i' }}">
+                        {{ installation.reading.read_datetime|naturaltime|default:"-" }}
+                    </td>
+                    <td data-column="status" class="text-center">
+                        {% if installation.reading %}
+                        <span class="badge bg-label-success">تکمیل شده</span>
+                        {% elif installation.reception_record %}
+                        <span class="badge bg-label-info">منتظر خوانش</span>
+                        {% else %}
+                        <span class="badge bg-label-warning">منتظر بازگشت</span>
+                        {% endif %}
+                    </td>
+                    <td class="text-center">
+                        <a href="{{ installation.get_absolute_url }}" class="btn btn-sm btn-outline-secondary">
+                            <i class="bx bx-show-alt me-1"></i> مشاهده
+                        </a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="7" class="text-center py-4">هیچ گزارشی در آرشیو یافت نشد.</td>
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- صفحه‌بندی -->
+        {% if page_obj.has_other_pages %}
+        <div class="d-flex justify-content-center mt-4">
+            <nav aria-label="Page navigation">
+                <ul class="pagination">
+                    {% if page_obj.has_previous %}
+                    <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">قبلی</a>
+                    </li>
+                    {% else %}
+                    <li class="page-item disabled"><span class="page-link">قبلی</span></li>
+                    {% endif %}
+
+                    {% for num in page_obj.paginator.page_range %}
+                    {% if page_obj.number == num %}
+                    <li class="page-item active"><span class="page-link">{{ num }}</span></li>
+                    {% else %}
+                    <li class="page-item"><a class="page-link" href="?page={{ num }}">{{ num }}</a></li>
+                    {% endif %}
+                    {% endfor %}
+
+                    {% if page_obj.has_next %}
+                    <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">بعدی</a>
+                    </li>
+                    {% else %}
+                    <li class="page-item disabled"><span class="page-link">بعدی</span></li>
+                    {% endif %}
+                </ul>
+            </nav>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const table = document.getElementById('archive-table');
+        const columnCheckboxes = document.querySelectorAll('#column-list input[type="checkbox"]');
+        const storageKey = 'holterBpArchiveColumnVisibility';
+
+        function updateColumnVisibility() {
+            const visibilityState = {};
+            columnCheckboxes.forEach(checkbox => {
+                const column = checkbox.dataset.column;
+                const isVisible = checkbox.checked;
+                visibilityState[column] = isVisible;
+
+                const cells = table.querySelectorAll(`[data-column="${column}"]`);
+                cells.forEach(cell => {
+                    cell.style.display = isVisible ? '' : 'none';
+                });
+            });
+            localStorage.setItem(storageKey, JSON.stringify(visibilityState));
+        }
+
+        function loadColumnVisibility() {
+            const savedState = JSON.parse(localStorage.getItem(storageKey));
+            if (savedState) {
+                columnCheckboxes.forEach(checkbox => {
+                    const column = checkbox.dataset.column;
+                    if (savedState[column] !== undefined) {
+                        checkbox.checked = savedState[column];
+                    }
+                });
+            }
+            updateColumnVisibility();
+        }
+
+        columnCheckboxes.forEach(checkbox => {
+            checkbox.addEventListener('change', updateColumnVisibility);
+        });
+
+        document.getElementById('column-list').addEventListener('click', function (e) {
+            e.stopPropagation();
+        });
+
+        loadColumnVisibility();
+    });
+</script>
+{% endblock %}

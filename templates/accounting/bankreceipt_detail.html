@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}جزئیات رسید بانکی{% endblock %}
+
+{% block content %}
+<h2 class="mb-4 text-center">🏦 جزئیات رسید بانکی</h2>
+
+<div class="card">
+    <div class="card-header">
+        <h5 class="mb-0">🏦 جزئیات رسید بانکی</h5>
+    </div>
+
+    <div class="card-body">
+        <dl class="row">
+            <dt class="col-sm-3">تاریخ آپلود:</dt>
+            <dd class="col-sm-9">{{ bankreceipt.upload_date|date:"Y/m/d H:i" }}</dd>
+
+            <dt class="col-sm-3">تراکنش مرتبط:</dt>
+            <dd class="col-sm-9">
+                <a href="{% url 'accounting:transaction_detail' bankreceipt.transaction.id %}">
+                    شماره فاکتور: {{ bankreceipt.transaction.invoice.invoice_number }}
+                </a>
+            </dd>
+
+            <dt class="col-sm-3">آپلودکننده:</dt>
+            <dd class="col-sm-9">{{ bankreceipt.uploaded_by }}</dd>
+
+            <dt class="col-sm-3">توضیحات:</dt>
+            <dd class="col-sm-9">{{ bankreceipt.notes|default:"-" }}</dd>
+
+            <dt class="col-sm-3">فایل:</dt>
+            <dd class="col-sm-9">
+                {% if bankreceipt.file %}
+                <a href="{{ bankreceipt.file.url }}" target="_blank">📥 دانلود فایل</a>
+                {% else %}
+                <span class="text-muted">⛔ فایل موجود نیست</span>
+                {% endif %}
+            </dd>
+        </dl>
+    </div>
+</div>
+{% endblock %}

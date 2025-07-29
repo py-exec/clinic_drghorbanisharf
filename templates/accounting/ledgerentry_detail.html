@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}📚 جزئیات ثبت دفتر کل{% endblock %}
+
+{% block content %}
+<h2 class="mb-4 text-center">📚 جزئیات ثبت دفتر کل</h2>
+
+<div class="card">
+    <div class="card-header">
+        <h5 class="mb-0">📚 جزئیات ثبت</h5>
+    </div>
+
+    <div class="card-body">
+        <dl class="row">
+            <dt class="col-sm-3">تاریخ ثبت:</dt>
+            <dd class="col-sm-9">{{ ledger_entry.created_at|date:"Y/m/d H:i" }}</dd>
+
+            <dt class="col-sm-3">حساب:</dt>
+            <dd class="col-sm-9">{{ ledger_entry.account.name }}</dd>
+
+            <dt class="col-sm-3">بدهکار:</dt>
+            <dd class="col-sm-9">{{ ledger_entry.debit|intcomma }}</dd>
+
+            <dt class="col-sm-3">بستانکار:</dt>
+            <dd class="col-sm-9">{{ ledger_entry.credit|intcomma }}</dd>
+
+            <dt class="col-sm-3">تراکنش مرتبط:</dt>
+            <dd class="col-sm-9">
+                <a href="{% url 'accounting:transaction_detail' ledger_entry.transaction.id %}">
+                    فاکتور: {{ ledger_entry.transaction.invoice.invoice_number }}
+                </a>
+            </dd>
+        </dl>
+    </div>
+</div>
+{% endblock %}

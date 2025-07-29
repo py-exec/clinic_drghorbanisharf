@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block title %}دسته‌بندی تخصص‌ها{% endblock %}
+
+{% block content %}
+<h2 class="text-center mb-4">دسته‌بندی تخصص‌ها</h2>
+
+<div class="card">
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <h5 class="mb-0">لیست دسته‌ها</h5>
+        <a href="{% url 'doctors:specialty-category-create' %}" class="btn btn-success btn-sm">➕ افزودن دسته تخصص</a>
+    </div>
+
+    <div class="card-body pt-0">
+        <div class="table-responsive">
+            <table class="table table-striped table-hover align-middle">
+                <thead>
+                <tr>
+                    <th>عنوان دسته</th>
+                    <th>توضیحات</th>
+                    <th class="text-center">عملیات</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for category in categories %}
+                <tr>
+                    <td>{{ category.title }}</td>
+                    <td>{{ category.description|truncatewords:10 }}</td>
+                    <td class="text-center">
+                        <a href="{% url 'doctors:specialty-category-edit' category.pk %}"
+                           class="btn btn-sm btn-outline-primary">✏️</a>
+                        <a href="{% url 'doctors:specialty-category-delete' category.pk %}"
+                           class="btn btn-sm btn-outline-danger">🗑</a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="3" class="text-center text-muted">⛔ هیچ دسته‌ای ثبت نشده است.</td>
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

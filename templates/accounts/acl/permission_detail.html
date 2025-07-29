@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}جزئیات سطح دسترسی: {{ permission.name }}{% endblock %}
+
+{% block content %}
+    <h4 class="py-3 mb-4">
+        <span class="text-muted fw-light">مدیریت دسترسی /</span> جزئیات سطح دسترسی
+    </h4>
+
+    <div class="card">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h5 class="mb-0">🔐 {{ permission.name }}</h5>
+            <div class="d-print-none">
+                <a href="{% url 'accounts:permission-update' permission.pk %}" class="btn btn-sm btn-outline-primary">
+                    <i class="bx bx-edit"></i> ویرایش
+                </a>
+                <a href="{% url 'accounts:permission-list' %}" class="btn btn-sm btn-outline-secondary">
+                    بازگشت
+                </a>
+            </div>
+        </div>
+        <div class="card-body">
+            <table class="table table-bordered">
+                <tbody>
+                    <tr>
+                        <th>🆔 شناسه</th>
+                        <td>{{ permission.id }}</td>
+                        <th>📝 نام</th>
+                        <td>{{ permission.name }}</td>
+                    </tr>
+                    <tr>
+                        <th>🔑 کد</th>
+                        <td>{{ permission.codename }}</td>
+                        <th>📦 مدل مربوطه</th>
+                        <td>{{ permission.content_type.app_label }} → {{ permission.content_type.model }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}

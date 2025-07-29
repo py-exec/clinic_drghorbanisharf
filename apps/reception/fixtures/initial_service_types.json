@@ -1,0 +1,128 @@
+[
+  {
+    "model": "reception.servicetype",
+    "pk": 1,
+    "fields": {
+      "code": "ECG",
+      "name": "نوار قلب",
+      "description": "لیست گزارش‌های نوار قلب",
+      "assigned_role": 10,
+      "is_active": true,
+      "duration_minutes": 5,
+      "created_at": "2025-07-28T01:12:02.778Z",
+      "created_by": null
+    }
+  },
+  {
+    "model": "reception.servicetype",
+    "pk": 2,
+    "fields": {
+      "code": "HR",
+      "name": "هولتر ریتم",
+      "description": "لیست گزارش‌های هولتر ریتم",
+      "assigned_role": 11,
+      "is_active": true,
+      "duration_minutes": 10,
+      "created_at": "2025-07-28T01:12:02.778Z",
+      "created_by": null
+    }
+  },
+  {
+    "model": "reception.servicetype",
+    "pk": 3,
+    "fields": {
+      "code": "BP",
+      "name": "هولتر فشار",
+      "description": "لیست گزارش‌های هولتر فشار خون",
+      "assigned_role": 11,
+      "is_active": true,
+      "duration_minutes": 10,
+      "created_at": "2025-07-28T01:12:02.778Z",
+      "created_by": null
+    }
+  },
+  {
+    "model": "reception.servicetype",
+    "pk": 4,
+    "fields": {
+      "code": "PROCEDURE",
+      "name": "پروسیجرها",
+      "description": "لیست پروسیجرهای انجام‌شده",
+      "assigned_role": null,
+      "is_active": true,
+      "duration_minutes": 30,
+      "created_at": "2025-07-28T01:12:02.778Z",
+      "created_by": null
+    }
+  },
+  {
+    "model": "reception.servicetype",
+    "pk": 5,
+    "fields": {
+      "code": "DOCTOR_REVIEW",
+      "name": "ارزیابی پزشک",
+      "description": "لیست نسخه‌ها و ارزیابی‌های پزشک",
+      "assigned_role": null,
+      "is_active": true,
+      "duration_minutes": 20,
+      "created_at": "2025-07-28T01:12:02.778Z",
+      "created_by": null
+    }
+  },
+  {
+    "model": "reception.servicetype",
+    "pk": 6,
+    "fields": {
+      "code": "STRESS_TEST",
+      "name": "تست ورزش",
+      "description": "لیست گزارش‌های تست ورزش",
+      "assigned_role": 13,
+      "is_active": true,
+      "duration_minutes": 45,
+      "created_at": "2025-07-28T01:12:02.778Z",
+      "created_by": null
+    }
+  },
+  {
+    "model": "reception.servicetype",
+    "pk": 7,
+    "fields": {
+      "code": "TILT_TEST",
+      "name": "تست تیلت",
+      "description": "لیست گزارش‌های تست تیلت",
+      "assigned_role": 13,
+      "is_active": true,
+      "duration_minutes": 30,
+      "created_at": "2025-07-28T01:12:02.778Z",
+      "created_by": null
+    }
+  },
+  {
+    "model": "reception.servicetype",
+    "pk": 8,
+    "fields": {
+      "code": "TTE_ECHO",
+      "name": "اکو TTE",
+      "description": "لیست گزارش‌های اکو از روی قفسه سینه",
+      "assigned_role": 12,
+      "is_active": true,
+      "duration_minutes": 25,
+      "created_at": "2025-07-28T01:12:02.778Z",
+      "created_by": null
+    }
+  },
+  {
+    "model": "reception.servicetype",
+    "pk": 9,
+    "fields": {
+      "code": "TEE_ECHO",
+      "name": "اکو TEE",
+      "description": "لیست گزارش‌های اکو از راه مری",
+      "assigned_role": 12,
+      "is_active": true,
+      "duration_minutes": 35,
+      "created_at": "2025-07-28T01:12:02.778Z",
+      "created_by": null
+    }
+  }
+]

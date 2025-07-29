@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}🏦 ثبت رسید بانکی{% endblock %}
+
+{% block content %}
+<h2 class="mb-4 text-center">🏦 ثبت رسید بانکی</h2>
+
+<div class="card">
+    <div class="card-body">
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ form.non_field_errors }}
+
+            <div class="row g-3">
+                <!-- transaction -->
+                <div class="col-md-6">
+                    {{ form.transaction.label_tag }}
+                    {{ form.transaction }}
+                </div>
+
+                <!-- file -->
+                <div class="col-md-6">
+                    {{ form.file.label_tag }}
+                    {{ form.file }}
+                </div>
+
+                <!-- notes -->
+                <div class="col-12">
+                    {{ form.notes.label_tag }}
+                    {{ form.notes }}
+                </div>
+
+                <!-- uploaded_by -->
+                <div class="col-md-6">
+                    {{ form.uploaded_by.label_tag }}
+                    {{ form.uploaded_by }}
+                </div>
+            </div>
+
+            <div class="mt-4 d-flex gap-2 justify-content-end">
+                <a href="javascript:history.back();" class="btn btn-secondary btn-sm">🔙 بازگشت</a>
+                <button type="submit" class="btn btn-primary btn-sm">💾 ثبت</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

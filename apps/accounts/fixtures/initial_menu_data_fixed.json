@@ -1,0 +1,1372 @@
+[
+  {
+    "model": "menu.menuitem",
+    "pk": 1,
+    "fields": {
+      "title": "داشبورد",
+      "description": "نمای کلی و صفحه اصلی سیستم",
+      "item_type": "link",
+      "link_type": "reverse",
+      "link_target": "dashboard",
+      "reverse_args_json": null,
+      "reverse_kwargs_json": null,
+      "highlight_url_names": "[]",
+      "parent": null,
+      "order": 1,
+      "icon": "bx-home-circle",
+      "badge": null,
+      "css_class": null,
+      "show_in_menu": true,
+      "is_active": true,
+      "auto_generated": false,
+      "created_at": "2025-07-18T03:11:15Z",
+      "updated_at": "2025-07-18T03:11:15Z",
+      "permissions": [],
+      "required_roles": []
+    }
+  },
+  {
+    "model": "menu.menuitem",
+    "pk": 2,
+    "fields": {
+      "title": "بخش اصلی",
+      "description": null,
+      "item_type": "divider",
+      "link_type": "none",
+      "link_target": null,
+      "reverse_args_json": null,
+      "reverse_kwargs_json": null,
+      "highlight_url_names": "[]",
+      "parent": null,
+      "order": 2,
+      "icon": "bx-circle",
+      "badge": null,
+      "css_class": null,
+      "show_in_menu": true,
+      "is_active": true,
+      "auto_generated": false,
+      "created_at": "2025-07-18T03:11:15Z",
+      "updated_at": "2025-07-18T03:11:15Z",
+      "permissions": [],
+      "required_roles": []
+    }
+  },
+  {
+    "model": "menu.menuitem",
+    "pk": 3,
+    "fields": {
+      "title": "بیماران",
+      "description": "مدیریت اطلاعات و پرونده بیماران",
+      "item_type": "header",
+      "link_type": "none",
+      "link_target": null,
+      "reverse_args_json": null,
+      "reverse_kwargs_json": null,
+      "highlight_url_names": "[]",
+      "parent": null,
+      "order": 3,
+      "icon": "bx-circle",
+      "badge": null,
+      "css_class": null,
+      "show_in_menu": true,
+      "is_active": true,
+      "auto_generated": false,
+      "created_at": "2025-07-18T03:11:15Z",
+      "updated_at": "2025-07-18T03:11:15Z",
+      "permissions": [],
+      "required_roles": []
+    }
+  },
+  {
+    "model": "menu.menuitem",
+    "pk": 4,
+    "fields": {
+      "title": "لیست بیماران",
+      "description": "مشاهده و جستجوی تمام بیماران ثبت‌شده",
+      "item_type": "link",
+      "link_type": "reverse",
+      "link_target": "patient:patient_list",
+      "reverse_args_json": null,
+      "reverse_kwargs_json": null,
+      "highlight_url_names": "[\"patient:patient_create\", \"patient:patient_detail\", \"patient:patient_update\", \"patient:patient_delete\"]",
+      "parent": 3,
+      "order": 1,
+      "icon": "bx-spreadsheet",
+      "badge": null,
+      "css_class": null,
+      "show_in_menu": true,
+      "is_active": true,
+      "auto_generated": false,
+      "created_at": "2025-07-18T03:11:15Z",
+      "updated_at": "2025-07-18T03:11:15Z",
+      "permissions": [
+        1
+      ],
+      "required_roles": []
+    }
+  },
+  {
+    "model": "menu.menuitem",
+    "pk": 5,
+    "fields": {
+      "title": "ثبت بیمار جدید",
+      "description": "ایجاد پرونده برای یک بیمار جدید",
+      "item_type": "link",
+      "link_type": "reverse",
+      "link_target": "patient:patient_lookup",
+      "reverse_args_json": null,
+      "reverse_kwargs_json": null,
+      "highlight_url_names": "[]",
+      "parent": 3,
+      "order": 2,
+      "icon": "bx-user-plus",
+      "badge": null,
+      "css_class": null,
+      "show_in_menu": true,
+      "is_active": true,
+      "auto_generated": false,
+      "created_at": "2025-07-18T03:11:15Z",
+      "updated_at": "2025-07-18T03:11:15Z",
+      "permissions": [
+        2
+      ],
+      "required_roles": []
+    }
+  },
+  {
+    "model": "menu.menuitem",
+    "pk": 6,
+    "fields": {
+      "title": "عملیات کلینیک",
+      "description": null,
+      "item_type": "divider",
+      "link_type": "none",
+      "link_target": null,
+      "reverse_args_json": null,
+      "reverse_kwargs_json": null,
+      "highlight_url_names": "[]",
+      "parent": null,
+      "order": 4,
+      "icon": "bx-circle",
+      "badge": null,
+      "css_class": null,
+      "show_in_menu": true,
+      "is_active": true,
+      "auto_generated": false,
+      "created_at": "2025-07-18T03:11:15Z",
+      "updated_at": "2025-07-18T03:11:15Z",
+      "permissions": [],
+      "required_roles": []
+    }
+  },
+  {
+    "model": "menu.menuitem",
+    "pk": 7,
+    "fields": {
+      "title": "نوبت‌دهی",
+      "description": "مدیریت نوبت‌های بیماران",
+      "item_type": "header",
+      "link_type": "none",
+      "link_target": null,
+      "reverse_args_json": null,
+      "reverse_kwargs_json": null,
+      "highlight_url_names": "[]",
+      "parent": null,
+      "order": 5,
+      "icon": "bx-calendar",
+      "badge": null,
+      "css_class": null,
+      "show_in_menu": true,
+      "is_active": true,
+      "auto_generated": false,
+      "created_at": "2025-07-18T03:11:15Z",
+      "updated_at": "2025-07-18T03:11:15Z",
+      "permissions": [],
+      "required_roles": []
+    }
+  },
+  {
+    "model": "menu.menuitem",
+    "pk": 8,
+    "fields": {
+      "title": "تقویم نوبت‌ها",
+      "description": "مشاهده و مدیریت نوبت‌ها در تقویم",
+      "item_type": "link",
+      "link_type": "reverse",
+      "link_target": "appointments:appointment_calendar",
+      "reverse_args_json": null,
+      "reverse_kwargs_json": null,
+      "highlight_url_names": "[\"appointments:api_events_list\", \"appointments:api_appointment_create\", \"appointments:api_appointment_update\", \"appointments:api_appointment_delete\"]",
+      "parent": 7,
+      "order": 1,
+      "icon": "bx-calendar",
+      "badge": null,
+      "css_class": null,
+      "show_in_menu": true,
+      "is_active": true,
+      "auto_generated": false,
+      "created_at": "2025-07-18T03:11:15Z",
+      "updated_at": "2025-07-18T03:11:15Z",
+      "permissions": [
+        3
+      ],
+      "required_roles": []
+    }
+  },
+  {
+    "model": "menu.menuitem",
+    "pk": 9,
+    "fields": {
+      "title": "پذیرش",
+      "description": "مدیریت فرآیندهای پذیرش بیماران",
+      "item_type": "header",
+      "link_type": "none",
+      "link_target": null,
+      "reverse_args_json": null,
+      "reverse_kwargs_json": null,
+      "highlight_url_names": "[]",
+      "parent": null,
+      "order": 6,
+      "icon": "bx-log-in-circle",
+      "badge": null,
+      "css_class": null,
+      "show_in_menu": true,
+      "is_active": true,
+      "auto_generated": false,
+      "created_at": "2025-07-18T03:11:15Z",
+      "updated_at": "2025-07-18T03:11:15Z",
+      "permissions": [],
+      "required_roles": []
+    }
+  },
+  {
+    "model": "menu.menuitem",
+    "pk": 10,
+    "fields": {
+      "title": "لیست پذیرش‌ها",
+      "description": "مشاهده پذیرش‌های ثبت‌شده",
+      "item_type": "link",
+      "link_type": "reverse",
+      "link_target": "reception:list",
+      "reverse_args_json": null,
+      "reverse_kwargs_json": null,
+      "highlight_url_names": "[\"reception:create\", \"reception:detail\", \"reception:update\", \"reception:delete\"]",
+      "parent": 9,
+      "order": 1,
+      "icon": "bx-list-check",
+      "badge": null,
+      "css_class": null,
+      "show_in_menu": true,
+      "is_active": true,
+      "auto_generated": false,
+      "created_at": "2025-07-18T03:11:15Z",
+      "updated_at": "2025-07-18T03:11:15Z",
+      "permissions": [
+        4
+      ],
+      "required_roles": []
+    }
+  },
+  {
+    "model": "menu.menuitem",
+    "pk": 11,
+    "fields": {
+      "title": "ثبت پذیرش جدید",
+      "description": "ایجاد یک پذیرش جدید برای بیمار",
+      "item_type": "link",
+      "link_type": "reverse",
+      "link_target": "reception:start",
+      "reverse_args_json": null,
+      "reverse_kwargs_json": null,
+      "highlight_url_names": "[]",
+      "parent": 9,
+      "order": 2,
+      "icon": "bx-add-to-queue",
+      "badge": null,
+      "css_class": null,
+      "show_in_menu": true,
+      "is_active": true,
+      "auto_generated": false,
+      "created_at": "2025-07-18T03:11:15Z",
+      "updated_at": "2025-07-18T03:11:15Z",
+      "permissions": [
+        5
+      ],
+      "required_roles": []
+    }
+  },
+  {
+    "model": "menu.menuitem",
+    "pk": 12,
+    "fields": {
+      "title": "خدمات کلینیکی",
+      "description": "مدیریت خدمات تشخیصی و درمانی",
+      "item_type": "header",
+      "link_type": "none",
+      "link_target": null,
+      "reverse_args_json": null,
+      "reverse_kwargs_json": null,
+      "highlight_url_names": "[]",
+      "parent": null,
+      "order": 7,
+      "icon": "bx-heart",
+      "badge": null,
+      "css_class": null,
+      "show_in_menu": true,
+      "is_active": true,
+      "auto_generated": false,
+      "created_at": "2025-07-18T03:11:15Z",
+      "updated_at": "2025-07-18T03:11:15Z",
+      "permissions": [],
+      "required_roles": []
+    }
+  },
+  {
+    "model": "menu.menuitem",
+    "pk": 13,
+    "fields": {
+      "title": "نوار قلب (ECG)",
+      "description": "لیست گزارش‌های نوار قلب",
+      "item_type": "link",
+      "link_type": "reverse",
+      "link_target": "ecg:ecgـreport_worklist",
+      "reverse_args_json": null,
+      "reverse_kwargs_json": null,
+      "highlight_url_names": "[\"ecg:ecg-create\", \"ecg:ecg-detail\", \"ecg:ecg-update\", \"ecg:ecg-delete\"]",
+      "parent": 12,
+      "order": 1,
+      "icon": "bx-pulse",
+      "badge": null,
+      "css_class": null,
+      "show_in_menu": true,
+      "is_active": true,
+      "auto_generated": false,
+      "created_at": "2025-07-18T03:11:15Z",
+      "updated_at": "2025-07-18T03:11:15Z",
+      "permissions": [
+        6
+      ],
+      "required_roles": []
+    }
+  },
+  {
+    "model": "menu.menuitem",
+    "pk": 14,
+    "fields": {
+      "title": "هولتر ریتم (HR)",
+      "description": "لیست گزارش‌های هولتر ریتم",
+      "item_type": "link",
+      "link_type": "reverse",
+      "link_target": "holter_hr:holter_hr_worklist",
+      "reverse_args_json": null,
+      "reverse_kwargs_json": null,
+      "highlight_url_names": "[\"holter_hr:holter_hr_create\", \"holter_hr:holter_hr_detail\", \"holter_hr:holter_hr_update\", \"holter_hr:holter_hr_delete\"]",
+      "parent": 12,
+      "order": 2,
+      "icon": "bx-heart-circle",
+      "badge": null,
+      "css_class": null,
+      "show_in_menu": true,
+      "is_active": true,
+      "auto_generated": false,
+      "created_at": "2025-07-18T03:11:15Z",
+      "updated_at": "2025-07-18T03:11:15Z",
+      "permissions": [
+        7
+      ],
+      "required_roles": []
+    }
+  },
+  {
+    "model": "menu.menuitem",
+    "pk": 15,
+    "fields": {
+      "title": "هولتر فشار (BP)",
+      "description": "لیست گزارش‌های هولتر فشار خون",
+      "item_type": "link",
+      "link_type": "reverse",
+      "link_target": "holter_bp:holter_bp_worklist",
+      "reverse_args_json": null,
+      "reverse_kwargs_json": null,
+      "highlight_url_names": "[\"holter_bp:holter_bp_create\", \"holter_bp:holter_bp_detail\", \"holter_bp:holter_bp_update\", \"holter_bp:holter_bp_delete\"]",
+      "parent": 12,
+      "order": 3,
+      "icon": "bx-tachometer",
+      "badge": null,
+      "css_class": null,
+      "show_in_menu": true,
+      "is_active": true,
+      "auto_generated": false,
+      "created_at": "2025-07-18T03:11:15Z",
+      "updated_at": "2025-07-18T03:11:15Z",
+      "permissions": [
+        8
+      ],
+      "required_roles": []
+    }
+  },
+  {
+    "model": "menu.menuitem",
+    "pk": 16,
+    "fields": {
+      "title": "پروسیجرها",
+      "description": "لیست پروسیجرهای انجام‌شده",
+      "item_type": "link",
+      "link_type": "reverse",
+      "link_target": "procedures:procedure_worklist",
+      "reverse_args_json": null,
+      "reverse_kwargs_json": null,
+      "highlight_url_names": "[\"procedures:procedure-create\", \"procedures:procedure-detail\", \"procedures:procedure-update\", \"procedures:procedure-delete\"]",
+      "parent": 12,
+      "order": 4,
+      "icon": "bx-injection",
+      "badge": null,
+      "css_class": null,
+      "show_in_menu": true,
+      "is_active": true,
+      "auto_generated": false,
+      "created_at": "2025-07-18T03:11:15Z",
+      "updated_at": "2025-07-18T03:11:15Z",
+      "permissions": [
+        9
+      ],
+      "required_roles": []
+    }
+  },
+  {
+    "model": "menu.menuitem",
+    "pk": 17,
+    "fields": {
+      "title": "ارزیابی پزشک",
+      "description": "لیست نسخه‌ها و ارزیابی‌های پزشک",
+      "item_type": "link",
+      "link_type": "reverse",
+      "link_target": "prescriptions:doctor-review-list",
+      "reverse_args_json": null,
+      "reverse_kwargs_json": null,
+      "highlight_url_names": "[\"prescriptions:doctor-review-create\", \"prescriptions:doctor-review-detail\", \"prescriptions:doctor-review-update\", \"prescriptions:doctor-review-delete\"]",
+      "parent": 12,
+      "order": 5,
+      "icon": "bx-file-find",
+      "badge": null,
+      "css_class": null,
+      "show_in_menu": true,
+      "is_active": true,
+      "auto_generated": false,
+      "created_at": "2025-07-18T03:11:15Z",
+      "updated_at": "2025-07-18T03:11:15Z",
+      "permissions": [
+        10
+      ],
+      "required_roles": []
+    }
+  },
+  {
+    "model": "menu.menuitem",
+    "pk": 18,
+    "fields": {
+      "title": "تست ورزش",
+      "description": "لیست گزارش‌های تست ورزش",
+      "item_type": "link",
+      "link_type": "reverse",
+      "link_target": "stress:stress_worklist",
+      "reverse_args_json": null,
+      "reverse_kwargs_json": null,
+      "highlight_url_names": "[\"stress:stress_create\", \"stress:stress_detail\", \"stress:stress_update\", \"stress:stress_delete\"]",
+      "parent": 12,
+      "order": 6,
+      "icon": "bx-run",
+      "badge": null,
+      "css_class": null,
+      "show_in_menu": true,
+      "is_active": true,
+      "auto_generated": false,
+      "created_at": "2025-07-18T03:11:15Z",
+      "updated_at": "2025-07-18T03:11:15Z",
+      "permissions": [
+        11
+      ],
+      "required_roles": []
+    }
+  },
+  {
+    "model": "menu.menuitem",
+    "pk": 19,
+    "fields": {
+      "title": "تست تیلت",
+      "description": "لیست گزارش‌های تست تیلت",
+      "item_type": "link",
+      "link_type": "reverse",
+      "link_target": "tilt:tilt_worklist",
+      "reverse_args_json": null,
+      "reverse_kwargs_json": null,
+      "highlight_url_names": "[\"tilt:tilt_create\", \"tilt:tilt_detail\", \"tilt:tilt_update\", \"tilt:tilt_delete\"]",
+      "parent": 12,
+      "order": 7,
+      "icon": "bx-body",
+      "badge": null,
+      "css_class": null,
+      "show_in_menu": true,
+      "is_active": true,
+      "auto_generated": false,
+      "created_at": "2025-07-18T03:11:15Z",
+      "updated_at": "2025-07-18T03:11:15Z",
+      "permissions": [
+        12
+      ],
+      "required_roles": []
+    }
+  },
+  {
+    "model": "menu.menuitem",
+    "pk": 20,
+    "fields": {
+      "title": "اکو TTE",
+      "description": "لیست گزارش‌های اکو از روی قفسه سینه",
+      "item_type": "link",
+      "link_type": "reverse",
+      "link_target": "tte:tte_worklist",
+      "reverse_args_json": null,
+      "reverse_kwargs_json": null,
+      "highlight_url_names": "[\"tte:tte_create\", \"tte:tte_detail\", \"tte:tte_update\", \"tte:tte_delete\"]",
+      "parent": 12,
+      "order": 8,
+      "icon": "bx-scan",
+      "badge": null,
+      "css_class": null,
+      "show_in_menu": true,
+      "is_active": true,
+      "auto_generated": false,
+      "created_at": "2025-07-18T03:11:15Z",
+      "updated_at": "2025-07-18T03:11:15Z",
+      "permissions": [
+        13
+      ],
+      "required_roles": []
+    }
+  },
+  {
+    "model": "menu.menuitem",
+    "pk": 21,
+    "fields": {
+      "title": "اکو TEE",
+      "description": "لیست گزارش‌های اکو از راه مری",
+      "item_type": "link",
+      "link_type": "reverse",
+      "link_target": "tee:tee_worklist",
+      "reverse_args_json": null,
+      "reverse_kwargs_json": null,
+      "highlight_url_names": "[\"tee:tee_create\", \"tee:tee_detail\", \"tee:tee_update\", \"tee:tee_delete\"]",
+      "parent": 12,
+      "order": 9,
+      "icon": "bxs-scan",
+      "badge": null,
+      "css_class": null,
+      "show_in_menu": true,
+      "is_active": true,
+      "auto_generated": false,
+      "created_at": "2025-07-18T03:11:15Z",
+      "updated_at": "2025-07-18T03:11:15Z",
+      "permissions": [
+        14
+      ],
+      "required_roles": []
+    }
+  },
+  {
+    "model": "menu.menuitem",
+    "pk": 22,
+    "fields": {
+      "title": "بخش مدیریت",
+      "description": null,
+      "item_type": "divider",
+      "link_type": "none",
+      "link_target": null,
+      "reverse_args_json": null,
+      "reverse_kwargs_json": null,
+      "highlight_url_names": "[]",
+      "parent": null,
+      "order": 8,
+      "icon": "bx-slider",
+      "badge": null,
+      "css_class": null,
+      "show_in_menu": true,
+      "is_active": true,
+      "auto_generated": false,
+      "created_at": "2025-07-18T03:11:15Z",
+      "updated_at": "2025-07-18T03:11:15Z",
+      "permissions": [],
+      "required_roles": []
+    }
+  },
+  {
+    "model": "menu.menuitem",
+    "pk": 23,
+    "fields": {
+      "title": "حسابداری",
+      "description": "مدیریت امور مالی و حساب‌ها",
+      "item_type": "header",
+      "link_type": "none",
+      "link_target": null,
+      "reverse_args_json": null,
+      "reverse_kwargs_json": null,
+      "highlight_url_names": "[]",
+      "parent": null,
+      "order": 9,
+      "icon": "bx-calculator",
+      "badge": null,
+      "css_class": null,
+      "show_in_menu": true,
+      "is_active": true,
+      "auto_generated": false,
+      "created_at": "2025-07-18T03:11:15Z",
+      "updated_at": "2025-07-18T03:11:15Z",
+      "permissions": [],
+      "required_roles": []
+    }
+  },
+  {
+    "model": "menu.menuitem",
+    "pk": 24,
+    "fields": {
+      "title": "لیست فاکتورها",
+      "description": "مشاهده و مدیریت فاکتورها",
+      "item_type": "link",
+      "link_type": "reverse",
+      "link_target": "accounting:invoice_list",
+      "reverse_args_json": null,
+      "reverse_kwargs_json": null,
+      "highlight_url_names": "[\"accounting:invoice_create\", \"accounting:invoice_detail\", \"accounting:invoice_update\"]",
+      "parent": 23,
+      "order": 1,
+      "icon": "bx-receipt",
+      "badge": null,
+      "css_class": null,
+      "show_in_menu": true,
+      "is_active": true,
+      "auto_generated": false,
+      "created_at": "2025-07-18T03:11:15Z",
+      "updated_at": "2025-07-18T03:11:15Z",
+      "permissions": [
+        15
+      ],
+      "required_roles": []
+    }
+  },
+  {
+    "model": "menu.menuitem",
+    "pk": 25,
+    "fields": {
+      "title": "تراکنش‌ها",
+      "description": "مشاهده تمامی تراکنش‌های مالی",
+      "item_type": "link",
+      "link_type": "reverse",
+      "link_target": "accounting:transaction_list",
+      "reverse_args_json": null,
+      "reverse_kwargs_json": null,
+      "highlight_url_names": "[\"accounting:transaction_create\", \"accounting:transaction_detail\", \"accounting:transaction_update\"]",
+      "parent": 23,
+      "order": 2,
+      "icon": "bx-transfer-alt",
+      "badge": null,
+      "css_class": null,
+      "show_in_menu": true,
+      "is_active": true,
+      "auto_generated": false,
+      "created_at": "2025-07-18T03:11:15Z",
+      "updated_at": "2025-07-18T03:11:15Z",
+      "permissions": [
+        16
+      ],
+      "required_roles": []
+    }
+  },
+  {
+    "model": "menu.menuitem",
+    "pk": 26,
+    "fields": {
+      "title": "حساب‌ها",
+      "description": "مدیریت حساب‌های مالی",
+      "item_type": "link",
+      "link_type": "reverse",
+      "link_target": "accounting:account_list",
+      "reverse_args_json": null,
+      "reverse_kwargs_json": null,
+      "highlight_url_names": "[\"accounting:account_detail\"]",
+      "parent": 23,
+      "order": 3,
+      "icon": "bx-wallet",
+      "badge": null,
+      "css_class": null,
+      "show_in_menu": true,
+      "is_active": true,
+      "auto_generated": false,
+      "created_at": "2025-07-18T03:11:15Z",
+      "updated_at": "2025-07-18T03:11:15Z",
+      "permissions": [
+        17
+      ],
+      "required_roles": []
+    }
+  },
+  {
+    "model": "menu.menuitem",
+    "pk": 46,
+    "fields": {
+      "title": "ثبت فاکتور جدید",
+      "description": "ایجاد فاکتور جدید",
+      "item_type": "link",
+      "link_type": "reverse",
+      "link_target": "accounting:invoice_create",
+      "reverse_args_json": null,
+      "reverse_kwargs_json": null,
+      "highlight_url_names": "[]",
+      "parent": 23,
+      "order": 4,
+      "icon": "bx-file-plus",
+      "badge": null,
+      "css_class": null,
+      "show_in_menu": true,
+      "is_active": true,
+      "auto_generated": false,
+      "created_at": "2025-07-28T03:11:15Z",
+      "updated_at": "2025-07-28T03:11:15Z",
+      "permissions": [
+        15
+      ],
+      "required_roles": []
+    }
+  },
+  {
+    "model": "menu.menuitem",
+    "pk": 47,
+    "fields": {
+      "title": "ثبت تراکنش جدید",
+      "description": "ایجاد تراکنش مالی جدید",
+      "item_type": "link",
+      "link_type": "reverse",
+      "link_target": "accounting:transaction_create",
+      "reverse_args_json": null,
+      "reverse_kwargs_json": null,
+      "highlight_url_names": "[]",
+      "parent": 23,
+      "order": 5,
+      "icon": "bx-plus-circle",
+      "badge": null,
+      "css_class": null,
+      "show_in_menu": true,
+      "is_active": true,
+      "auto_generated": false,
+      "created_at": "2025-07-28T03:11:15Z",
+      "updated_at": "2025-07-28T03:11:15Z",
+      "permissions": [
+        16
+      ],
+      "required_roles": []
+    }
+  },
+  {
+    "model": "menu.menuitem",
+    "pk": 48,
+    "fields": {
+      "title": "ورودی‌های دفتر کل",
+      "description": "مشاهده لیست ورودی‌های دفتر کل",
+      "item_type": "link",
+      "link_type": "reverse",
+      "link_target": "accounting:ledgerentry_list",
+      "reverse_args_json": null,
+      "reverse_kwargs_json": null,
+      "highlight_url_names": "[]",
+      "parent": 23,
+      "order": 6,
+      "icon": "bx-book-open",
+      "badge": null,
+      "css_class": null,
+      "show_in_menu": true,
+      "is_active": true,
+      "auto_generated": false,
+      "created_at": "2025-07-28T03:11:15Z",
+      "updated_at": "2025-07-28T03:11:15Z",
+      "permissions": [
+        16
+      ],
+      "required_roles": []
+    }
+  },
+  {
+    "model": "menu.menuitem",
+    "pk": 49,
+    "fields": {
+      "title": "پیوست‌های اسناد",
+      "description": "مدیریت پیوست‌های اسناد مالی",
+      "item_type": "link",
+      "link_type": "reverse",
+      "link_target": "accounting:document_list",
+      "reverse_args_json": null,
+      "reverse_kwargs_json": null,
+      "highlight_url_names": "[\"accounting:document_create\"]",
+      "parent": 23,
+      "order": 7,
+      "icon": "bx-paperclip",
+      "badge": null,
+      "css_class": null,
+      "show_in_menu": true,
+      "is_active": true,
+      "auto_generated": false,
+      "created_at": "2025-07-28T03:11:15Z",
+      "updated_at": "2025-07-28T03:11:15Z",
+      "permissions": [
+        16
+      ],
+      "required_roles": []
+    }
+  },
+  {
+    "model": "menu.menuitem",
+    "pk": 50,
+    "fields": {
+      "title": "آپلود سند",
+      "description": "آپلود سند جدید",
+      "item_type": "link",
+      "link_type": "reverse",
+      "link_target": "accounting:document_create",
+      "reverse_args_json": null,
+      "reverse_kwargs_json": null,
+      "highlight_url_names": "[]",
+      "parent": 23,
+      "order": 8,
+      "icon": "bx-upload",
+      "badge": null,
+      "css_class": null,
+      "show_in_menu": true,
+      "is_active": true,
+      "auto_generated": false,
+      "created_at": "2025-07-28T03:11:15Z",
+      "updated_at": "2025-07-28T03:11:15Z",
+      "permissions": [
+        16
+      ],
+      "required_roles": []
+    }
+  },
+  {
+    "model": "menu.menuitem",
+    "pk": 27,
+    "fields": {
+      "title": "انبار و تجهیزات",
+      "description": "مدیریت موجودی و دارایی‌ها",
+      "item_type": "header",
+      "link_type": "none",
+      "link_target": null,
+      "reverse_args_json": null,
+      "reverse_kwargs_json": null,
+      "highlight_url_names": "[]",
+      "parent": null,
+      "order": 10,
+      "icon": "bx-box",
+      "badge": null,
+      "css_class": null,
+      "show_in_menu": true,
+      "is_active": true,
+      "auto_generated": false,
+      "created_at": "2025-07-18T03:11:15Z",
+      "updated_at": "2025-07-18T03:11:15Z",
+      "permissions": [],
+      "required_roles": []
+    }
+  },
+  {
+    "model": "menu.menuitem",
+    "pk": 28,
+    "fields": {
+      "title": "مدیریت کالاها",
+      "description": "لیست و ثبت کالاها",
+      "item_type": "link",
+      "link_type": "reverse",
+      "link_target": "inventory:item_list",
+      "reverse_args_json": null,
+      "reverse_kwargs_json": null,
+      "highlight_url_names": "[\"inventory:item_create\", \"inventory:item_detail\"]",
+      "parent": 27,
+      "order": 1,
+      "icon": "bx-package",
+      "badge": null,
+      "css_class": null,
+      "show_in_menu": true,
+      "is_active": true,
+      "auto_generated": false,
+      "created_at": "2025-07-18T03:11:15Z",
+      "updated_at": "2025-07-18T03:11:15Z",
+      "permissions": [
+        18
+      ],
+      "required_roles": []
+    }
+  },
+  {
+    "model": "menu.menuitem",
+    "pk": 29,
+    "fields": {
+      "title": "موجودی انبار",
+      "description": "مشاهده موجودی فعلی انبار",
+      "item_type": "link",
+      "link_type": "reverse",
+      "link_target": "inventory:inventory_list",
+      "reverse_args_json": null,
+      "reverse_kwargs_json": null,
+      "highlight_url_names": "[]",
+      "parent": 27,
+      "order": 2,
+      "icon": "bx-store-alt",
+      "badge": null,
+      "css_class": null,
+      "show_in_menu": true,
+      "is_active": true,
+      "auto_generated": false,
+      "created_at": "2025-07-18T03:11:15Z",
+      "updated_at": "2025-07-18T03:11:15Z",
+      "permissions": [
+        19
+      ],
+      "required_roles": []
+    }
+  },
+  {
+    "model": "menu.menuitem",
+    "pk": 30,
+    "fields": {
+      "title": "پزشکان",
+      "description": "مدیریت پزشکان و تخصص‌ها",
+      "item_type": "header",
+      "link_type": "none",
+      "link_target": null,
+      "reverse_args_json": null,
+      "reverse_kwargs_json": null,
+      "highlight_url_names": "[]",
+      "parent": null,
+      "order": 11,
+      "icon": "bx-id-card",
+      "badge": null,
+      "css_class": null,
+      "show_in_menu": true,
+      "is_active": true,
+      "auto_generated": false,
+      "created_at": "2025-07-18T03:11:15Z",
+      "updated_at": "2025-07-18T03:11:15Z",
+      "permissions": [],
+      "required_roles": []
+    }
+  },
+  {
+    "model": "menu.menuitem",
+    "pk": 31,
+    "fields": {
+      "title": "لیست پزشکان",
+      "description": "مشاهده و مدیریت پزشکان",
+      "item_type": "link",
+      "link_type": "reverse",
+      "link_target": "doctors:doctor-list",
+      "reverse_args_json": null,
+      "reverse_kwargs_json": null,
+      "highlight_url_names": "[\"doctors:doctor-create\", \"doctors:doctor-detail\", \"doctors:doctor-update\", \"doctors:doctor-delete\"]",
+      "parent": 30,
+      "order": 1,
+      "icon": "bxs-user-badge",
+      "badge": null,
+      "css_class": null,
+      "show_in_menu": true,
+      "is_active": true,
+      "auto_generated": false,
+      "created_at": "2025-07-18T03:11:15Z",
+      "updated_at": "2025-07-18T03:11:15Z",
+      "permissions": [
+        20
+      ],
+      "required_roles": []
+    }
+  },
+  {
+    "model": "menu.menuitem",
+    "pk": 32,
+    "fields": {
+      "title": "لیست تخصص‌ها",
+      "description": "مدیریت تخصص‌های پزشکی",
+      "item_type": "link",
+      "link_type": "reverse",
+      "link_target": "doctors:specialty-list",
+      "reverse_args_json": null,
+      "reverse_kwargs_json": null,
+      "highlight_url_names": "[\"doctors:specialty-create\", \"doctors:specialty-update\", \"doctors:specialty-delete\"]",
+      "parent": 30,
+      "order": 2,
+      "icon": "bx-bookmark-heart",
+      "badge": null,
+      "css_class": null,
+      "show_in_menu": true,
+      "is_active": true,
+      "auto_generated": false,
+      "created_at": "2025-07-18T03:11:15Z",
+      "updated_at": "2025-07-18T03:11:15Z",
+      "permissions": [
+        21
+      ],
+      "required_roles": []
+    }
+  },
+  {
+    "model": "menu.menuitem",
+    "pk": 33,
+    "fields": {
+      "title": "پرسنل",
+      "description": "مدیریت کارمندان و منابع انسانی",
+      "item_type": "header",
+      "link_type": "none",
+      "link_target": null,
+      "reverse_args_json": null,
+      "reverse_kwargs_json": null,
+      "highlight_url_names": "[]",
+      "parent": null,
+      "order": 12,
+      "icon": "bx-group",
+      "badge": null,
+      "css_class": null,
+      "show_in_menu": true,
+      "is_active": true,
+      "auto_generated": false,
+      "created_at": "2025-07-18T03:11:15Z",
+      "updated_at": "2025-07-18T03:11:15Z",
+      "permissions": [],
+      "required_roles": []
+    }
+  },
+  {
+    "model": "menu.menuitem",
+    "pk": 34,
+    "fields": {
+      "title": "لیست پرسنل",
+      "description": "مشاهده و مدیریت اطلاعات پرسنل",
+      "item_type": "link",
+      "link_type": "reverse",
+      "link_target": "staffs:staff-list",
+      "reverse_args_json": null,
+      "reverse_kwargs_json": null,
+      "highlight_url_names": "[\"staffs:staff-create\", \"staffs:staff-detail\", \"staffs:staff-update\", \"staffs:staff-delete\"]",
+      "parent": 33,
+      "order": 1,
+      "icon": "bx-group",
+      "badge": null,
+      "css_class": null,
+      "show_in_menu": true,
+      "is_active": true,
+      "auto_generated": false,
+      "created_at": "2025-07-18T03:11:15Z",
+      "updated_at": "2025-07-18T03:11:15Z",
+      "permissions": [
+        22
+      ],
+      "required_roles": []
+    }
+  },
+  {
+    "model": "menu.menuitem",
+    "pk": 35,
+    "fields": {
+      "title": "حضور و غیاب",
+      "description": "مدیریت ورود و خروج",
+      "item_type": "link",
+      "link_type": "reverse",
+      "link_target": "staffs:attendance-list",
+      "reverse_args_json": null,
+      "reverse_kwargs_json": null,
+      "highlight_url_names": "[\"staffs:attendance-create\", \"staffs:attendance-update\", \"staffs:attendance-delete\"]",
+      "parent": 33,
+      "order": 2,
+      "icon": "bx-time-five",
+      "badge": null,
+      "css_class": null,
+      "show_in_menu": true,
+      "is_active": true,
+      "auto_generated": false,
+      "created_at": "2025-07-18T03:11:15Z",
+      "updated_at": "2025-07-18T03:11:15Z",
+      "permissions": [
+        23
+      ],
+      "required_roles": []
+    }
+  },
+  {
+    "model": "menu.menuitem",
+    "pk": 36,
+    "fields": {
+      "title": "درخواست‌های مرخصی",
+      "description": "مدیریت درخواست‌های مرخصی",
+      "item_type": "link",
+      "link_type": "reverse",
+      "link_target": "staffs:leave-list",
+      "reverse_args_json": null,
+      "reverse_kwargs_json": null,
+      "highlight_url_names": "[\"staffs:leave-create\", \"staffs:leave-update\", \"staffs:leave-delete\"]",
+      "parent": 33,
+      "order": 3,
+      "icon": "bx-calendar-edit",
+      "badge": null,
+      "css_class": null,
+      "show_in_menu": true,
+      "is_active": true,
+      "auto_generated": false,
+      "created_at": "2025-07-18T03:11:15Z",
+      "updated_at": "2025-07-18T03:11:15Z",
+      "permissions": [
+        24
+      ],
+      "required_roles": []
+    }
+  },
+  {
+    "model": "menu.menuitem",
+    "pk": 37,
+    "fields": {
+      "title": "پیکربندی سیستم",
+      "description": null,
+      "item_type": "header",
+      "link_type": "none",
+      "link_target": null,
+      "reverse_args_json": null,
+      "reverse_kwargs_json": null,
+      "highlight_url_names": "[]",
+      "parent": null,
+      "order": 13,
+      "icon": "bx-cog",
+      "badge": null,
+      "css_class": null,
+      "show_in_menu": true,
+      "is_active": true,
+      "auto_generated": false,
+      "created_at": "2025-07-18T03:11:15Z",
+      "updated_at": "2025-07-18T03:11:15Z",
+      "permissions": [],
+      "required_roles": []
+    }
+  },
+  {
+    "model": "menu.menuitem",
+    "pk": 44,
+    "fields": {
+      "title": "مدیریت خدمات",
+      "description": "لیست و ایجاد خدمات درمانی",
+      "item_type": "link",
+      "link_type": "reverse",
+      "link_target": "reception:service_list",
+      "reverse_args_json": null,
+      "reverse_kwargs_json": null,
+      "highlight_url_names": "[\"reception:service_list\"]",
+      "parent": 37,
+      "order": 1,
+      "icon": "bx-list-ul",
+      "badge": null,
+      "css_class": null,
+      "show_in_menu": true,
+      "is_active": true,
+      "auto_generated": false,
+      "permissions": [
+        28
+      ],
+      "required_roles": [],
+      "created_at": "2025-07-27T10:00:00Z",
+      "updated_at": "2025-07-27T10:00:00Z"
+    }
+  },
+  {
+    "model": "menu.menuitem",
+    "pk": 45,
+    "fields": {
+      "title": "مدیریت تعرفه‌ها",
+      "description": "تعریف و ویرایش تعرفه خدمات",
+      "item_type": "link",
+      "link_type": "reverse",
+      "link_target": "reception:tariff_list",
+      "reverse_args_json": null,
+      "reverse_kwargs_json": null,
+      "highlight_url_names": "[\"reception:tariff_list\"]",
+      "parent": 37,
+      "order": 2,
+      "icon": "bx-money",
+      "badge": null,
+      "css_class": null,
+      "show_in_menu": true,
+      "is_active": true,
+      "auto_generated": false,
+      "permissions": [
+        29
+      ],
+      "required_roles": [],
+      "created_at": "2025-07-27T10:00:00Z",
+      "updated_at": "2025-07-27T10:00:00Z"
+    }
+  },
+  {
+    "model": "menu.menuitem",
+    "pk": 38,
+    "fields": {
+      "title": "کاربران و دسترسی‌ها",
+      "description": "مدیریت کاربران، نقش‌ها و مجوزها",
+      "item_type": "header",
+      "link_type": "none",
+      "link_target": null,
+      "reverse_args_json": null,
+      "reverse_kwargs_json": null,
+      "highlight_url_names": "[]",
+      "parent": null,
+      "order": 14,
+      "icon": "bx-shield-quarter",
+      "badge": null,
+      "css_class": null,
+      "show_in_menu": true,
+      "is_active": true,
+      "auto_generated": false,
+      "created_at": "2025-07-18T03:11:15Z",
+      "updated_at": "2025-07-18T03:11:15Z",
+      "permissions": [],
+      "required_roles": [
+        1
+      ]
+    }
+  },
+  {
+    "model": "menu.menuitem",
+    "pk": 39,
+    "fields": {
+      "title": "لیست کاربران",
+      "description": "مشاهده و مدیریت کاربران سیستم",
+      "item_type": "link",
+      "link_type": "reverse",
+      "link_target": "accounts:user-list",
+      "reverse_args_json": null,
+      "reverse_kwargs_json": null,
+      "highlight_url_names": "[\"accounts:user-create\", \"accounts:user-detail\", \"accounts:user-update\", \"accounts:user-delete\"]",
+      "parent": 38,
+      "order": 1,
+      "icon": "bxs-user-detail",
+      "badge": null,
+      "css_class": null,
+      "show_in_menu": true,
+      "is_active": true,
+      "auto_generated": false,
+      "created_at": "2025-07-18T03:11:15Z",
+      "updated_at": "2025-07-18T03:11:15Z",
+      "permissions": [
+        25
+      ],
+      "required_roles": []
+    }
+  },
+  {
+    "model": "menu.menuitem",
+    "pk": 40,
+    "fields": {
+      "title": "نقش‌ها",
+      "description": "مدیریت نقش‌های کاربری",
+      "item_type": "link",
+      "link_type": "reverse",
+      "link_target": "accounts:role-list",
+      "reverse_args_json": null,
+      "reverse_kwargs_json": null,
+      "highlight_url_names": "[\"accounts:role-create\", \"accounts:role-detail\", \"accounts:role-update\", \"accounts:role-delete\"]",
+      "parent": 38,
+      "order": 2,
+      "icon": "bx-shield-quarter",
+      "badge": null,
+      "css_class": null,
+      "show_in_menu": true,
+      "is_active": true,
+      "auto_generated": false,
+      "created_at": "2025-07-18T03:11:15Z",
+      "updated_at": "2025-07-18T03:11:15Z",
+      "permissions": [
+        26
+      ],
+      "required_roles": []
+    }
+  },
+  {
+    "model": "menu.menuitem",
+    "pk": 41,
+    "fields": {
+      "title": "مجوزها",
+      "description": "مدیریت مجوزهای دسترسی",
+      "item_type": "link",
+      "link_type": "reverse",
+      "link_target": "accounts:permission-list",
+      "reverse_args_json": null,
+      "reverse_kwargs_json": null,
+      "highlight_url_names": "[\"accounts:permission-create\", \"accounts:permission-detail\", \"accounts:permission-update\", \"accounts:permission-delete\"]",
+      "parent": 38,
+      "order": 3,
+      "icon": "bx-key",
+      "badge": null,
+      "css_class": null,
+      "show_in_menu": true,
+      "is_active": true,
+      "auto_generated": false,
+      "created_at": "2025-07-18T03:11:15Z",
+      "updated_at": "2025-07-18T03:11:15Z",
+      "permissions": [
+        27
+      ],
+      "required_roles": []
+    }
+  },
+  {
+    "model": "menu.menuitem",
+    "pk": 42,
+    "fields": {
+      "title": "پیام‌رسان کلینیک",
+      "description": "تنظیمات و ارسال پیامک",
+      "item_type": "header",
+      "link_type": "none",
+      "link_target": null,
+      "reverse_args_json": null,
+      "reverse_kwargs_json": null,
+      "highlight_url_names": "[]",
+      "parent": null,
+      "order": 15,
+      "icon": "bx-chat",
+      "badge": null,
+      "css_class": null,
+      "show_in_menu": true,
+      "is_active": true,
+      "auto_generated": false,
+      "created_at": "2025-07-23T10:00:00Z",
+      "updated_at": "2025-07-23T10:00:00Z",
+      "permissions": [],
+      "required_roles": []
+    }
+  },
+  {
+    "model": "menu.menuitem",
+    "pk": 43,
+    "fields": {
+      "title": "پیکربندی پیامک",
+      "description": "اتصال به ارائه‌دهنده پیامک",
+      "item_type": "link",
+      "link_type": "reverse",
+      "link_target": "clinic_messenger:sms_dashboard",
+      "reverse_args_json": null,
+      "reverse_kwargs_json": null,
+      "highlight_url_names": "[\"clinic_messenger:sms_dashboard\"]",
+      "parent": 42,
+      "order": 1,
+      "icon": "bx-cog",
+      "badge": null,
+      "css_class": null,
+      "show_in_menu": true,
+      "is_active": true,
+      "auto_generated": false,
+      "created_at": "2025-07-23T10:00:00Z",
+      "updated_at": "2025-07-23T10:00:00Z",
+      "permissions": [],
+      "required_roles": []
+    }
+  }
+]

@@ -1,0 +1,34 @@
+{# frontend/Dashbord/partials/menu.html #}
+{# این تمپلیت در base.html شما include می‌شود و کانتینر اصلی منو را فراهم می‌کند. #}
+
+{% load static %} {# برای استفاده از تگ static برای آیکون‌ها #}
+{% load menu_tags %} {# برای لود کردن تگ render_dynamic_menu #}
+
+{# کانتینر اصلی منوی عمودی. #}
+<aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme">
+    {# بخش برند و لوگوی اپلیکیشن در بالای منو. #}
+    <div class="app-brand demo">
+        {# لینک به داشبورد اصلی. #}
+        <a href="{% url 'dashboard' %}" class="app-brand-link">
+            {# لوگوی اپلیکیشن (می‌توانید تصویر یا SVG لوگو را اینجا قرار دهید). #}
+            <span class="app-brand-logo demo"></span>
+            {# نام اپلیکیشن یا کلینیک. #}
+            <span class="app-brand-text demo menu-text fw-bold ms-2">کلینیک آریتمی</span>
+        </a>
+        {# دکمه تاگل منو برای صفحات کوچک‌تر. #}
+        <a href="javascript:void(0);" class="layout-menu-toggle menu-link text-large ms-auto">
+            <i class="bx menu-toggle-icon d-none d-xl-block fs-4 align-middle"></i>
+            <i class="bx bx-x d-block d-xl-none bx-sm align-middle"></i>
+        </a>
+    </div>
+
+    {# جداکننده بصری در منو. #}
+    <div class="menu-divider mt-0"></div>
+    {# سایه داخلی منو برای جلوه بصری. #}
+    <div class="menu-inner-shadow"></div>
+
+    {# 🔥 این خط برای بارگذاری منوی داینامیک از سیستم MenuItem کافی است. #}
+    {# render_dynamic_menu حالا partials/_menu_tree.html را رندر می‌کند. #}
+    {# آبجکت request به render_dynamic_menu ارسال می‌شود تا منطق هایلایت فعال کار کند. #}
+    {% render_dynamic_menu %}
+</aside>

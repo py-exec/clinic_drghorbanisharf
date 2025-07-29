@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}لیست حضور و غیاب{% endblock %}
+
+{% block content %}
+<h2 class="mb-4 text-center">📋 لیست حضور و غیاب</h2>
+
+<div class="card">
+    <div class="card-header d-flex flex-column flex-md-row justify-content-between align-items-center gap-2">
+        <h5 class="mb-0">رکوردهای ثبت‌شده</h5>
+        <div class="d-flex flex-wrap gap-2 align-items-center">
+            <a href="{% url 'staffs:attendance-create' %}" class="btn btn-sm btn-success">➕ ثبت حضور جدید</a>
+        </div>
+    </div>
+
+    <div class="card-body pt-0">
+        <div class="table-responsive">
+            <table class="table table-striped table-hover">
+                <thead>
+                <tr>
+                    <th>نام کارمند</th>
+                    <th>تاریخ</th>
+                    <th>ورود</th>
+                    <th>خروج</th>
+                    <th>وضعیت</th>
+                    <th class="text-center">عملیات</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for record in records %}
+                <tr>
+                    <td>{{ record.staff.user.get_full_name }}</td>
+                    <td>{{ record.date|date:"Y/m/d" }}</td>
+                    <td>{{ record.check_in|time:"H:i" }}</td>
+                    <td>{{ record.check_out|default:"-"|time:"H:i" }}</td>
+                    <td>
+                        {% if record.is_late %}
+                        <span class="badge bg-warning text-dark">تاخیر</span>
+                        {% else %}
+                        <span class="badge bg-success">به موقع</span>
+                        {% endif %}
+                    </td>
+                    <td class="text-center">
+                        <div class="dropdown">
+                            <button class="btn btn-sm btn-outline-secondary dropdown-toggle" data-bs-toggle="dropdown">
+                                عملیات
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="{% url 'staffs:attendance-update' record.pk %}">✏️
+                                    ویرایش</a></li>
+                                <li><a class="dropdown-item text-danger"
+                                       href="{% url 'staffs:attendance-delete' record.pk %}">🗑 حذف</a></li>
+                            </ul>
+                        </div>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="6" class="text-center text-muted">⛔ رکوردی ثبت نشده است.</td>
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

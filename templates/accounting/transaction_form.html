@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% load static %}
+{% load humanize %}
+
+{% block title %}
+    {% if view.object %}✏️ ویرایش تراکنش{% else %}➕ ثبت تراکنش جدید{% endif %}
+{% endblock %}
+
+{% block content %}
+<h4 class="py-3 mb-4">
+    <span class="text-muted fw-light">حسابداری /</span>
+    {% if view.object %} ویرایش تراکنش{% else %} ثبت تراکنش جدید{% endif %}
+</h4>
+
+<div class="card">
+    <div class="card-body">
+        <form method="post" enctype="multipart/form-data" novalidate>
+            {% csrf_token %}
+
+            {% if form.non_field_errors %}
+                <div class="alert alert-danger">
+                    {% for error in form.non_field_errors %}
+                        <div>{{ error }}</div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            <fieldset class="border p-3 mb-4 rounded">
+                <legend class="w-auto px-2 small">📋 اطلاعات تراکنش</legend>
+                <div class="row g-3">
+                    {% for field in form.visible_fields %}
+                        <div class="{% if field.name == 'description' or field.name == 'notes' %}col-12{% else %}col-md-6{% endif %}">
+                            <label for="{{ field.id_for_label }}" class="form-label">
+                                {{ field.label }}
+                                {% if field.field.required %}
+                                    <span class="text-danger">*</span>
+                                {% endif %}
+                            </label>
+                            {{ field }}
+                            {% for error in field.errors %}
+                                <div class="text-danger small">{{ error }}</div>
+                            {% endfor %}
+                        </div>
+                    {% endfor %}
+                </div>
+            </fieldset>
+
+            <div class="d-flex justify-content-between mt-4">
+                <div>
+                    <a href="{% url 'accounting:transaction_list' %}" class="btn btn-secondary">🔙 بازگشت</a>
+                </div>
+                <div>
+                    <button type="submit" class="btn btn-primary">
+                        {% if view.object %}💾 بروزرسانی{% else %}💾 ذخیره{% endif %}
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

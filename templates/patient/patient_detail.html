@@ -1,0 +1,181 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}پرونده بیمار: {{ patient.user.get_full_name }}{% endblock %}
+
+{% block content %}
+<h4 class="py-3 mb-4">
+    <span class="text-muted fw-light">بیماران /</span> پرونده کامل بیمار
+</h4>
+
+<div class="card">
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <h5 class="mb-0">پرونده: {{ patient.user.get_full_name }} ({{ patient.record_number }})</h5>
+        <div class="d-print-none">
+            <a href="{% url 'patient:patient_update' patient.pk %}" class="btn btn-sm btn-outline-primary">
+                <i class="bx bx-edit"></i> ویرایش
+            </a>
+            <a href="{% url 'patient:patient_list' %}" class="btn btn-sm btn-outline-secondary">
+                بازگشت
+            </a>
+            <button onclick="window.print()" class="btn btn-sm btn-outline-info">
+                <i class="bx bx-printer"></i> چاپ
+            </button>
+        </div>
+    </div>
+    <div class="card-body">
+        <table class="table table-bordered">
+            <tbody>
+            <tr>
+                <th>نام</th>
+                <td>{{ patient.user.first_name }}</td>
+                <th>نام خانوادگی</th>
+                <td>{{ patient.user.last_name }}</td>
+            </tr>
+            <tr>
+                <th>کد ملی</th>
+                <td>{{ patient.user.national_code }}</td>
+                <th>شماره تماس</th>
+                <td>{{ patient.user.phone_number }}</td>
+            </tr>
+            <tr>
+                <th>ایمیل</th>
+                <td colspan="3">{{ patient.user.email|default:"—" }}</td>
+            </tr>
+            <tr>
+                <th>شماره پرونده</th>
+                <td>{{ patient.record_number }}</td>
+                <th>تعداد پذیرش‌ها</th>
+                <td>{{ patient.total_receptions }}</td>
+            </tr>
+            <tr>
+                <th>تاریخ ثبت</th>
+                <td>{{ patient.created_at|date:"Y/m/d" }}</td>
+                <th>آخرین سطح خدمت</th>
+                <td>{{ patient.latest_service_level }}</td>
+            </tr>
+            </tbody>
+        </table>
+
+        <h6 class="mt-4 mb-2">اطلاعات پزشکی</h6>
+        <table class="table table-bordered">
+            <tbody>
+            <tr>
+                <th>گروه خونی</th>
+                <td>{{ patient.blood_group|default:"—" }}</td>
+                <th>آلرژی</th>
+                <td>{{ patient.has_allergy|yesno:"دارد,ندارد" }}</td>
+            </tr>
+            <tr>
+                <th>توضیحات آلرژی</th>
+                <td colspan="3">{{ patient.allergy_info|default:"—" }}</td>
+            </tr>
+            <tr>
+                <th>بیماری مزمن</th>
+                <td>{{ patient.chronic_diseases|default:"—" }}</td>
+                <th>جراحی قلب</th>
+                <td>{{ patient.heart_surgery|yesno:"دارد,ندارد" }}</td>
+            </tr>
+            <tr>
+                <th>توضیحات جراحی</th>
+                <td colspan="3">{{ patient.surgery_description|default:"—" }}</td>
+            </tr>
+            <tr>
+                <th>وضعیت حرکتی</th>
+                <td>{{ patient.mobility_status|default:"—" }}</td>
+                <th>نیاز به خدمات ویژه</th>
+                <td>{{ patient.special_needs|default:"—" }}</td>
+            </tr>
+            <tr>
+                <th>سواد سلامت</th>
+                <td colspan="3">{{ patient.health_literacy|default:"—" }}</td>
+            </tr>
+            </tbody>
+        </table>
+
+        <h6 class="mt-4 mb-2">بیمه و ارجاع</h6>
+        <table class="table table-bordered">
+            <tbody>
+            <tr>
+                <th>نوع بیمه</th>
+                <td>{{ patient.insurance_type|default:"—" }}</td>
+                <th>شماره بیمه</th>
+                <td>{{ patient.insurance_number|default:"—" }}</td>
+            </tr>
+            <tr>
+                <th>کارت بیمه</th>
+                <td>
+                    {% if patient.insurance_file %}
+                    <a href="{{ patient.insurance_file.url }}" target="_blank">مشاهده فایل</a>
+                    {% else %}
+                    —
+                    {% endif %}
+                </td>
+                <th>ارجاعی است؟</th>
+                <td>{{ patient.is_referred|yesno:"بله,خیر" }}</td>
+            </tr>
+            <tr>
+                <th>پزشک ارجاع دهنده</th>
+                <td>{{ patient.referring_doctor|default:"—" }}</td>
+                <th>مرکز ارجاع</th>
+                <td>{{ patient.referring_center|default:"—" }}</td>
+            </tr>
+            <tr>
+                <th>فایل ارجاع</th>
+                <td colspan="3">
+                    {% if patient.referral_file %}
+                    <a href="{{ patient.referral_file.url }}" target="_blank">مشاهده فایل</a>
+                    {% else %}
+                    —
+                    {% endif %}
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+        <h6 class="mt-4 mb-2">اطلاعات همراه</h6>
+        <table class="table table-bordered">
+            <tbody>
+            <tr>
+                <th>نام همراه</th>
+                <td>{{ patient.companion_name|default:"—" }}</td>
+                <th>نسبت</th>
+                <td>{{ patient.companion_relation|default:"—" }}</td>
+            </tr>
+            <tr>
+                <th>شماره تماس همراه</th>
+                <td>{{ patient.companion_phone|default:"—" }}</td>
+                <th>اجازه تصمیم‌گیری</th>
+                <td>{{ patient.companion_decision|yesno:"دارد,ندارد" }}</td>
+            </tr>
+            </tbody>
+        </table>
+
+        <h6 class="mt-4 mb-2">فایل‌های پزشکی</h6>
+        {% if patient.files.exists %}
+        <table class="table table-bordered">
+            <thead>
+            <tr>
+                <th>عنوان</th>
+                <th>نوع فایل</th>
+                <th>تاریخ</th>
+                <th>فایل</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for file in patient.files.all %}
+            <tr>
+                <td>{{ file.title|default:"—" }}</td>
+                <td>{{ file.get_category_display }}</td>
+                <td>{{ file.uploaded_at|date:"Y/m/d" }}</td>
+                <td><a href="{{ file.file.url }}" target="_blank">مشاهده</a></td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <p class="text-muted">📁 هیچ فایل پزشکی‌ای ثبت نشده است.</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

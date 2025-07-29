@@ -1,0 +1,201 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}
+{% if form.instance.pk %}
+ویرایش پترن پیامک
+{% else %}
+ایجاد پترن پیامک جدید
+{% endif %}
+{% endblock %}
+
+{% block content %}
+<h4 class="py-3 mb-4">
+    <span class="text-muted fw-light">پیام‌رسان /</span>
+    {% if form.instance.pk %}
+    ویرایش پترن: {{ form.instance.name }}
+    {% else %}
+    ایجاد پترن جدید
+    {% endif %}
+</h4>
+
+<div class="row">
+    <div class="col-md-10 mx-auto">
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="card-title mb-0">فرم اطلاعات پترن</h5>
+            </div>
+            <div class="card-body">
+                <form method="post">
+                    {% csrf_token %}
+
+                    {% if form.non_field_errors %}
+                    <div class="alert alert-danger">
+                        {% for error in form.non_field_errors %}
+                        <p class="mb-0">{{ error }}</p>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+
+                    <!-- ==== فرم اصلی پترن ==== -->
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="{{ form.name.id_for_label }}" class="form-label">نام داخلی</label>
+                            {{ form.name }}
+                            <div class="form-text">{{ form.name.help_text }}</div>
+                            {% for error in form.name.errors %}
+                            <div class="invalid-feedback d-block">{{ error }}</div>
+                            {% endfor %}
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="{{ form.code.id_for_label }}" class="form-label">کد پترن (از پنل)</label>
+                            {{ form.code }}
+                            <div class="form-text">{{ form.code.help_text }}</div>
+                            {% for error in form.code.errors %}
+                            <div class="invalid-feedback d-block">{{ error }}</div>
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="{{ form.config.id_for_label }}" class="form-label">تنظیمات ارسال</label>
+                            {{ form.config }}
+                            {% for error in form.config.errors %}
+                            <div class="invalid-feedback d-block">{{ error }}</div>
+                            {% endfor %}
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="{{ form.type.id_for_label }}" class="form-label">نوع پترن</label>
+                            {{ form.type }}
+                            {% for error in form.type.errors %}
+                            <div class="invalid-feedback d-block">{{ error }}</div>
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="{{ form.body_template.id_for_label }}" class="form-label">متن قالب</label>
+                        {{ form.body_template }}
+                        {% for error in form.body_template.errors %}
+                        <div class="invalid-feedback d-block">{{ error }}</div>
+                        {% endfor %}
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="{{ form.provider.id_for_label }}" class="form-label">سرویس‌دهنده</label>
+                        {{ form.provider }}
+                        {% for error in form.provider.errors %}
+                        <div class="invalid-feedback d-block">{{ error }}</div>
+                        {% endfor %}
+                    </div>
+
+                    <div class="form-check mb-3">
+                        {{ form.is_active }}
+                        <label class="form-check-label" for="{{ form.is_active.id_for_label }}">
+                            این پترن فعال باشد؟
+                        </label>
+                    </div>
+
+                    <!-- ==== فرم متغیرهای پترن ==== -->
+                    <hr class="my-4"/>
+                    <h5>متغیرهای پترن</h5>
+
+                    {{ variable_formset.management_form }}
+                    <div id="variables-container">
+                        {% for form_var in variable_formset %}
+                        <div class="border rounded p-3 mb-3">
+                            <div class="row">
+                                <div class="col-md-3">
+                                    {{ form_var.key.label }} {{ form_var.key }}
+                                </div>
+                                <div class="col-md-3">
+                                    {{ form_var.label.label }} {{ form_var.label }}
+                                </div>
+                                <div class="col-md-2">
+                                    {{ form_var.data_type.label }} {{ form_var.data_type }}
+                                </div>
+                                <div class="col-md-2">
+                                    {{ form_var.required.label }} {{ form_var.required }}
+                                </div>
+                                <div class="col-md-2">
+                                    {{ form_var.hint.label }} {{ form_var.hint }}
+                                </div>
+                            </div>
+                            {% for hidden in form_var.hidden_fields %}
+                            {{ hidden }}
+                            {% endfor %}
+                            {% for error in form_var.non_field_errors %}
+                            <div class="text-danger small">{{ error }}</div>
+                            {% endfor %}
+                        </div>
+                        {% endfor %}
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">
+                        <i class="bx bx-save me-1"></i> ذخیره
+                    </button>
+                    <a href="{% url 'clinic_messenger:sms_dashboard' %}" class="btn btn-secondary">بازگشت</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block extra_js %}
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const formsetContainer = document.getElementById("variables-container");
+        const totalForms = document.getElementById("id_variables-TOTAL_FORMS");
+
+        // ساخت دکمه افزودن
+        const addButton = document.createElement("button");
+        addButton.type = "button";
+        addButton.className = "btn btn-sm btn-outline-primary mb-3";
+        addButton.innerHTML = '<i class="bx bx-plus"></i> افزودن متغیر';
+        formsetContainer.parentNode.insertBefore(addButton, formsetContainer.nextSibling);
+
+        // تابع افزودن فرم جدید
+        addButton.addEventListener("click", function () {
+            const formCount = parseInt(totalForms.value);
+            const firstForm = formsetContainer.querySelector(".border");
+            const newForm = firstForm.cloneNode(true);
+
+            // پاک‌سازی مقادیر فرم
+            Array.from(newForm.querySelectorAll("input, select, textarea")).forEach(input => {
+                if (input.type === "checkbox") {
+                    input.checked = false;
+                } else {
+                    input.value = "";
+                }
+
+                const name = input.name.replace(/-\d+-/, `-${formCount}-`);
+                const id = input.id.replace(/-\d+-/, `-${formCount}-`);
+                input.name = name;
+                input.id = id;
+            });
+
+            // حذف ارورها و مقدار hidden
+            Array.from(newForm.querySelectorAll(".text-danger, .invalid-feedback")).forEach(el => el.remove());
+            Array.from(newForm.querySelectorAll("input[type=hidden]")).forEach(el => {
+                el.name = el.name.replace(/-\d+-/, `-${formCount}-`);
+                el.id = el.id.replace(/-\d+-/, `-${formCount}-`);
+            });
+
+            // افزودن دکمه حذف
+            const removeBtn = document.createElement("button");
+            removeBtn.type = "button";
+            removeBtn.className = "btn btn-sm btn-outline-danger mt-2";
+            removeBtn.innerHTML = '<i class="bx bx-trash"></i> حذف';
+            removeBtn.onclick = function () {
+                newForm.remove();
+                totalForms.value = document.querySelectorAll("#variables-container .border").length;
+            };
+            newForm.appendChild(removeBtn);
+
+            formsetContainer.appendChild(newForm);
+            totalForms.value = formCount + 1;
+        });
+    });
+</script>
+{% endblock %}

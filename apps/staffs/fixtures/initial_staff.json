@@ -1,0 +1,110 @@
+[
+  {
+    "model": "staffs.staff",
+    "pk": 1,
+    "fields": {
+      "user": 3,
+      "position": 4,
+      "contract_number": "CN-1401-001",
+      "contract_start": "2023-11-01",
+      "contract_end": null,
+      "contract_file": null,
+      "base_salary": 12000000,
+      "is_active": true,
+      "notes": "پذیرش‌گر فعال در شیفت صبح کلینیک مرکزی",
+      "created_by": 1,
+      "created_at": "2023-11-01T08:00:00Z",
+      "updated_at": "2025-07-28T07:00:00Z"
+    }
+  },
+  {
+    "model": "staffs.staff",
+    "pk": 2,
+    "fields": {
+      "user": 4,
+      "position": 5,
+      "contract_number": "CN-1401-002",
+      "contract_start": "2023-11-02",
+      "contract_end": null,
+      "contract_file": null,
+      "base_salary": 10000000,
+      "is_active": true,
+      "notes": "کارمند واحد اداری",
+      "created_by": 6,
+      "created_at": "2023-11-02T09:00:00Z",
+      "updated_at": "2025-07-28T07:10:00Z"
+    }
+  },
+  {
+    "model": "staffs.staff",
+    "pk": 3,
+    "fields": {
+      "user": 5,
+      "position": 2,
+      "contract_number": "CN-1401-003",
+      "contract_start": "2023-11-03",
+      "contract_end": null,
+      "contract_file": null,
+      "base_salary": 15000000,
+      "is_active": true,
+      "notes": "مدیر کلینیک",
+      "created_by": 1,
+      "created_at": "2023-11-03T09:30:00Z",
+      "updated_at": "2025-07-28T07:11:00Z"
+    }
+  },
+  {
+    "model": "staffs.staff",
+    "pk": 4,
+    "fields": {
+      "user": 6,
+      "position": 1,
+      "contract_number": "CN-1401-004",
+      "contract_start": "2023-11-04",
+      "contract_end": null,
+      "contract_file": null,
+      "base_salary": 14500000,
+      "is_active": true,
+      "notes": "مدیر منابع انسانی کلینیک",
+      "created_by": 1,
+      "created_at": "2023-11-04T09:30:00Z",
+      "updated_at": "2025-07-28T07:12:00Z"
+    }
+  },
+  {
+    "model": "staffs.staff",
+    "pk": 5,
+    "fields": {
+      "user": 7,
+      "position": 9,
+      "contract_number": "CN-1401-005",
+      "contract_start": "2023-11-05",
+      "contract_end": null,
+      "contract_file": null,
+      "base_salary": 9500000,
+      "is_active": true,
+      "notes": "تکنسین نوار قلب (ECG)",
+      "created_by": 6,
+      "created_at": "2023-11-05T09:45:00Z",
+      "updated_at": "2025-07-28T07:13:00Z"
+    }
+  },
+  {
+    "model": "staffs.staff",
+    "pk": 6,
+    "fields": {
+      "user": 8,
+      "position": 10,
+      "contract_number": "CN-1401-006",
+      "contract_start": "2023-11-06",
+      "contract_end": null,
+      "contract_file": null,
+      "base_salary": 9200000,
+      "is_active": true,
+      "notes": "تکنسین هولتر",
+      "created_by": 6,
+      "created_at": "2023-11-06T09:50:00Z",
+      "updated_at": "2025-07-28T07:14:00Z"
+    }
+  }
+]

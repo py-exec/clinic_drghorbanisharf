@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}{% if form.instance.pk %}ویرایش کارمند{% else %}افزودن کارمند{% endif %}{% endblock %}
+
+{% block content %}
+<h2 class="mb-4 text-center">{% if form.instance.pk %}ویرایش کارمند{% else %}افزودن کارمند جدید{% endif %}</h2>
+
+<div class="col-12 mb-4">
+    <div class="bs-stepper wizard-vertical wizard-numbered vertical mt-2">
+
+        <!-- هد استپر -->
+        <div class="bs-stepper-header">
+            <div class="step" data-target="#step1">
+                <button type="button" class="step-trigger">
+                    <span class="bs-stepper-circle">1</span>
+                    <span class="bs-stepper-label">اطلاعات فردی</span>
+                </button>
+            </div>
+            <div class="line"></div>
+            <div class="step" data-target="#step2">
+                <button type="button" class="step-trigger">
+                    <span class="bs-stepper-circle">2</span>
+                    <span class="bs-stepper-label">شغلی و سیستم</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- محتوای استپر -->
+        <div class="bs-stepper-content">
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+
+                <!-- مرحله ۱: اطلاعات فردی -->
+                <div id="step1" class="content">
+                    <div class="content-header mb-3">
+                        <h6 class="mb-1">اطلاعات فردی</h6>
+                    </div>
+                    <div class="row g-3">
+                        <div class="col-md-3">{{ form.first_name.label_tag }}{{ form.first_name }}</div>
+                        <div class="col-md-3">{{ form.last_name.label_tag }}{{ form.last_name }}</div>
+                        <div class="col-md-3">{{ form.national_code.label_tag }}{{ form.national_code }}</div>
+                        <div class="col-md-3">{{ form.phone.label_tag }}{{ form.phone }}</div>
+                        <div class="col-md-3">{{ form.birth_date.label_tag }}{{ form.birth_date }}</div>
+                        <div class="col-md-3">{{ form.gender.label_tag }}{{ form.gender }}</div>
+                        <div class="col-md-3">{{ form.marital_status.label_tag }}{{ form.marital_status }}</div>
+                        <div class="col-md-3">{{ form.address.label_tag }}{{ form.address }}</div>
+
+                        <div class="col-12 d-flex justify-content-between">
+                            <button class="btn btn-label-secondary btn-prev" disabled>
+                                <i class="bx bx-chevron-left bx-sm ms-sm-n2"></i>
+                                <span class="d-sm-inline-block d-none">قبلی</span>
+                            </button>
+                            <button class="btn btn-primary btn-next" type="button">
+                                <span class="d-sm-inline-block d-none me-sm-1">بعدی</span>
+                                <i class="bx bx-chevron-right bx-sm me-sm-n2"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- مرحله ۲: شغلی و وضعیت -->
+                <div id="step2" class="content">
+                    <div class="content-header mb-3">
+                        <h6 class="mb-1">اطلاعات شغلی</h6>
+                    </div>
+                    <div class="row g-3">
+                        <div class="col-md-4">{{ form.position.label_tag }}{{ form.position }}</div>
+                        <div class="col-md-4">{{ form.hire_date.label_tag }}{{ form.hire_date }}</div>
+                        <div class="col-md-4">{{ form.salary.label_tag }}{{ form.salary }}</div>
+                        <div class="col-md-4">{{ form.contract_type.label_tag }}{{ form.contract_type }}</div>
+                        <div class="col-md-4">{{ form.working_hours.label_tag }}{{ form.working_hours }}</div>
+                        <div class="col-md-4">{{ form.notes.label_tag }}{{ form.notes }}</div>
+                        <div class="col-md-4">{{ form.is_active.label_tag }}{{ form.is_active }}</div>
+                    </div>
+
+                    <div class="col-12 d-flex justify-content-between mt-4">
+                        <button class="btn btn-primary btn-prev" type="button">
+                            <i class="bx bx-chevron-left bx-sm ms-sm-n2"></i>
+                            <span class="d-sm-inline-block d-none">قبلی</span>
+                        </button>
+                        <button class="btn btn-success btn-submit" type="submit">ثبت</button>
+                    </div>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/stepper.js' %}"></script>
+{% endblock %}

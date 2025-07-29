@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}لیست خروج کالا از انبار{% endblock %}
+
+{% block content %}
+<h2 class="mb-4 text-center">لیست اسناد خروج کالا</h2>
+
+<div class="card">
+  <!-- هدر کارت -->
+  <div class="card-header d-flex flex-column flex-md-row justify-content-between align-items-center gap-2">
+    <h5 class="mb-0">خروج‌های ثبت‌شده</h5>
+    <div class="d-flex flex-wrap gap-2 align-items-center">
+      <select class="form-select form-select-sm" style="width: 100px;">
+        <option>10</option>
+        <option>25</option>
+        <option selected>50</option>
+        <option>100</option>
+      </select>
+
+      <form method="get" class="d-flex align-items-center">
+        <input type="search" name="q" value="{{ request.GET.q }}" class="form-control form-control-sm" placeholder="🔍 جستجو بر اساس واحد / مسئول" />
+      </form>
+
+      <button class="btn btn-outline-danger btn-sm" onclick="window.print()">🖨 چاپ</button>
+    </div>
+  </div>
+
+  <!-- جدول -->
+  <div class="card-body pt-0">
+    <div class="table-responsive">
+      <table class="table table-striped table-hover align-middle">
+        <thead>
+          <tr>
+            <th>تاریخ</th>
+            <th>شماره سند</th>
+            <th>واحد مقصد</th>
+            <th>تحویل‌گیرنده</th>
+            <th>تعداد اقلام</th>
+            <th>ثبت‌کننده</th>
+            <th class="text-center">عملیات</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for stockout in stockouts %}
+          <tr>
+            <td>{{ stockout.date|date:"Y/m/d" }}</td>
+            <td>#{{ stockout.id }}</td>
+            <td>{{ stockout.department }}</td>
+            <td>{{ stockout.staff }}</td>
+            <td>{{ stockout.items.count }}</td>
+            <td>{{ stockout.created_by.get_full_name|default:stockout.created_by.username }}</td>
+            <td class="text-center">
+              <a href="{% url 'inventory:item_detail' stockout.items.first.item.pk %}" class="btn btn-sm btn-outline-primary">👁 مشاهده</a>
+            </td>
+          </tr>
+          {% empty %}
+          <tr><td colspan="7" class="text-center text-muted">⛔ هیچ خروجی‌ای ثبت نشده است.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}

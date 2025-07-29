@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}حذف بیمار{% endblock %}
+
+{% block content %}
+<h4 class="py-3 mb-4">
+    <span class="text-muted fw-light">بیماران /</span> حذف بیمار
+</h4>
+
+<div class="alert alert-danger d-flex align-items-center" role="alert">
+    <i class="bx bx-error-circle me-2"></i>
+    <div>
+        ⚠️ آیا مطمئن هستید که می‌خواهید بیمار
+        <strong>{{ patient.user.get_full_name }}</strong>
+        با شماره پرونده
+        <strong>{{ patient.record_number }}</strong>
+        و کاربر مرتبط را حذف کنید؟ این عملیات قابل بازگشت نیست!
+    </div>
+</div>
+
+<form method="post" class="mt-4">
+    {% csrf_token %}
+    <div class="d-flex gap-2">
+        <button type="submit" class="btn btn-danger">
+            <i class="bx bx-trash"></i> بله، حذف شود
+        </button>
+        <a href="{{ patient.get_absolute_url }}" class="btn btn-outline-secondary">
+            لغو
+        </a>
+    </div>
+</form>
+{% endblock %}

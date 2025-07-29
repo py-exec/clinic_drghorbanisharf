@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}جزئیات کارمند{% endblock %}
+
+{% block content %}
+<h2 class="mb-4 text-center">👤 اطلاعات کارمند</h2>
+
+<div class="card">
+    <div class="card-body">
+        <div class="row g-4">
+            <div class="col-md-3 text-center">
+                {% if staff.user.profile_image %}
+                <img src="{{ staff.user.profile_image.url }}" class="img-thumbnail rounded-circle" width="150"
+                     height="150">
+                {% else %}
+                <img src="{% static 'img/default-avatar.png' %}" class="img-thumbnail rounded-circle" width="150"
+                     height="150">
+                {% endif %}
+            </div>
+            <div class="col-md-9">
+                <table class="table table-striped">
+                    <tr>
+                        <th>نام و نام خانوادگی</th>
+                        <td>{{ staff.user.get_full_name }}</td>
+                    </tr>
+                    <tr>
+                        <th>کد ملی</th>
+                        <td>{{ staff.user.national_code }}</td>
+                    </tr>
+                    <tr>
+                        <th>شماره موبایل</th>
+                        <td>{{ staff.user.phone_number }}</td>
+                    </tr>
+                    <tr>
+                        <th>ایمیل</th>
+                        <td>{{ staff.user.email|default:"-" }}</td>
+                    </tr>
+                    <tr>
+                        <th>نقش</th>
+                        <td>{{ staff.user.role.name }}</td>
+                    </tr>
+                    <tr>
+                        <th>موقعیت شغلی</th>
+                        <td>{{ staff.position.title }}</td>
+                    </tr>
+                    <tr>
+                        <th>تاریخ استخدام</th>
+                        <td>{{ staff.hired_at|date:"Y/m/d" }}</td>
+                    </tr>
+                    <tr>
+                        <th>وضعیت</th>
+                        <td>
+                            {% if staff.is_active %}
+                            <span class="badge bg-success">فعال</span>
+                            {% else %}
+                            <span class="badge bg-danger">غیرفعال</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                </table>
+
+                <div class="mt-4 d-flex gap-2">
+                    <a href="{% url 'staffs:staff-update' staff.pk %}" class="btn btn-primary">✏️ ویرایش</a>
+                    <a href="{% url 'staffs:staff-delete' staff.pk %}" class="btn btn-danger">🗑 غیرفعال‌سازی</a>
+                    <a href="{% url 'staffs:staff-list' %}" class="btn btn-secondary">🔙 بازگشت</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

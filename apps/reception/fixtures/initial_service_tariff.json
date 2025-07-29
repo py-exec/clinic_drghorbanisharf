@@ -1,0 +1,128 @@
+[
+  {
+    "model": "reception.servicetariff",
+    "pk": 1,
+    "fields": {
+      "service_type": 1,
+      "amount": 520000,
+      "valid_from": "2025-07-28",
+      "valid_to": null,
+      "insurance_coverage": null,
+      "is_active": true,
+      "created_at": "2025-07-28T01:12:21.416Z",
+      "created_by": null
+    }
+  },
+  {
+    "model": "reception.servicetariff",
+    "pk": 2,
+    "fields": {
+      "service_type": 2,
+      "amount": 850000,
+      "valid_from": "2025-07-28",
+      "valid_to": null,
+      "insurance_coverage": null,
+      "is_active": true,
+      "created_at": "2025-07-28T01:12:21.416Z",
+      "created_by": null
+    }
+  },
+  {
+    "model": "reception.servicetariff",
+    "pk": 3,
+    "fields": {
+      "service_type": 3,
+      "amount": 800000,
+      "valid_from": "2025-07-28",
+      "valid_to": null,
+      "insurance_coverage": null,
+      "is_active": true,
+      "created_at": "2025-07-28T01:12:21.416Z",
+      "created_by": null
+    }
+  },
+  {
+    "model": "reception.servicetariff",
+    "pk": 4,
+    "fields": {
+      "service_type": 4,
+      "amount": 1200000,
+      "valid_from": "2025-07-28",
+      "valid_to": null,
+      "insurance_coverage": null,
+      "is_active": true,
+      "created_at": "2025-07-28T01:12:21.416Z",
+      "created_by": null
+    }
+  },
+  {
+    "model": "reception.servicetariff",
+    "pk": 5,
+    "fields": {
+      "service_type": 5,
+      "amount": 750000,
+      "valid_from": "2025-07-28",
+      "valid_to": null,
+      "insurance_coverage": null,
+      "is_active": true,
+      "created_at": "2025-07-28T01:12:21.416Z",
+      "created_by": null
+    }
+  },
+  {
+    "model": "reception.servicetariff",
+    "pk": 6,
+    "fields": {
+      "service_type": 6,
+      "amount": 1500000,
+      "valid_from": "2025-07-28",
+      "valid_to": null,
+      "insurance_coverage": null,
+      "is_active": true,
+      "created_at": "2025-07-28T01:12:21.416Z",
+      "created_by": null
+    }
+  },
+  {
+    "model": "reception.servicetariff",
+    "pk": 7,
+    "fields": {
+      "service_type": 7,
+      "amount": 1100000,
+      "valid_from": "2025-07-28",
+      "valid_to": null,
+      "insurance_coverage": null,
+      "is_active": true,
+      "created_at": "2025-07-28T01:12:21.416Z",
+      "created_by": null
+    }
+  },
+  {
+    "model": "reception.servicetariff",
+    "pk": 8,
+    "fields": {
+      "service_type": 8,
+      "amount": 950000,
+      "valid_from": "2025-07-28",
+      "valid_to": null,
+      "insurance_coverage": null,
+      "is_active": true,
+      "created_at": "2025-07-28T01:12:21.416Z",
+      "created_by": null
+    }
+  },
+  {
+    "model": "reception.servicetariff",
+    "pk": 9,
+    "fields": {
+      "service_type": 9,
+      "amount": 1800000,
+      "valid_from": "2025-07-28",
+      "valid_to": null,
+      "insurance_coverage": null,
+      "is_active": true,
+      "created_at": "2025-07-28T01:12:21.416Z",
+      "created_by": null
+    }
+  }
+]

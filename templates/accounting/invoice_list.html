@@ -1,0 +1,217 @@
+{% extends "base.html" %}
+{% load static %}
+{% load humanize %}
+
+{% block title %}📑 لیست فاکتورها{% endblock %}
+
+{% block content %}
+<h4 class="py-3 mb-4">
+    <span class="text-muted fw-light">حسابداری /</span> لیست فاکتورها
+</h4>
+
+<div class="card">
+    <!-- هدر کارت و ابزارهای مدیریتی -->
+    <div class="card-header">
+        <div class="d-flex flex-wrap justify-content-between align-items-center gap-3">
+            <h5 class="card-title mb-0">لیست فاکتورهای سیستم</h5>
+
+            <div class="d-flex flex-wrap align-items-center gap-2">
+                <!-- دکمه انتخاب ستون‌ها -->
+                <div class="dropdown">
+                    <button class="btn btn-outline-secondary btn-sm dropdown-toggle" type="button" id="column-toggler"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="bx bx-table me-1"></i> نمایش ستون‌ها
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="column-toggler" id="column-list">
+                        <li><label class="dropdown-item"><input type="checkbox" class="form-check-input me-2"
+                                                                data-column="invoice_number" checked> شماره
+                            فاکتور</label></li>
+                        <li><label class="dropdown-item"><input type="checkbox" class="form-check-input me-2"
+                                                                data-column="related_user" checked> بیمار/کاربر</label>
+                        </li>
+                        <li><label class="dropdown-item"><input type="checkbox" class="form-check-input me-2"
+                                                                data-column="final_amount" checked> مبلغ نهایی</label>
+                        </li>
+                        <li><label class="dropdown-item"><input type="checkbox" class="form-check-input me-2"
+                                                                data-column="paid_amount"> مبلغ پرداخت شده</label></li>
+                        <li><label class="dropdown-item"><input type="checkbox" class="form-check-input me-2"
+                                                                data-column="debt"> بدهی</label></li>
+                        <li><label class="dropdown-item"><input type="checkbox" class="form-check-input me-2"
+                                                                data-column="status" checked> وضعیت</label></li>
+                        <li><label class="dropdown-item"><input type="checkbox" class="form-check-input me-2"
+                                                                data-column="issue_date" checked> تاریخ صدور</label>
+                        </li>
+                        <li><label class="dropdown-item"><input type="checkbox" class="form-check-input me-2"
+                                                                data-column="due_date"> تاریخ سررسید</label></li>
+                    </ul>
+                </div>
+
+                <!-- دکمه‌های عملیاتی -->
+                <a href="{% url 'accounting:invoice_create' %}" class="btn btn-success btn-sm">
+                    <i class="bx bx-plus me-1"></i> ثبت فاکتور جدید
+                </a>
+                <a href="?export=pdf" class="btn btn-outline-danger btn-sm">
+                    <i class="bx bxs-file-pdf me-1"></i> خروجی PDF
+                </a>
+                <a href="?export=excel" class="btn btn-outline-success btn-sm">
+                    <i class="bx bxs-file-spreadsheet me-1"></i> خروجی Excel
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- جدول فاکتورها -->
+    <div class="card-body">
+        <div class="table-responsive text-nowrap">
+            <table class="table table-hover table-striped" id="invoices-table">
+                <thead>
+                <tr>
+                    <th data-column="invoice_number">شماره فاکتور</th>
+                    <th data-column="related_user">بیمار/کاربر</th>
+                    <th data-column="final_amount">مبلغ نهایی</th>
+                    <th data-column="paid_amount">پرداخت شده</th>
+                    <th data-column="debt">بدهی</th>
+                    <th data-column="status">وضعیت</th>
+                    <th data-column="issue_date">تاریخ صدور</th>
+                    <th data-column="due_date">تاریخ سررسید</th>
+                    <th class="text-center">عملیات</th>
+                </tr>
+                </thead>
+                <tbody class="table-border-bottom-0">
+                {% for invoice in page_obj %}
+                <tr>
+                    <td data-column="invoice_number"><strong>{{ invoice.invoice_number }}</strong></td>
+                    <td data-column="related_user">{{ invoice.related_user.get_full_name|default:"-" }}</td>
+                    <td data-column="final_amount">{{ invoice.final_amount|intcomma }} ریال</td>
+                    <td data-column="paid_amount">{{ invoice.paid_amount|intcomma }} ریال</td>
+                    <td data-column="debt">
+                        {% if invoice.debt > 0 %}
+                        <span class="text-danger">{{ invoice.debt|intcomma }} ریال</span>
+                        {% else %}
+                        <span>-</span>
+                        {% endif %}
+                    </td>
+                    <td data-column="status">
+                            <span class="badge
+                                {% if invoice.status == 'paid' %}bg-label-success
+                                {% elif invoice.status == 'open' %}bg-label-warning
+                                {% elif invoice.status == 'void' %}bg-label-danger
+                                {% else %}bg-label-secondary{% endif %} me-1">
+                                {{ invoice.get_status_display }}
+                            </span>
+                    </td>
+                    <td data-column="issue_date">{{ invoice.issue_date|date:"Y/m/d" }}</td>
+                    <td data-column="due_date">{{ invoice.due_date|date:"Y/m/d"|default:"-" }}</td>
+                    <td class="text-center">
+                        <div class="dropdown">
+                            <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
+                                <i class="bx bx-dots-vertical-rounded"></i>
+                            </button>
+                            <div class="dropdown-menu">
+                                <a class="dropdown-item" href="{% url 'accounting:invoice_detail' invoice.pk %}">
+                                    <i class="bx bx-show-alt me-1"></i> مشاهده
+                                </a>
+                                <a class="dropdown-item" href="{% url 'accounting:invoice_update' invoice.pk %}">
+                                    <i class="bx bx-edit-alt me-1"></i> ویرایش
+                                </a>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="9" class="text-center py-4">هیچ فاکتوری یافت نشد.</td>
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- صفحه‌بندی -->
+        {% if page_obj.has_other_pages %}
+        <div class="d-flex justify-content-center mt-4">
+            <nav aria-label="Page navigation">
+                <ul class="pagination">
+                    {% if page_obj.has_previous %}
+                    <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">قبلی</a>
+                    </li>
+                    {% else %}
+                    <li class="page-item disabled"><span class="page-link">قبلی</span></li>
+                    {% endif %}
+
+                    {% for num in page_obj.paginator.page_range %}
+                    {% if page_obj.number == num %}
+                    <li class="page-item active"><span class="page-link">{{ num }}</span></li>
+                    {% else %}
+                    <li class="page-item"><a class="page-link" href="?page={{ num }}">{{ num }}</a></li>
+                    {% endif %}
+                    {% endfor %}
+
+                    {% if page_obj.has_next %}
+                    <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">بعدی</a>
+                    </li>
+                    {% else %}
+                    <li class="page-item disabled"><span class="page-link">بعدی</span></li>
+                    {% endif %}
+                </ul>
+            </nav>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const table = document.getElementById('invoices-table');
+        const columnCheckboxes = document.querySelectorAll('#column-list input[type="checkbox"]');
+        const storageKey = 'invoiceColumnVisibility';
+
+        // تابع برای بروزرسانی نمایش ستون‌ها
+        function updateColumnVisibility() {
+            const visibilityState = {};
+            columnCheckboxes.forEach(checkbox => {
+                const column = checkbox.dataset.column;
+                const isVisible = checkbox.checked;
+                visibilityState[column] = isVisible;
+
+                // نمایش یا پنهان کردن هدر و تمام سلول‌های مربوط به ستون
+                const cells = table.querySelectorAll(`[data-column="${column}"]`);
+                cells.forEach(cell => {
+                    cell.style.display = isVisible ? '' : 'none';
+                });
+            });
+            // ذخیره وضعیت در حافظه محلی
+            localStorage.setItem(storageKey, JSON.stringify(visibilityState));
+        }
+
+        // تابع برای بارگذاری تنظیمات ذخیره شده
+        function loadColumnVisibility() {
+            const savedState = JSON.parse(localStorage.getItem(storageKey));
+            if (savedState) {
+                columnCheckboxes.forEach(checkbox => {
+                    const column = checkbox.dataset.column;
+                    if (savedState[column] !== undefined) {
+                        checkbox.checked = savedState[column];
+                    }
+                });
+            }
+            updateColumnVisibility();
+        }
+
+        // افزودن Event Listener به هر چک‌باکس
+        columnCheckboxes.forEach(checkbox => {
+            checkbox.addEventListener('change', updateColumnVisibility);
+        });
+
+        // جلوگیری از بسته شدن منو هنگام کلیک روی آیتم‌ها
+        document.getElementById('column-list').addEventListener('click', function (e) {
+            e.stopPropagation();
+        });
+
+        // بارگذاری تنظیمات در هنگام باز شدن صفحه
+        loadColumnVisibility();
+    });
+</script>
+{% endblock %}

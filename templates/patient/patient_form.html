@@ -1,0 +1,388 @@
+{% extends "base.html" %}
+{% load static %}
+{% block vendor_css %}
+<link rel="stylesheet" href="{% static 'assets/vendor/libs/bs-stepper/bs-stepper.css' %}">
+{% endblock %}
+
+{% block title %}
+{% if patient %}
+ویرایش بیمار
+{% else %}
+ثبت بیمار جدید
+{% endif %}
+{% endblock %}
+
+{% block content %}
+<h2 class="mb-4 text-center">
+    {% if patient %}
+    ویرایش اطلاعات بیمار
+    {% elif pending_user %}
+    تکمیل اطلاعات بیمار
+    {% else %}
+    ثبت بیمار جدید
+    {% endif %}
+</h2>
+
+<div class="col-12 mb-4">
+    {% if patient %}
+    <div class="card mb-3">
+        <div class="card-body">
+            <h5 class="mb-0">ویرایش اطلاعات برای: {{ patient.user.get_full_name }}</h5>
+        </div>
+    </div>
+    {% elif pending_user %}
+    <div class="card mb-3">
+        <div class="card-body">
+            <h5 class="mb-0">کاربر با کد ملی {{ pending_user.national_code }} یافت شد. لطفاً اطلاعات بیمار را تکمیل
+                کنید.</h5>
+        </div>
+    </div>
+    {% endif %}
+
+    <form method="post" enctype="multipart/form-data" id="patient-form">
+        {% csrf_token %}
+        {% if form.non_field_errors %}
+        <div class="alert alert-danger">
+            {% for error in form.non_field_errors %}
+            <p class="mb-0">{{ error }}</p>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        <div class="bs-stepper wizard-vertical wizard-numbered vertical mt-2">
+            <div class="bs-stepper-header">
+                <div class="step" data-target="#step-personal-info">
+                    <button type="button" class="step-trigger">
+                        <span class="bs-stepper-circle">1</span>
+                        <span class="bs-stepper-label">اطلاعات هویتی</span>
+                    </button>
+                </div>
+                <div class="line"></div>
+                <div class="step" data-target="#step-medical-info">
+                    <button type="button" class="step-trigger">
+                        <span class="bs-stepper-circle">2</span>
+                        <span class="bs-stepper-label">اطلاعات پزشکی</span>
+                    </button>
+                </div>
+                <div class="line"></div>
+                <div class="step" data-target="#step-insurance-info">
+                    <button type="button" class="step-trigger">
+                        <span class="bs-stepper-circle">3</span>
+                        <span class="bs-stepper-label">بیمه و ارجاع</span>
+                    </button>
+                </div>
+                <div class="line"></div>
+                <div class="step" data-target="#step-companion-info">
+                    <button type="button" class="step-trigger">
+                        <span class="bs-stepper-circle">4</span>
+                        <span class="bs-stepper-label">اطلاعات همراه</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="bs-stepper-content">
+                <div id="step-personal-info" class="content">
+                    <div class="content-header mb-3">
+                        <h6 class="mb-1">اطلاعات هویتی و تماس</h6>
+                    </div>
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label for="{{ form.first_name.id_for_label }}" class="form-label">
+                                {{ form.first_name.label }}{% if form.first_name.field.required %}<span
+                                    class="text-danger">*</span>{% endif %}
+                            </label>
+                            {{ form.first_name }}
+                            {{ form.first_name.errors }}
+                        </div>
+                        <div class="col-md-6">
+                            <label for="{{ form.last_name.id_for_label }}" class="form-label">
+                                {{ form.last_name.label }}{% if form.last_name.field.required %}<span
+                                    class="text-danger">*</span>{% endif %}
+                            </label>
+                            {{ form.last_name }}
+                            {{ form.last_name.errors }}
+                        </div>
+                        <div class="col-md-6">
+                            <label for="{{ form.national_code.id_for_label }}" class="form-label">
+                                {{ form.national_code.label }}{% if form.national_code.field.required %}<span
+                                    class="text-danger">*</span>{% endif %}
+                            </label>
+                            {{ form.national_code }}
+                            {{ form.national_code.errors }}
+                        </div>
+                        <div class="col-md-6">
+                            <label for="{{ form.phone_number.id_for_label }}" class="form-label">
+                                {{ form.phone_number.label }}{% if form.phone_number.field.required %}<span
+                                    class="text-danger">*</span>{% endif %}
+                            </label>
+                            {{ form.phone_number }}
+                            {{ form.phone_number.errors }}
+                        </div>
+                        <div class="col-md-6">
+                            <label for="{{ form.email.id_for_label }}" class="form-label">
+                                {{ form.email.label }}{% if form.email.field.required %}<span
+                                    class="text-danger">*</span>{% endif %}
+                            </label>
+                            {{ form.email }}
+                            {{ form.email.errors }}
+                        </div>
+                    </div>
+
+
+                    <div class="col-12 d-flex justify-content-end mt-4">
+                        <button class="btn btn-primary btn-next">
+                            <span class="d-sm-inline-block d-none me-sm-1">بعدی</span>
+                            <i class="bx bx-chevron-right bx-sm me-sm-n2"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div id="step-medical-info" class="content">
+                    <div class="content-header mb-3">
+                        <h6 class="mb-1">اطلاعات پزشکی پایه</h6>
+                    </div>
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label for="{{ form.blood_group.id_for_label }}" class="form-label">
+                                {{ form.blood_group.label }}{% if form.blood_group.field.required %}<span
+                                    class="text-danger">*</span>{% endif %}
+                            </label>
+                            {{ form.blood_group }}
+                            {{ form.blood_group.errors }}
+                        </div>
+                        <div class="col-md-6">
+                            <label for="{{ form.chronic_diseases.id_for_label }}" class="form-label">
+                                {{ form.chronic_diseases.label }}{% if form.chronic_diseases.field.required %}<span
+                                    class="text-danger">*</span>{% endif %}
+                            </label>
+                            {{ form.chronic_diseases }}
+                            {{ form.chronic_diseases.errors }}
+                        </div>
+                        <div class="col-md-6">
+                            <label for="{{ form.blood_sugar_status.id_for_label }}" class="form-label">
+                                {{ form.blood_sugar_status.label }}{% if form.blood_sugar_status.field.required %}<span
+                                    class="text-danger">*</span>{% endif %}
+                            </label>
+                            {{ form.blood_sugar_status }}
+                            {{ form.blood_sugar_status.errors }}
+                        </div>
+                        <div class="col-12">
+                            <label for="{{ form.allergy_info.id_for_label }}" class="form-label">
+                                {{ form.allergy_info.label }}{% if form.allergy_info.field.required %}<span
+                                    class="text-danger">*</span>{% endif %}
+                            </label>
+                            {{ form.allergy_info }}
+                            {{ form.allergy_info.errors }}
+                        </div>
+                        <div class="col-12">
+                            <label for="{{ form.surgery_description.id_for_label }}" class="form-label">
+                                {{ form.surgery_description.label }}{% if form.surgery_description.field.required %}
+                                <span class="text-danger">*</span>{% endif %}
+                            </label>
+                            {{ form.surgery_description }}
+                            {{ form.surgery_description.errors }}
+                        </div>
+                        <div class="col-md-6">
+                            <label for="{{ form.mobility_status.id_for_label }}" class="form-label">
+                                {{ form.mobility_status.label }}{% if form.mobility_status.field.required %}<span
+                                    class="text-danger">*</span>{% endif %}
+                            </label>
+                            {{ form.mobility_status }}
+                            {{ form.mobility_status.errors }}
+                        </div>
+                        <div class="col-md-6">
+                            <label for="{{ form.special_needs.id_for_label }}" class="form-label">
+                                {{ form.special_needs.label }}{% if form.special_needs.field.required %}<span
+                                    class="text-danger">*</span>{% endif %}
+                            </label>
+                            {{ form.special_needs }}
+                            {{ form.special_needs.errors }}
+                        </div>
+                        <div class="col-md-6">
+                            <label for="{{ form.health_literacy.id_for_label }}" class="form-label">
+                                {{ form.health_literacy.label }}{% if form.health_literacy.field.required %}<span
+                                    class="text-danger">*</span>{% endif %}
+                            </label>
+                            {{ form.health_literacy }}
+                            {{ form.health_literacy.errors }}
+                        </div>
+                        <div class="col-md-3 form-check mt-4 pt-2">
+                            {{ form.has_allergy }} {{ form.has_allergy.label_tag }}
+                            {{ form.has_allergy.errors }}
+                        </div>
+                        <div class="col-md-3 form-check mt-4 pt-2">
+                            {{ form.heart_surgery }} {{ form.heart_surgery.label_tag }}
+                            {{ form.heart_surgery.errors }}
+                        </div>
+                    </div>
+
+
+                    <div class="col-12 d-flex justify-content-between mt-4">
+                        <button class="btn btn-primary btn-prev"><i class="bx bx-chevron-left bx-sm ms-sm-n2"></i> <span
+                                class="d-sm-inline-block d-none">قبلی</span></button>
+                        <button class="btn btn-primary btn-next"><span
+                                class="d-sm-inline-block d-none me-sm-1">بعدی</span> <i
+                                class="bx bx-chevron-right bx-sm me-sm-n2"></i></button>
+                    </div>
+                </div>
+
+                <div id="step-insurance-info" class="content">
+                    <div class="content-header mb-3"><h6 class="mb-1">بیمه و ارجاع</h6></div>
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label for="{{ form.basic_insurance_company.id_for_label }}" class="form-label">
+                                {{ form.basic_insurance_company.label }}{% if form.basic_insurance_company.field.required %}<span class="text-danger">*</span>
+                                {% endif %}
+                            </label>
+                            {{ form.basic_insurance_company }}
+                            {{ form.basic_insurance_company.errors }}
+                        </div>
+                        <div class="col-md-6">
+                            <label for="{{ form.basic_insurance_number.id_for_label }}" class="form-label">
+                                {{ form.basic_insurance_number.label }}{% if form.basic_insurance_number.field.required %}
+                                <span class="text-danger">*</span>{% endif %}
+                            </label>
+                            {{ form.basic_insurance_number }}
+                            {{ form.basic_insurance_number.errors }}
+                        </div>
+                        <div class="col-md-12">
+                            <label for="{{ form.basic_insurance_file.id_for_label }}" class="form-label">
+                                {{ form.basic_insurance_file.label }}{% if form.basic_insurance_file.field.required %}
+                                <span class="text-danger">*</span>{% endif %}
+                            </label>
+                            {{ form.basic_insurance_file }}
+                            {{ form.basic_insurance_file.errors }}
+                        </div>
+                        <div class="col-md-6">
+                            <label for="{{ form.supplementary_insurance_company.id_for_label }}" class="form-label">
+                                {{ form.supplementary_insurance_company.label }}{% if form.supplementary_insurance_company.field.required %}<span class="text-danger">*</span>
+                                {% endif %}
+                            </label>
+                            {{ form.supplementary_insurance_company }}
+                            {{ form.supplementary_insurance_company.errors }}
+                        </div>
+                        <div class="col-md-6">
+                            <label for="{{ form.supplementary_insurance_number.id_for_label }}" class="form-label">
+                                {{ form.supplementary_insurance_number.label }}{% if form.supplementary_insurance_number.field.required %}<span class="text-danger">*</span>
+                                {% endif %}
+                            </label>
+                            {{ form.supplementary_insurance_number }}
+                            {{ form.supplementary_insurance_number.errors }}
+                        </div>
+                        <div class="col-md-12">
+                            <label for="{{ form.supplementary_insurance_file.id_for_label }}" class="form-label">
+                                {{ form.supplementary_insurance_file.label }}{% if form.supplementary_insurance_file.field.required %}<span class="text-danger">*</span>
+                                {% endif %}
+                            </label>
+                            {{ form.supplementary_insurance_file }}
+                            {{ form.supplementary_insurance_file.errors }}
+                        </div>
+                        <div class="col-md-6">
+                            <label for="{{ form.referring_doctor.id_for_label }}" class="form-label">
+                                {{ form.referring_doctor.label }}{% if form.referring_doctor.field.required %}<span
+                                    class="text-danger">*</span>{% endif %}
+                            </label>
+                            {{ form.referring_doctor }}
+                            {{ form.referring_doctor.errors }}
+                        </div>
+                        <div class="col-md-6">
+                            <label for="{{ form.referring_center.id_for_label }}" class="form-label">
+                                {{ form.referring_center.label }}{% if form.referring_center.field.required %}<span
+                                    class="text-danger">*</span>{% endif %}
+                            </label>
+                            {{ form.referring_center }}
+                            {{ form.referring_center.errors }}
+                        </div>
+                        <div class="col-md-12">
+                            <label for="{{ form.referral_file.id_for_label }}" class="form-label">
+                                {{ form.referral_file.label }}{% if form.referral_file.field.required %}<span
+                                    class="text-danger">*</span>{% endif %}
+                            </label>
+                            {{ form.referral_file }}
+                            {{ form.referral_file.errors }}
+                        </div>
+                        <div class="col-md-12 mt-3 pt-2 form-check">
+                            {{ form.is_referred }} {{ form.is_referred.label_tag }}
+                            {{ form.is_referred.errors }}
+                        </div>
+                    </div>
+
+
+                    <div class="col-12 d-flex justify-content-between mt-4">
+                        <button class="btn btn-primary btn-prev"><i class="bx bx-chevron-left bx-sm ms-sm-n2"></i> <span
+                                class="d-sm-inline-block d-none">قبلی</span></button>
+                        <button class="btn btn-primary btn-next"><span
+                                class="d-sm-inline-block d-none me-sm-1">بعدی</span> <i
+                                class="bx bx-chevron-right bx-sm me-sm-n2"></i></button>
+                    </div>
+                </div>
+
+                <div id="step-companion-info" class="content">
+                    <div class="content-header mb-3"><h6 class="mb-1">اطلاعات همراه</h6></div>
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label for="{{ form.companion_name.id_for_label }}" class="form-label">
+                                {{ form.companion_name.label }}{% if form.companion_name.field.required %}<span
+                                    class="text-danger">*</span>{% endif %}
+                            </label>
+                            {{ form.companion_name }}
+                            {{ form.companion_name.errors }}
+                        </div>
+                        <div class="col-md-6">
+                            <label for="{{ form.companion_relation.id_for_label }}" class="form-label">
+                                {{ form.companion_relation.label }}{% if form.companion_relation.field.required %}<span
+                                    class="text-danger">*</span>{% endif %}
+                            </label>
+                            {{ form.companion_relation }}
+                            {{ form.companion_relation.errors }}
+                        </div>
+                        <div class="col-md-6">
+                            <label for="{{ form.companion_phone.id_for_label }}" class="form-label">
+                                {{ form.companion_phone.label }}{% if form.companion_phone.field.required %}<span
+                                    class="text-danger">*</span>{% endif %}
+                            </label>
+                            {{ form.companion_phone }}
+                            {{ form.companion_phone.errors }}
+                        </div>
+                        <div class="col-md-6 mt-4 pt-2 form-check">
+                            {{ form.companion_decision }} {{ form.companion_decision.label_tag }}
+                            {{ form.companion_decision.errors }}
+                        </div>
+                    </div>
+
+
+                    <div class="col-12 d-flex justify-content-between mt-4">
+                        <button class="btn btn-primary btn-prev"><i class="bx bx-chevron-left bx-sm ms-sm-n2"></i> <span
+                                class="d-sm-inline-block d-none">قبلی</span></button>
+                        <button type="submit" class="btn btn-success"><i class="bx bx-save me-1"></i> ذخیره اطلاعات
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+{% endblock %}
+{% block vendor_js %}
+<script src="{% static 'assets/vendor/libs/bs-stepper/bs-stepper.js' %}"></script>
+<script src="{% static 'assets/js/form-wizard-numbered.js' %}"></script>
+<script src="{% static 'assets/js/form-wizard-validation.js' %}"></script>
+{% endblock %}
+
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const forms = document.querySelectorAll('form'); // همه فرم‌ها
+        forms.forEach(form => {
+            const inputs = form.querySelectorAll('input, select, textarea');
+            inputs.forEach(input => {
+                const type = input.getAttribute('type');
+                if (type !== 'checkbox' && type !== 'file' && !input.classList.contains('form-control')) {
+                    input.classList.add('form-control');
+                }
+            });
+        });
+    });
+</script>
+{% endblock %}

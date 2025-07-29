@@ -1,0 +1,373 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}تقویم نوبت‌ها | مدیریت کلینیک{% endblock %}
+
+{% block vendor_css %}
+{# Vendor CSS files for third-party libraries #}
+<link rel="stylesheet" href="{% static 'assets/vendor/libs/fullcalendar/fullcalendar.css' %}"/>
+{# The original comment indicated potential ambiguity here. Ensure fullcalendar.css is directly under 'fullcalendar' #}
+{# If 'fullcalendar.css' is located in 'assets/vendor/libs/fullcalendar/', the path above is correct. #}
+<link rel="stylesheet" href="{% static 'assets/vendor/libs/flatpickr/flatpickr.css' %}"/>
+<link rel="stylesheet" href="{% static 'assets/vendor/libs/select2/select2.css' %}"/>
+{# Custom CSS files for this specific application or overrides #}
+<link rel="stylesheet" href="{% static 'css/fullcalendar.css' %}"/>
+<link rel="stylesheet" href="{% static 'css/app-calendar.css' %}"/>
+{% endblock %}
+
+{% comment %}
+Place your custom page-specific CSS here. This block is currently empty.
+{% endcomment %}
+{% block page_css %}{% endblock %}
+
+{% block content %}
+<div class="container-xxl flex-grow-1 container-p-y">
+    <div class="card app-calendar-wrapper">
+        <div class="row g-0">
+
+            {# Sidebar for appointment and event management #}
+            <div class="col app-calendar-sidebar" id="app-calendar-sidebar">
+                <div class="p-3">
+                    {# Button to open the event creation sidebar (FullCalendar event) #}
+                    <div class="d-grid mb-3">
+                        <button class="btn btn-secondary btn-toggle-sidebar" data-bs-toggle="offcanvas"
+                                data-bs-target="#addEventSidebar" aria-controls="addEventSidebar">
+                            <i class="bx bx-calendar-event me-1"></i>
+                            <span class="align-middle">ثبت رویداد جدید (تقویم)</span>
+                        </button>
+                    </div>
+
+                    {# NEW: Button to start a new appointment booking flow #}
+                    <div class="d-grid mb-3">
+                        <button class="btn btn-primary" id="btnStartNewAppointment">
+                            <i class="bx bx-calendar-plus me-1"></i>
+                            <span class="align-middle">ثبت نوبت جدید</span>
+                        </button>
+                    </div>
+
+
+                    {# Inline calendar widget, likely for date selection within the sidebar #}
+                    <div class="inline-calendar"></div>
+
+                    <hr class="my-4">
+
+                    {# Accordion for the multi-step appointment booking process #}
+                    <div class="accordion" id="appointmentAccordion">
+
+                        {# Step 1: Patient Identification or Quick Registration #}
+                        <div class="accordion-item" id="patientStepContainer">
+                            <h2 class="accordion-header" id="headingStep1">
+                                <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                                        data-bs-target="#collapseStep1" aria-expanded="true" aria-controls="collapseStep1">
+                                    مرحله ۱: شناسایی یا ساخت سریع بیمار
+                                </button>
+                            </h2>
+                            <div id="collapseStep1" class="accordion-collapse collapse show" aria-labelledby="headingStep1" data-bs-parent="#appointmentAccordion">
+                                <div class="accordion-body">
+                                    <form id="patientIdentifyForm">
+                                        <label for="patientSearchInput" class="form-label">شماره موبایل / کد ملی / شماره پرونده</label>
+                                        <input type="text" class="form-control mb-3" id="patientSearchInput" placeholder="مثال: 0912xxxxxxx یا 1234567890">
+                                        <div class="d-grid">
+                                            <button type="submit" class="btn btn-primary" id="btnCheckPatient">بررسی وجود بیمار</button>
+                                        </div>
+                                    </form>
+
+                                    {# Container to display identified patient info #}
+                                    <div id="patientInfoContainer" class="mt-4" style="display: none;"></div>
+
+                                    {# Form for quick patient registration, shown if patient not found #}
+                                    <div id="quickPatientFormBox" style="display: none;">
+                                        <hr>
+                                        <h6>بیمار یافت نشد. لطفاً اطلاعات را وارد کنید:</h6>
+                                        <form id="quickPatientForm">
+                                            <div class="row">
+                                                <div class="col-md-6 mb-2">
+                                                    <input type="text" class="form-control" name="first_name" placeholder="نام" required>
+                                                </div>
+                                                <div class="col-md-6 mb-2">
+                                                    <input type="text" class="form-control" name="last_name" placeholder="نام خانوادگی" required>
+                                                </div>
+                                                <div class="col-md-6 mb-2">
+                                                    <input type="text" class="form-control" name="phone" placeholder="شماره موبایل" required>
+                                                </div>
+                                                <div class="col-md-6 mb-2">
+                                                    <input type="text" class="form-control" name="national_code" placeholder="کد ملی" required>
+                                                </div>
+                                                <div class="col-md-6 mb-2">
+                                                    <select name="gender" class="form-select" required>
+                                                        <option value="">جنسیت</option>
+                                                        <option value="male">مرد</option>
+                                                        <option value="female">زن</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="d-grid mt-3">
+                                                <button type="submit" class="btn btn-success" id="btnSubmitQuickPatient">ثبت بیمار و ادامه</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                    {# Button to proceed to the next step, initially hidden #}
+                                    <div class="d-grid mt-3">
+                                        <button type="button" class="btn btn-primary d-none" id="btnNextToAppointment">ادامه به مرحله نوبت‌دهی</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        {# Step 2: Service and Time Selection for Appointment #}
+                        <div class="accordion-item" id="appointmentStepContainer">
+                            <h2 class="accordion-header" id="headingStep2">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                        data-bs-target="#collapseStep2" aria-expanded="false" aria-controls="collapseStep2">
+                                    مرحله ۲: انتخاب خدمات و زمان نوبت
+                                </button>
+                            </h2>
+                            <div id="collapseStep2" class="accordion-collapse collapse" aria-labelledby="headingStep2" data-bs-parent="#appointmentAccordion">
+                                <div class="accordion-body">
+                                    <form id="appointmentDetailsForm">
+                                        <div class="mb-3">
+                                            <label class="form-label">پزشک:</label>
+                                            <select id="appointmentDoctor" name="appointmentDoctor" class="form-select select2" required></select>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">نوع خدمت (می‌توان چند مورد انتخاب کرد):</label>
+                                            <select id="appointmentService" name="appointmentService" class="form-select select2" multiple required></select>
+                                        </div>
+
+                                        <div class="mb-3">
+                                            <label class="form-label">شعبه:</label>
+                                            <select id="appointmentLocation" name="appointmentLocation" class="form-select select2" required></select>
+                                        </div>
+
+                                        <div class="mb-3">
+                                            <label class="form-label">تاریخ مورد نظر:</label>
+                                            <input type="text" id="appointmentDate" name="appointmentDate" class="form-control flatpickr-date" placeholder="انتخاب تاریخ" required>
+                                        </div>
+
+                                        <div class="mb-3">
+                                            <label class="form-label">ساعت‌های آزاد:</label>
+                                            <div id="availableTimes" class="d-flex flex-wrap gap-2"></div>
+                                        </div>
+
+                                        <div class="d-grid mt-3">
+                                            <button type="submit" class="btn btn-primary" id="btnSubmitAppointment">ثبت نهایی نوبت</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+
+                        {# Step 3: Confirmation and Appointment Information Display #}
+                        <div class="accordion-item" id="successPageContainer">
+                            <h2 class="accordion-header" id="headingStep3">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                        data-bs-target="#collapseStep3" aria-expanded="false" aria-controls="collapseStep3">
+                                    مرحله ۳: تایید و نمایش اطلاعات نوبت
+                                </button>
+                            </h2>
+                            <div id="collapseStep3" class="accordion-collapse collapse" aria-labelledby="headingStep3" data-bs-parent="#appointmentAccordion">
+                                <div class="accordion-body">
+                                    <div id="appointment-summary-box" class="border p-3 rounded bg-light">
+                                        <h6 class="mb-3">اطلاعات نهایی نوبت:</h6>
+                                        <ul class="list-group mb-3" id="summary-list">
+                                        </ul>
+                                        <div class="alert alert-info">
+                                            کد رهگیری نوبت: <strong id="tracking-code">...</strong>
+                                        </div>
+                                    </div>
+
+                                    <div class="d-grid mt-3">
+                                        <button class="btn btn-outline-primary" onclick="window.location.reload()">ثبت نوبت جدید</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {# End of appointmentAccordion #}
+                </div>
+                {# End of p-3 #}
+            </div>
+            {# End of app-calendar-sidebar #}
+
+            {# Main calendar content area #}
+            <div class="col app-calendar-content">
+                <div class="card shadow-none border-0 h-100">
+                    <div class="card-body pb-0 h-100">
+                        <div id="calendar" class="h-100"></div>
+                        {# FullCalendar rendering target #}
+                    </div>
+                </div>
+                <div class="app-overlay"></div>
+                {# Overlay for sidebar or modals #}
+
+                {# Offcanvas sidebar for adding new events to the calendar #}
+                <div class="offcanvas offcanvas-end event-sidebar" tabindex="-1" id="addEventSidebar"
+                     aria-labelledby="addEventSidebarLabel">
+                    <div class="offcanvas-header border-bottom">
+                        <h5 class="offcanvas-title" id="addEventSidebarLabel">افزودن رویداد</h5>
+                        <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas"
+                                aria-label="Close"></button>
+                    </div>
+                    <div class="offcanvas-body">
+                        <form class="event-form pt-0" id="eventForm" onsubmit="return false">
+
+                            <fieldset class="mb-3">
+                                <legend class="form-label fs-6">اطلاعات اصلی رویداد (تقویم)</legend>
+                                <div class="mb-3">
+                                    <label for="name" class="form-label">عنوان رویداد <span
+                                            class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" id="name" name="name"
+                                           placeholder="مثلا: ملاقات با مدیر">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="methodSelect" class="form-label">نوع رویداد</label>
+                                    <select class="select2 select-event-label form-select" id="methodSelect"
+                                            name="eventLabel">
+                                        <option data-label="danger" value="Personal">شخصی</option>
+                                        <option data-label="primary" value="Business">کاری</option>
+                                        <option data-label="warning" value="Family">خانوادگی</option>
+                                        <option data-label="info" value="ETC">متفرقه</option>
+                                    </select>
+                                </div>
+                            </fieldset>
+
+                            <fieldset class="mb-3">
+                                <legend class="form-label fs-6">زمان‌بندی</legend>
+                                <div class="mb-3">
+                                    <label class="form-label" for="eventStartDate">تاریخ و ساعت شروع</label>
+                                    <input type="text" class="form-control" id="eventStartDate" name="eventStartDate"
+                                           placeholder="YYYY-MM-DD HH:MM">
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label" for="eventEndDate">تاریخ و ساعت پایان</label>
+                                    <input type="text" class="form-control" id="eventEndDate" name="eventEndDate"
+                                           placeholder="YYYY-MM-DD HH:MM">
+                                </div>
+                            </fieldset>
+
+                            <fieldset>
+                                <legend class="form-label fs-6">یادداشت‌ها</legend>
+                                <div class="mb-3">
+                                    <label class="form-label" for="eventLocation">مکان (اختیاری)</label>
+                                    <input type="text" class="form-control" name="eventLocation" id="eventLocation" placeholder="محل برگزاری رویداد">
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label" for="eventDescription">توضیحات (اختیاری)</label>
+                                    <textarea class="form-control" name="eventDescription" id="eventDescription"
+                                              rows="2"></textarea>
+                                </div>
+                            </fieldset>
+
+                            <div class="d-flex justify-content-between my-4 pt-4 border-top">
+                                <div>
+                                    <button type="submit" class="btn btn-primary btn-add-event me-2">افزودن</button>
+                                    <button type="reset" class="btn btn-label-secondary" data-bs-dismiss="offcanvas">
+                                        انصراف
+                                    </button>
+                                </div>
+                                <div>
+                                    <button class="btn btn-label-danger btn-delete-event d-none">حذف</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            {# End of app-calendar-content #}
+        </div>
+        {# End of row g-0 #}
+    </div>
+    {# End of card app-calendar-wrapper #}
+</div> {# End of container-xxl #}
+{% endblock %}
+
+{% block vendor_js %}
+{# Core vendor JS files #}
+<script src="{% static 'assets/vendor/libs/jquery/jquery.js' %}"></script>
+<script src="{% static 'assets/vendor/libs/popper/popper.js' %}"></script>
+<script src="{% static 'assets/vendor/js/bootstrap.js' %}"></script>
+<script src="{% static 'assets/vendor/js/helpers.js' %}"></script>
+<script src="{% static 'assets/vendor/libs/sweetalert2/sweetalert2.js' %}"></script>
+<script src="{% static 'assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.js' %}"></script>
+<script src="{% static 'assets/vendor/js/menu.js' %}"></script>
+{#
+IMPORTANT: 'config.js' is already loaded in your base.html.
+Loading it again here will cause "Uncaught SyntaxError: Identifier 'config' has already been declared".
+Therefore, this line has been removed to prevent duplication.
+#}
+{#
+<script src="{% static 'assets/js/config.js' %}"></script> #}
+<script src="{% static 'assets/vendor/js/template-customizer.js' %}"></script>
+
+{# Form related libraries #}
+<script src="{% static 'assets/vendor/libs/typeahead-js/typeahead.js' %}"></script>
+<script src="{% static 'assets/vendor/libs/select2/select2.js' %}"></script>
+<script src="{% static 'assets/vendor/libs/flatpickr/flatpickr.js' %}"></script>
+{# Persian date (jDate) specific flatpickr plugins #}
+<script src="{% static 'assets/vendor/libs/flatpickr/flatpickr-jdate.js' %}"></script>
+<script src="{% static 'assets/vendor/libs/flatpickr/l10n/fa-jdate.js' %}"></script>
+<script src="{% static 'assets/vendor/libs/formvalidation/dist/js/FormValidation.min.js' %}"></script>
+<script src="{% static 'assets/vendor/libs/formvalidation/dist/js/plugins/Bootstrap5.min.js' %}"></script>
+<script src="{% static 'assets/vendor/libs/formvalidation/dist/js/plugins/AutoFocus.min.js' %}"></script>
+<script src="{% static 'assets/vendor/libs/moment/moment.js' %}"></script>
+
+{# Other utility JS files #}
+<script src="{% static 'assets/vendor/libs/jdate/jdate.js' %}"></script>
+<script src="{% static 'assets/vendor/libs/ical/ical.min.js' %}"></script>
+
+<script src="{% static 'assets/vendor/libs/fullcalendar/index.global.min.js' %}"></script> {# Main FullCalendar bundle #}
+<script src="{% static 'assets/vendor/libs/fullcalendar/daygrid.global.min.js' %}"></script>
+<script src="{% static 'assets/vendor/libs/fullcalendar/interaction.global.min.js' %}"></script>
+<script src="{% static 'assets/vendor/libs/fullcalendar/list.global.min.js' %}"></script>
+<script src="{% static 'assets/vendor/libs/fullcalendar/timegrid.global.min.js' %}"></script>
+{% endblock %}
+
+{% block extra_js %}
+{# Script to pass Django URLs and RTL setting to JavaScript #}
+<script>
+    // Pass URLs from Django to JavaScript in the global window object.
+    // This MUST be executed before your type="module" script.
+    window.calendar_urls = {
+        events_list: "{% url 'appointments:api_events_list' %}",
+        availabilities: "{% url 'appointments:api_availabilities' %}",
+        appointment_create: "{% url 'appointments:api_appointment_create' %}",
+        appointment_base: "/appointments/api/appointments/",
+        search_patients: "{% url 'appointments:api_search_patients' %}",
+        search_doctors: "{% url 'appointments:api_search_doctors' %}",
+        search_services: "{% url 'appointments:api_search_services' %}",
+        search_locations: "{% url 'appointments:api_search_locations' %}",
+        holidays_url: "{% static 'data/iranian_holidays.ics' %}"
+    };
+    // isRtlFromDjango should reflect the page's direction.
+    // It's safer to read it from the HTML document's dir attribute to ensure it's dynamic.
+    window.isRtlFromDjango = document.documentElement.dir === 'rtl';
+
+    // JavaScript to handle the new "ثبت نوبت جدید" button
+    document.addEventListener('DOMContentLoaded', function () {
+        const btnStartNewAppointment = document.getElementById('btnStartNewAppointment');
+        const appointmentAccordion = document.getElementById('appointmentAccordion');
+        const collapseStep1 = document.getElementById('collapseStep1');
+        const addEventSidebar = new bootstrap.Offcanvas(document.getElementById('addEventSidebar')); // Initialize Offcanvas
+
+        if (btnStartNewAppointment && appointmentAccordion && collapseStep1) {
+            btnStartNewAppointment.addEventListener('click', function () {
+                // Close the "Add Event" offcanvas if it's open
+                addEventSidebar.hide();
+
+                // Ensure the appointment accordion is visible and the first step is open
+                // This will toggle the accordion's first item, if already open it will close and reopen
+                // Or simply ensure it's open if it's closed
+                const bsCollapse = new bootstrap.Collapse(collapseStep1, {
+                    toggle: false // Do not toggle on creation
+                });
+                bsCollapse.show(); // Ensure it is shown
+
+                // Scroll to the top of the sidebar or the accordion for better UX
+                appointmentAccordion.scrollIntoView({behavior: 'smooth', block: 'start'});
+            });
+        }
+    });
+</script>
+{# Main JavaScript logic for the calendar and appointment forms #}
+<script type="module" src="{% static 'js/appointments/main.js' %}"></script>
+{% endblock %}

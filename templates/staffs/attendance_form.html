@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}{% if form.instance.pk %}ویرایش حضور{% else %}ثبت حضور{% endif %}{% endblock %}
+
+{% block content %}
+<h2 class="mb-4 text-center">{% if form.instance.pk %}ویرایش حضور{% else %}ثبت حضور کارمند{% endif %}</h2>
+
+<div class="card">
+    <div class="card-body">
+        <form method="post">
+            {% csrf_token %}
+            <div class="row g-3">
+                <div class="col-md-6">{{ form.staff.label_tag }}{{ form.staff }}</div>
+                <div class="col-md-6">{{ form.date.label_tag }}{{ form.date }}</div>
+                <div class="col-md-6">{{ form.check_in.label_tag }}{{ form.check_in }}</div>
+                <div class="col-md-6">{{ form.check_out.label_tag }}{{ form.check_out }}</div>
+                <div class="col-md-12">{{ form.notes.label_tag }}{{ form.notes }}</div>
+                <div class="col-12 d-flex justify-content-end">
+                    <button type="submit" class="btn btn-success">ثبت</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

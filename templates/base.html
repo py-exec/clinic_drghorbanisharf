@@ -1,0 +1,96 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fa" class="light-style layout-navbar-fixed layout-menu-fixed" dir="rtl"
+      data-theme="theme-default"
+      data-assets-path="{% static 'assets/' %}"
+      data-template="vertical-menu-template-starter">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    <title>{% block title %}داشبورد مدیریت{% endblock %}</title>
+    <meta name="description" content="">
+
+    <!-- ==================== Favicon ==================== -->
+    <link rel="icon" type="image/x-icon" href="{% static 'assets/img/favicon/favicon.ico' %}"/>
+
+    <!-- ==================== Fonts ==================== -->
+    <link rel="stylesheet" href="{% static 'assets/vendor/fonts/boxicons.css' %}"/>
+    <link rel="stylesheet" href="{% static 'assets/vendor/fonts/fontawesome.css' %}"/>
+    <link rel="stylesheet" href="{% static 'assets/vendor/fonts/flag-icons.css' %}"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+
+    <!-- ==================== Core CSS ==================== -->
+    <link rel="stylesheet" href="{% static 'assets/vendor/css/rtl/core.css' %}" class="template-customizer-core-css"/>
+    <link rel="stylesheet" href="{% static 'assets/vendor/css/rtl/theme-default.css' %}" class="template-customizer-theme-css"/>
+    <link rel="stylesheet" href="{% static 'assets/css/demo.css' %}"/>
+    <link rel="stylesheet" href="{% static 'assets/vendor/css/rtl/rtl.css' %}"/>
+    <link rel="stylesheet" href="{% static 'css/base.css' %}"/>
+
+    <!-- ==================== Common Vendors CSS ==================== -->
+    <link rel="stylesheet" href="{% static 'assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.css' %}"/>
+    <link rel="stylesheet" href="{% static 'assets/vendor/libs/typeahead-js/typeahead.css' %}"/>
+    <link rel="stylesheet" href="{% static 'assets/vendor/libs/select2/select2.css' %}"/>
+    <link rel="stylesheet" href="{% static 'assets/vendor/libs/flatpickr/flatpickr.css' %}"/>
+    <link rel="stylesheet" href="{% static 'assets/vendor/libs/formvalidation/dist/css/formValidation.min.css' %}"/>
+    <link rel="stylesheet" href="{% static 'assets/vendor/libs/sweetalert2/sweetalert2.css' %}">
+
+
+    <!-- ==================== Page CSS ==================== -->
+    {% block vendor_css %}{% endblock %}
+    {% block page_css %}{% endblock %}
+    {% block extra_head %}{% endblock %}
+</head>
+<body>
+<div class="layout-wrapper layout-content-navbar">
+    <div class="layout-container">
+        {% include 'partials/menu.html' %}
+        <div class="layout-page">
+            {% include 'partials/navbar.html' %}
+            <div class="content-wrapper">
+                <section class="content pt-3">
+                    <div class="container-fluid">
+                        {% include "message.html" %}
+                        {% block content %}{% endblock %}
+                    </div>
+                </section>
+                <div class="content-backdrop fade"></div>
+            </div>
+        </div>
+    </div>
+    <div class="layout-overlay layout-menu-toggle"></div>
+    <div class="drag-target"></div>
+</div>
+
+<!-- ==================== Core JS ==================== -->
+<script src="{% static 'assets/vendor/libs/jquery/jquery.js' %}"></script>
+<script src="{% static 'assets/vendor/libs/popper/popper.js' %}"></script>
+<script src="{% static 'assets/vendor/js/bootstrap.js' %}"></script>
+<script src="{% static 'assets/vendor/js/helpers.js' %}"></script>
+<script src="{% static 'assets/vendor/libs/sweetalert2/sweetalert2.js' %}"></script>
+<script src="{% static 'assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.js' %}"></script>
+<script src="{% static 'assets/vendor/js/menu.js' %}"></script>
+<!-- ==================== Template Config ==================== -->
+<script src="{% static 'assets/js/config.js' %}"></script>
+<script src="{% static 'assets/vendor/js/template-customizer.js' %}"></script>
+
+<!-- ==================== Common Vendors JS ==================== -->
+<script src="{% static 'assets/vendor/libs/typeahead-js/typeahead.js' %}"></script>
+<script src="{% static 'assets/vendor/libs/select2/select2.js' %}"></script>
+<script src="{% static 'assets/vendor/libs/flatpickr/flatpickr.js' %}"></script>
+<script src="{% static 'assets/vendor/libs/flatpickr/flatpickr-jdate.js' %}"></script>
+<script src="{% static 'assets/vendor/libs/flatpickr/l10n/fa-jdate.js' %}"></script>
+<script src="{% static 'assets/vendor/libs/formvalidation/dist/js/FormValidation.min.js' %}"></script>
+<script src="{% static 'assets/vendor/libs/formvalidation/dist/js/plugins/Bootstrap5.min.js' %}"></script>
+<script src="{% static 'assets/vendor/libs/formvalidation/dist/js/plugins/AutoFocus.min.js' %}"></script>
+<script src="{% static 'assets/vendor/libs/moment/moment.js' %}"></script>
+
+<!-- ==================== Custom JS ==================== -->
+<script src="{% static 'assets/js/main.js' %}"></script>
+
+<!-- ==================== Page Scripts ==================== -->
+{% block vendor_js %}{% endblock %}
+{% block extra_js %}{% endblock %}
+
+</body>
+</html>

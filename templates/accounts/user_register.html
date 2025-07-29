@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block title %}ثبت‌نام کاربر جدید{% endblock %}
+
+{% block content %}
+<h2 class="mb-4 text-center">فرم ثبت‌نام کاربر</h2>
+
+<div class="card p-4">
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="row g-3">
+            <div class="col-md-3">{{ form.username.label_tag }}{{ form.username }}</div>
+            <div class="col-md-3">{{ form.first_name.label_tag }}{{ form.first_name }}</div>
+            <div class="col-md-3">{{ form.last_name.label_tag }}{{ form.last_name }}</div>
+            <div class="col-md-3">{{ form.nickname.label_tag }}{{ form.nickname }}</div>
+
+            <div class="col-md-3">{{ form.national_code.label_tag }}{{ form.national_code }}</div>
+            <div class="col-md-3">{{ form.phone_number.label_tag }}{{ form.phone_number }}</div>
+            <div class="col-md-3">{{ form.email.label_tag }}{{ form.email }}</div>
+            <div class="col-md-3">{{ form.profile_image.label_tag }}{{ form.profile_image }}</div>
+
+            <div class="col-md-6">{{ form.role.label_tag }}{{ form.role }}</div>
+            <div class="col-md-3">{{ form.password1.label_tag }}{{ form.password1 }}</div>
+            <div class="col-md-3">{{ form.password2.label_tag }}{{ form.password2 }}</div>
+        </div>
+
+        <div class="d-flex justify-content-center mt-4">
+            <button class="btn btn-success" type="submit">ثبت‌نام</button>
+        </div>
+    </form>
+</div>
+{% endblock %}

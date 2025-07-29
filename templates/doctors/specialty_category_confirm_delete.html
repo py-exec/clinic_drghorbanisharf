@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block title %}حذف دسته تخصص{% endblock %}
+
+{% block content %}
+<div class="alert alert-warning text-center mt-5">
+    <h4>❗ آیا از حذف دسته <strong>{{ object.title }}</strong> مطمئن هستید؟</h4>
+    <form method="post" class="mt-4">
+        {% csrf_token %}
+        <a href="{% url 'doctors:specialty-category-list' %}" class="btn btn-secondary">بازگشت</a>
+        <button type="submit" class="btn btn-danger">حذف</button>
+    </form>
+</div>
+{% endblock %}

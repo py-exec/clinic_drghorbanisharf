@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}حذف کارمند{% endblock %}
+
+{% block content %}
+<h2 class="mb-4 text-center text-danger">⚠️ حذف کارمند</h2>
+
+<div class="card">
+    <div class="card-body text-center">
+        <p>آیا مطمئن هستید که می‌خواهید کارمند زیر را غیرفعال کنید؟</p>
+
+        <ul class="list-unstyled">
+            <li><strong>نام:</strong> {{ staff.user.get_full_name }}</li>
+            <li><strong>کد ملی:</strong> {{ staff.user.national_code }}</li>
+            <li><strong>موقعیت شغلی:</strong> {{ staff.position.title }}</li>
+        </ul>
+
+        <form method="post" class="mt-4">
+            {% csrf_token %}
+            <a href="{% url 'staffs:staff-list' %}" class="btn btn-secondary">لغو</a>
+            <button type="submit" class="btn btn-danger">بله، غیرفعال کن</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}تقویم نوبت‌ها | مدیریت کلینیک{% endblock %}
+
+{% block vendor_css %}
+<link rel="stylesheet" href="{% static 'assets/vendor/libs/flatpickr/flatpickr.css' %}"/>
+<link rel="stylesheet" href="{% static 'assets/vendor/libs/select2/select2.css' %}"/>
+<link rel="stylesheet" href="{% static 'css/app-calendar.css' %}"/>
+{% endblock %}
+
+{% block content %}
+
+<h2>تقویم نوبت‌ها - {{ year }}/{{ month }}</h2>
+
+<div class="mb-3">
+    <a href="?year={{ prev_year }}&month={{ prev_month }}">⬅ ماه قبل</a>
+    |
+    <a href="?year={{ next_year }}&month={{ next_month }}">ماه بعد ➡</a>
+</div>
+
+<table class="table table-bordered text-center align-middle" dir="rtl">
+    <thead class="table-light">
+    <tr>
+        <th>ش</th>
+        <th>ی</th>
+        <th>د</th>
+        <th>س</th>
+        <th>چ</th>
+        <th>پ</th>
+        <th>ج</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for week in weeks %}
+    <tr>
+        {% for day in week %}
+        {% if day %}
+        <td>
+            <strong>{{ day.jdate.day }}</strong><br>
+            {% for appt in day.appointments %}
+            <small class="d-block text-success">🩺 {{ appt.doctor }} | {{ appt.time }}</small>
+            {% endfor %}
+        </td>
+        {% else %}
+        <td class="bg-light"></td>
+        {% endif %}
+        {% endfor %}
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+{% endblock %}
+
+{% block vendor_js %}{% endblock %}
+{% block extra_js %}{% endblock %}

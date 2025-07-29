@@ -1,0 +1,760 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}تست ورزش بیماران کلینیک آریتمی{% endblock %}
+
+{% block content %}
+<h1 class="text-center">تست ورزش</h1>
+<!-- Vertical Wizard -->
+<div class="col-12 mb-4">
+    <div class="bs-stepper wizard-vertical wizard-numbered vertical mt-2">
+        <div class="bs-stepper-header">
+            <!--  شاخص‌های عملکردی قلبی -->
+            <div class="step" data-target="#account-details-1">
+                <button type="button" class="step-trigger">
+                    <span class="bs-stepper-circle">1</span>
+                    <span class="bs-stepper-label"> شاخص‌های عملکردی قلبی</span>
+                </button>
+            </div>
+
+            <!--  فاز بازیابی پس از تست (Recovery Phase) -->
+            <div class="line"></div>
+            <div class="step" data-target="#personal-info-1">
+                <button type="button" class="step-trigger">
+                    <span class="bs-stepper-circle">2</span>
+                    <span class="bs-stepper-label">(Recovery Phase)</span>
+                </button>
+            </div>
+            <!-- اطلاعات پیش‌تست (Pre-Test) -->
+            <div class="line"></div>
+            <div class="step" data-target="#social-links-1">
+                <button type="button" class="step-trigger">
+                    <span class="bs-stepper-circle">3</span>
+                    <span class="bs-stepper-label">اطلاعات پیش ‌تست</span>
+                </button>
+            </div>
+
+            <!-- 🧾 اطلاعات تست -->
+            <div class="line"></div>
+            <div class="step" data-target="#Test-information">
+                <button type="button" class="step-trigger">
+                    <span class="bs-stepper-circle">4</span>
+                    <span class="bs-stepper-label">اطلاعات ‌تست</span>
+                </button>
+            </div>
+
+            <!--  علائم بالینی -->
+            <div class="line"></div>
+            <div class="step" data-target="#Clinical-signs">
+                <button type="button" class="step-trigger">
+                    <span class="bs-stepper-circle">5</span>
+                    <span class="bs-stepper-label">علائم بالینی</span>
+                </button>
+            </div>
+
+            <!--  یافته‌های ECG -->
+            <div class="line"></div>
+            <div class="step" data-target="#ECG-findings">
+                <button type="button" class="step-trigger">
+                    <span class="bs-stepper-circle">6</span>
+                    <span class="bs-stepper-label">یافته‌های ECG</span>
+                </button>
+            </div>
+
+            <!--  یافته‌های اکو -->
+            <div class="line"></div>
+            <div class="step" data-target="#Echo-findings">
+                <button type="button" class="step-trigger">
+                    <span class="bs-stepper-circle">7</span>
+                    <span class="bs-stepper-label">یافته‌های اکو</span>
+                </button>
+            </div>
+            <!--  مستندات -->
+            <div class="line"></div>
+            <div class="step" data-target="#Documentation">
+                <button type="button" class="step-trigger">
+                    <span class="bs-stepper-circle">8</span>
+                    <span class="bs-stepper-label">مستندات</span>
+                </button>
+            </div>
+
+            <!--  اطلاعات تست استرس و علائم حین آن -->
+            <div class="line"></div>
+            <div class="step" data-target="#stress-test">
+                <button type="button" class="step-trigger">
+                    <span class="bs-stepper-circle">9</span>
+                    <span class="bs-stepper-label">اطلاعات تست استرس</span>
+                </button>
+            </div>
+
+            <!--  تحلیل نهایی پزشک -->
+            <div class="line"></div>
+            <div class="step" data-target="#Final-analysis">
+                <button type="button" class="step-trigger">
+                    <span class="bs-stepper-circle">10</span>
+                    <span class="bs-stepper-label">تحلیل نهایی پزشک</span>
+                </button>
+            </div>
+
+        </div>
+        <div class="bs-stepper-content">
+            <form method="post">
+                <!--  شاخص‌های عملکردی قلبی -->
+                <div id="account-details-1" class="content">
+                    <div class="content-header mb-3">
+                        <h6 class="mb-1"> شاخص‌های عملکردی قلبی</h6>
+                        <small> شاخص‌های عملکردی قلبی را وارد کنید.</small>
+                    </div>
+                    <div class="row g-3">
+                        <div class="col-sm-4">
+                            <label>سن بیمار (برای محاسبه HR ماکزیمم)</label>
+                            <input type="number" name="patient_age" class="form-control" placeholder="مثلاً 55"
+                                   oninput="calculateStressMetrics()">
+                        </div>
+
+                        <div class="col-sm-4">
+                            <label>HR پیک (bpm)</label>
+                            <input type="number" name="hr_peak_metric" class="form-control" placeholder="مثلاً 150"
+                                   oninput="calculateStressMetrics()">
+                        </div>
+
+                        <div class="col-sm-4">
+                            <label>درصد HR نسبت به HR ماکزیمم</label>
+                            <input type="text" id="hr_percent_max" class="form-control" readonly>
+                        </div>
+
+                        <div class="col-sm-4">
+                            <label>METs تخمینی</label>
+                            <input type="number" name="mets" class="form-control" step="0.1" placeholder="مثلاً 7.5">
+                        </div>
+
+                        <div class="col-sm-4">
+                            <label>SBP پیک</label>
+                            <input type="number" name="sbp_peak_metric" class="form-control"
+                                   oninput="calculateStressMetrics()">
+                        </div>
+
+                        <div class="col-sm-4">
+                            <label>RPP = HR × SBP</label>
+                            <input type="text" id="rpp_result" class="form-control" readonly>
+                        </div>
+
+                        <div class="col-12 d-flex justify-content-between">
+                            <button class="btn btn-label-secondary btn-prev" disabled type="button">
+                                <i class="bx bx-chevron-left bx-sm ms-sm-n2"></i>
+                                <span class="d-sm-inline-block d-none">قبلی</span>
+                            </button>
+                            <button class="btn btn-primary btn-next" type="button">
+                                <span class="d-sm-inline-block d-none me-sm-1">بعدی</span>
+                                <i class="bx bx-chevron-right bx-sm me-sm-n2"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <!--  شاخص‌های عملکردی قلبی -->
+
+                <!-- فاز بازیابی پس از تست (Recovery Phase) -->
+                <div id="personal-info-1" class="content">
+                    <div class="content-header mb-3">
+                        <h6 class="mb-1">Recovery Phase</h6>
+                        <small>فاز بازیابی پس از تست</small>
+                    </div>
+                    <div class="row g-3">
+                        <div class="col-sm-6">
+                            <label>مدت زمان ریکاوری (دقیقه)</label>
+                            <input type="number" name="recovery_duration" class="form-control" placeholder="مثلاً 5">
+                        </div>
+
+                        <div class="col-sm-6">
+                            <label>HR در پایان ریکاوری</label>
+                            <input type="number" name="hr_recovery" class="form-control" placeholder="مثلاً 85">
+                        </div>
+
+                        <div class="col-sm-6">
+                            <label>SBP در پایان ریکاوری</label>
+                            <input type="number" name="sbp_recovery" class="form-control" placeholder="مثلاً 120">
+                        </div>
+                        <div class="col-sm-6">
+                            <label>آیا در فاز ریکاوری تغییر ST جدید یا ادامه‌دار وجود داشت؟</label>
+                            <select name="recovery_st_change" class="form-select">
+                                <option value="">انتخاب کنید</option>
+                                <option>بله</option>
+                                <option>خیر</option>
+                                <option>ناقص ثبت شده</option>
+                            </select>
+                        </div>
+
+                        <div class="col-sm-7">
+                            <small class="fw-semibold d-block">علائم در فاز ریکاوری</small>
+                            <div class="form-check form-check-inline mt-3">
+                                <input class="form-check-input" type="checkbox" name="recovery_symptoms" value="سنکوپ">
+                                <label class="form-check-label">سنکوپ یا افت هوشیاری</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="checkbox" name="recovery_symptoms"
+                                       value="تنگی نفس">
+                                <label class="form-check-label">تنگی نفس تأخیری</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="checkbox" name="recovery_symptoms" value="هیچ">
+                                <label class="form-check-label">بدون علائم خاص</label>
+                            </div>
+                        </div>
+
+
+                        <div class="col-md-12">
+                            <label>پایش بیمار پس از تست</label>
+                            <textarea name="recovery_monitoring" class="form-control" rows="2"
+                                      placeholder="مثلاً پایش ۱۵ دقیقه‌ای با نظارت مستقیم پزشک..."></textarea>
+                        </div>
+
+                        <div class="col-12 d-flex justify-content-between">
+                            <button class="btn btn-primary btn-prev" type="button">
+                                <i class="bx bx-chevron-left bx-sm ms-sm-n2"></i>
+                                <span class="d-sm-inline-block d-none">قبلی</span>
+                            </button>
+                            <button class="btn btn-primary btn-next" type="button">
+                                <span class="d-sm-inline-block d-none me-sm-1">بعدی</span>
+                                <i class="bx bx-chevron-right bx-sm me-sm-n2"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <!-- فاز بازیابی پس از تست (Recovery Phase) -->
+
+                <!-- اطلاعات پیش‌تست (Pre-Test) -->
+                <div id="social-links-1" class="content">
+                    <div class="content-header mb-3">
+                        <h6 class="mb-1">Pre-Test</h6>
+                        <small>اطلاعات پیش‌ تست را وارد کنید.</small>
+                    </div>
+                    <div class="row g-3">
+                        <div class="col-sm-6">
+                            <label>مصرف داروی قلبی قبل تست</label>
+                            <select name="pretest_medications" class="form-select">
+                                <option value="">انتخاب کنید</option>
+                                <option>بتابلوکر</option>
+                                <option>نیترات</option>
+                                <option>دیورتیک</option>
+                                <option>مسدودکننده کانال کلسیم</option>
+                                <option>هیچ‌کدام</option>
+                            </select>
+                        </div>
+
+                        <div class="col-sm-6">
+                            <label>وضعیت ECG پایه</label>
+                            <select name="baseline_ecg" class="form-select">
+                                <option value="">انتخاب کنید</option>
+                                <option>نرمال</option>
+                                <option>ST-T تغییر یافته</option>
+                                <option>آریتمی پایه</option>
+                                <option>بلاک شاخه‌ای (LBBB/RBBB)</option>
+                                <option>نامشخص / ناتمام</option>
+                            </select>
+                        </div>
+
+                        <div class="col-sm-6">
+                            <label>فشار خون قبل تست (SBP)</label>
+                            <input type="number" name="pretest_sbp" class="form-control" placeholder="مثلاً 120">
+                        </div>
+
+                        <div class="col-sm-6">
+                            <label>فشار خون قبل تست (DBP)</label>
+                            <input type="number" name="pretest_dbp" class="form-control" placeholder="مثلاً 80">
+                        </div>
+
+                        <div class="col-sm-6">
+                            <label>ممنوعیت انجام تست وجود دارد؟</label>
+                            <select name="pretest_contra" class="form-select">
+                                <option value="">انتخاب کنید</option>
+                                <option>خیر</option>
+                                <option>آنژین ناپایدار</option>
+                                <option>هیپوتانسیون شدید</option>
+                                <option>بلوک کامل AV</option>
+                                <option>مشکلات تنفسی حاد</option>
+                                <option>سایر موارد (در یادداشت پزشک)</option>
+                            </select>
+                        </div>
+
+                        <div class="col-12 d-flex justify-content-between">
+                            <button class="btn btn-primary btn-prev" type="button">
+                                <i class="bx bx-chevron-left bx-sm ms-sm-n2"></i>
+                                <span class="d-sm-inline-block d-none">قبلی</span>
+                            </button>
+                            <button class="btn btn-primary btn-next" type="button">
+                                <span class="d-sm-inline-block d-none me-sm-1">بعدی</span>
+                                <i class="bx bx-chevron-right bx-sm me-sm-n2"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <!-- اطلاعات پیش‌تست (Pre-Test) -->
+
+                <!--  اطلاعات تست -->
+                <div id="Test-information" class="content">
+                    <div class="content-header mb-3">
+                        <h6 class="mb-1">اطلاعات تست</h6>
+                        <small>اطلاعات تست را وارد کنید. </small>
+                    </div>
+                    <div class="row g-3">
+                        <div class="col-sm-6">
+                            <label>نوع تست استرس</label>
+                            <select name="stress_type" class="form-select">
+                                <option value="">انتخاب کنید</option>
+                                <option>تردمیل</option>
+                                <option>دوبوتامین</option>
+                                <option>ارگومتر</option>
+                            </select>
+                        </div>
+                        <div class="col-sm-6">
+                            <label>زمان شروع تست</label>
+                            <input type="time" name="stress_start_time" class="form-control">
+                        </div>
+                        <div class="col-sm-6">
+                            <label>مدت‌زمان تست (دقیقه)</label>
+                            <input type="number" name="stress_duration" class="form-control">
+                        </div>
+                        <div class="col-sm-6">
+                            <label>علت توقف تست</label>
+                            <select name="stress_stop_reason" class="form-select">
+                                <option value="">انتخاب کنید</option>
+                                <option>رسیدن به HR هدف</option>
+                                <option>علامت‌دار شدن بیمار</option>
+                                <option>آریتمی</option>
+                                <option>افت فشار</option>
+                                <option>خستگی</option>
+                                <option>تنگی نفس شدید</option>
+                            </select>
+                        </div>
+                        <div class="col-md-12">
+                            <label>شرایط خاص حین تست</label>
+                            <textarea name="stress_conditions" class="form-control"
+                                      placeholder="مثلاً لرزش عضله، عرق زیاد، عدم همکاری"></textarea>
+                        </div>
+
+                        <div class="col-12 d-flex justify-content-between">
+                            <button class="btn btn-primary btn-prev" type="button">
+                                <i class="bx bx-chevron-left bx-sm ms-sm-n2"></i>
+                                <span class="d-sm-inline-block d-none">قبلی</span>
+                            </button>
+                            <button class="btn btn-primary btn-next" type="button">
+                                <span class="d-sm-inline-block d-none me-sm-1">بعدی</span>
+                                <i class="bx bx-chevron-right bx-sm me-sm-n2"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <!--  اطلاعات تست -->
+
+                <!--  علائم بالینی -->
+                <div id="Clinical-signs" class="content">
+                    <div class="content-header mb-3">
+                        <h6 class="mb-1">علائم بالینی</h6>
+                        <small>علائم بالینی را وارد کنید. </small>
+                    </div>
+                    <div class="row g-3">
+                        <div class="col-sm-8">
+                            <small class="fw-semibold d-block">علائم حین تست</small>
+                            <div class="form-check form-check-inline mt-3">
+                                <input class="form-check-input" type="checkbox" name="symptoms" value="درد قفسه سینه">
+                                <label class="form-check-label">درد قفسه سینه</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="checkbox" name="symptoms" value="تنگی نفس">
+                                <label class="form-check-label">تنگی نفس</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="checkbox" name="symptoms" value="سرگیجه">
+                                <label class="form-check-label">سرگیجه</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="checkbox" name="symptoms" value="سنکوپ">
+                                <label class="form-check-label">سنکوپ</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="checkbox" name="symptoms" value="اضطراب">
+                                <label class="form-check-label">اضطراب</label>
+                            </div>
+                        </div>
+
+
+                        <div class="col-sm-6">
+                            <label>HR پایه</label>
+                            <input type="number" name="hr_rest" class="form-control">
+                        </div>
+                        <div class="col-sm-6">
+                            <label>HR ماکزیمم</label>
+                            <input type="number" name="hr_peak" class="form-control">
+                        </div>
+                        <div class="col-sm-6">
+                            <label>SBP پایه</label>
+                            <input type="number" name="sbp_rest" class="form-control">
+                        </div>
+                        <div class="col-sm-6">
+                            <label>SBP پیک</label>
+                            <input type="number" name="sbp_peak" class="form-control">
+                        </div>
+                        <div class="col-sm-6">
+                            <label>آیا تست علامت‌دار بود؟</label>
+                            <select name="stress_symptomatic" class="form-select">
+                                <option value="">انتخاب کنید</option>
+                                <option>بله</option>
+                                <option>خیر</option>
+                                <option>نسبی</option>
+                            </select>
+                        </div>
+                        <div class="col-sm-6">
+                            <label>درجه تنگی نفس (Borg Scale)</label>
+                            <select name="borg_scale" class="form-select">
+                                <option value="">انتخاب کنید</option>
+                                <option>1</option>
+                                <option>2</option>
+                                <option>3</option>
+                                <option>4</option>
+                                <option>5</option>
+                                <option>6</option>
+                                <option>7</option>
+                                <option>8</option>
+                                <option>9</option>
+                                <option>10</option>
+                            </select>
+                        </div>
+
+                        <div class="col-12 d-flex justify-content-between">
+                            <button class="btn btn-primary btn-prev" type="button">
+                                <i class="bx bx-chevron-left bx-sm ms-sm-n2"></i>
+                                <span class="d-sm-inline-block d-none">قبلی</span>
+                            </button>
+                            <button class="btn btn-primary btn-next" type="button">
+                                <span class="d-sm-inline-block d-none me-sm-1">بعدی</span>
+                                <i class="bx bx-chevron-right bx-sm me-sm-n2"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <!--  علائم بالینی -->
+
+                <!--  یافته‌های ECG -->
+                <div id="ECG-findings" class="content">
+                    <div class="content-header mb-3">
+                        <h6 class="mb-1">یافته‌های ECG</h6>
+                        <small>یافته‌های ECG را وارد کنید. </small>
+                    </div>
+                    <div class="row g-3">
+                        <div class="col-sm-6">
+                            <label>نوع آریتمی در صورت وجود</label>
+                            <input type="text" name="arrhythmia_type" class="form-control"
+                                   placeholder="مثلاً PVC, PAC, AF">
+                        </div>
+                        <div class="col-sm-6">
+                            <label>محل لیدهای درگیر</label>
+                            <input type="text" name="ecg_leads" class="form-control"
+                                   placeholder="مثلاً II, III, aVF یا V1-V4">
+                        </div>
+                        <div class="col-sm-12">
+                            <label>تغییرات ST-T</label>
+                            <textarea name="ecg_changes" class="form-control" rows="2"
+                                      placeholder="مثلاً ST elevation در V1-V4 یا depression در aVL"></textarea>
+                        </div>
+
+                        <div class="col-12 d-flex justify-content-between">
+                            <button class="btn btn-primary btn-prev" type="button">
+                                <i class="bx bx-chevron-left bx-sm ms-sm-n2"></i>
+                                <span class="d-sm-inline-block d-none">قبلی</span>
+                            </button>
+                            <button class="btn btn-primary btn-next" type="button">
+                                <span class="d-sm-inline-block d-none me-sm-1">بعدی</span>
+                                <i class="bx bx-chevron-right bx-sm me-sm-n2"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <!--  یافته‌های ECG -->
+
+                <!--  یافته‌های اکو -->
+                <div id="Echo-findings" class="content">
+                    <div class="content-header mb-3">
+                        <h6 class="mb-1">یافته‌های اکو</h6>
+                        <small>یافته‌های اکو را وارد کنید. </small>
+                    </div>
+                    <div class="row g-3">
+                        <div class="col-sm-6">
+                            <label>شدت RWMA</label>
+                            <select name="rwma_severity" class="form-select">
+                                <option value="">انتخاب کنید</option>
+                                <option>خفیف</option>
+                                <option>متوسط</option>
+                                <option>شدید</option>
+                            </select>
+                        </div>
+                        <div class="col-sm-6">
+                            <label>EF در حالت استراحت (%)</label>
+                            <input type="number" name="ef_rest" class="form-control">
+                        </div>
+                        <div class="col-sm-6">
+                            <label>EF بعد از تست (%)</label>
+                            <input type="number" name="ef_post" class="form-control">
+                        </div>
+                        <div class="col-sm-6">
+                            <label>شدت MR در استرس</label>
+                            <select name="mr_grade" class="form-select">
+                                <option value="">انتخاب کنید</option>
+                                <option>هیچ</option>
+                                <option>خفیف</option>
+                                <option>متوسط</option>
+                                <option>شدید</option>
+                            </select>
+                        </div>
+                        <div class="col-sm-12">
+                            <label>دیواره‌های دچار RWMA</label>
+                            <textarea name="rwma_walls" class="form-control" rows="2"
+                                      placeholder="مثلاً Anterior wall, Apex"></textarea>
+                        </div>
+                        <div class="col-12 d-flex justify-content-between">
+                            <button class="btn btn-primary btn-prev" type="button">
+                                <i class="bx bx-chevron-left bx-sm ms-sm-n2"></i>
+                                <span class="d-sm-inline-block d-none">قبلی</span>
+                            </button>
+                            <button class="btn btn-primary btn-next" type="button">
+                                <span class="d-sm-inline-block d-none me-sm-1">بعدی</span>
+                                <i class="bx bx-chevron-right bx-sm me-sm-n2"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <!--  یافته‌های اکو -->
+
+                <!--  مستندات -->
+                <div id="Documentation" class="content">
+                    <div class="content-header mb-3">
+                        <h6 class="mb-1">مستندات</h6>
+                        <small>مستندات را وارد کنید. </small>
+                    </div>
+                    <div class="row g-3">
+                        <div class="col-sm-6">
+                            <label>آپلود تصویر یا ویدیوی تست</label>
+                            <input type="file" name="stress_video" class="form-control">
+                        </div>
+                        <div class="col-sm-6">
+                            <label>آیا تصاویر ذخیره شد؟</label>
+                            <select name="image_saved" class="form-select">
+                                <option value="">انتخاب کنید</option>
+                                <option>بله</option>
+                                <option>خیر</option>
+                            </select>
+                        </div>
+                        <div class="col-md-12">
+                            <label>شرایط فنی خاص</label>
+                            <textarea name="technical_issues" class="form-control" rows="2"
+                                      placeholder="مثلاً مشکل اتصال لید یا لرزش دستگاه"></textarea>
+                        </div>
+                        <!--  تحلیل نهایی -->
+                        <div class="col-md-12">
+                            <label>تفسیر نهایی پزشک</label>
+                            <textarea name="final_comment" class="form-control" rows="3"></textarea>
+                        </div>
+                        <div class="col-md-6">
+                            <label>یافته نهایی</label>
+                            <select name="final_diagnosis" class="form-select">
+                                <option value="">انتخاب کنید</option>
+                                <option>نرمال</option>
+                                <option>ایسکمی</option>
+                                <option>مشکوک</option>
+                                <option>قابل تکرار</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label>پیشنهاد بعدی</label>
+                            <input type="text" name="final_plan" class="form-control"
+                                   placeholder="مثلاً آنژیوگرافی یا تکرار با دارو">
+                        </div>
+                        <div class="col-12 d-flex justify-content-between">
+                            <button class="btn btn-primary btn-prev" type="button">
+                                <i class="bx bx-chevron-left bx-sm ms-sm-n2"></i>
+                                <span class="d-sm-inline-block d-none">قبلی</span>
+                            </button>
+                            <button class="btn btn-primary btn-next" type="button">
+                                <span class="d-sm-inline-block d-none me-sm-1">بعدی</span>
+                                <i class="bx bx-chevron-right bx-sm me-sm-n2"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <!--  مستندات -->
+
+                <!--  اطلاعات تست استرس و علائم حین آن -->
+                <div id="stress-test" class="content">
+                    <div class="content-header mb-3">
+                        <h6 class="mb-1">اطلاعات تست استرس</h6>
+                        <small>اطلاعات تست استرس و علائم حین آن.</small>
+                    </div>
+                    <div class="row g-3">
+                        <div class="col-sm-6">
+                            <label>نوع تست استرس</label>
+                            <select name="stress_type" class="form-select">
+                                <option value="">انتخاب کنید</option>
+                                <option>تردمیل</option>
+                                <option>دوبوتامین</option>
+                                <option>ارگومتر</option>
+                            </select>
+                        </div>
+                        <div class="col-sm-6">
+                            <label>زمان شروع تست</label>
+                            <input type="time" name="stress_start_time" class="form-control">
+                        </div>
+                        <div class="col-sm-6">
+                            <label>مدت‌زمان تست (دقیقه)</label>
+                            <input type="number" name="stress_duration" class="form-control">
+                        </div>
+                        <div class="col-sm-6">
+                            <label>علت توقف تست</label>
+                            <select name="stress_stop_reason" class="form-select">
+                                <option value="">انتخاب کنید</option>
+                                <option>رسیدن به HR هدف</option>
+                                <option>علامت‌دار شدن بیمار</option>
+                                <option>آریتمی</option>
+                                <option>افت فشار</option>
+                                <option>خستگی</option>
+                                <option>تنگی نفس شدید</option>
+                            </select>
+                        </div>
+                        <div class="col-sm-12">
+                            <label>شرایط خاص حین تست</label>
+                            <textarea name="stress_conditions" class="form-control"
+                                      placeholder="مثلاً لرزش عضله، عرق زیاد، عدم همکاری"></textarea>
+                        </div>
+
+                        <div class="col-sm-8">
+                            <small class="fw-semibold d-block">علائم حین تست</small>
+                            <div class="form-check form-check-inline mt-3">
+                                <input class="form-check-input" type="checkbox" name="symptoms" value="درد قفسه سینه">
+                                <label class="form-check-label">درد قفسه سینه</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="checkbox" name="symptoms" value="تنگی نفس">
+                                <label class="form-check-label">تنگی نفس</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="checkbox" name="symptoms" value="سرگیجه">
+                                <label class="form-check-label">سرگیجه</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="checkbox" name="symptoms" value="سنکوپ">
+                                <label class="form-check-label">سنکوپ</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="checkbox" name="symptoms" value="اضطراب">
+                                <label class="form-check-label">اضطراب</label>
+                            </div>
+                        </div>
+
+
+                        <div class="col-sm-6">
+                            <label>HR پایه</label>
+                            <input type="number" name="hr_rest" class="form-control">
+                        </div>
+                        <div class="col-sm-6">
+                            <label>HR ماکزیمم</label>
+                            <input type="number" name="hr_peak" class="form-control">
+                        </div>
+                        <div class="col-sm-6">
+                            <label>SBP پایه</label>
+                            <input type="number" name="sbp_rest" class="form-control">
+                        </div>
+                        <div class="col-sm-6">
+                            <label>SBP پیک</label>
+                            <input type="number" name="sbp_peak" class="form-control">
+                        </div>
+                        <div class="col-sm-6">
+                            <label>آیا تست علامت‌دار بود؟</label>
+                            <select name="stress_symptomatic" class="form-select">
+                                <option value="">انتخاب کنید</option>
+                                <option>بله</option>
+                                <option>خیر</option>
+                                <option>نسبی</option>
+                            </select>
+                        </div>
+                        <div class="col-sm-6">
+                            <label>درجه تنگی نفس (Borg Scale)</label>
+                            <select name="borg_scale" class="form-select">
+                                <option value="">انتخاب کنید</option>
+                                <option>1</option>
+                                <option>2</option>
+                                <option>3</option>
+                                <option>4</option>
+                                <option>5</option>
+                                <option>6</option>
+                                <option>7</option>
+                                <option>8</option>
+                                <option>9</option>
+                                <option>10</option>
+                            </select>
+                        </div>
+                        <div class="col-12 d-flex justify-content-between">
+                            <button class="btn btn-primary btn-prev" type="button">
+                                <i class="bx bx-chevron-left bx-sm ms-sm-n2"></i>
+                                <span class="d-sm-inline-block d-none">قبلی</span>
+                            </button>
+                            <button class="btn btn-primary btn-next" type="button">
+                                <span class="d-sm-inline-block d-none me-sm-1">بعدی</span>
+                                <i class="bx bx-chevron-right bx-sm me-sm-n2"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <!--  اطلاعات تست استرس و علائم حین آن -->
+
+
+                <!--  تحلیل نهایی پزشک -->
+                <div id="Final-analysis" class="content">
+                    <div class="content-header mb-3">
+                        <h6 class="mb-1">تحلیل نهایی پزشک</h6>
+                        <!--                        <small>اطلاعات تست استرس و علائم حین آن.</small>-->
+                    </div>
+                    <div class="row g-3">
+                        <div class="col-md-12">
+                            <label>تفسیر نهایی پزشک</label>
+                            <textarea name="final_comment" class="form-control" rows="3"></textarea>
+                        </div>
+                        <div class="col-sm-6">
+                            <label>یافته نهایی</label>
+                            <select name="final_diagnosis" class="form-select">
+                                <option>انتخاب کنید</option>
+                                <option>نرمال</option>
+                                <option>ایسکمی</option>
+                                <option>مشکوک</option>
+                                <option>قابل تکرار</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label>پیشنهاد بعدی</label>
+                            <input type="text" name="final_plan" class="form-control"
+                                   placeholder="مثلاً آنژیوگرافی یا تکرار با دارو">
+                        </div>
+                        <div class="col-md-12">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" name="consent" id="consent" required>
+                                <label class="form-check-label" for="consent">
+                                    تأیید می‌کنم که اطلاعات وارد شده صحیح است .
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-12 d-flex justify-content-between">
+                            <button class="btn btn-primary btn-prev" type="button">
+                                <i class="bx bx-chevron-left bx-sm ms-sm-n2"></i>
+                                <span class="d-sm-inline-block d-none">قبلی</span>
+                            </button>
+                            <button class="btn btn-success btn-submit" type="submit">ثبت</button>
+                        </div>
+                    </div>
+                </div>
+                <!--  تحلیل نهایی پزشک -->
+            </form>
+        </div>
+    </div>
+</div>
+<!-- /Vertical Wizard -->
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/Exercise-test.js' %}"></script>
+{% endblock %}

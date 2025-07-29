@@ -1,0 +1,58 @@
+{% load static %}
+<nav class="layout-navbar navbar glass-navbar navbar-expand-xl align-items-center bg-navbar-theme" id="layout-navbar">
+    <div class="container-fluid">
+
+        <!-- دکمه باز کردن منو در موبایل -->
+        <div class="layout-menu-toggle navbar-nav align-items-xl-center me-3 me-xl-0 d-xl-none">
+            <a class="nav-item nav-link px-0 me-xl-4" href="javascript:void(0)">
+                <i class="bx bx-menu bx-sm"></i>
+            </a>
+        </div>
+
+        <!-- ساعت -->
+        <div class="d-flex justify-content-start flex-grow-1">
+            <span id="datetime" class="text-center"></span>
+        </div>
+
+        <!-- اطلاعات کاربر -->
+        <div class="navbar-nav flex-row align-items-center ms-auto">
+            {% if request.user.is_authenticated %}
+            <li class="nav-item dropdown-user dropdown">
+                <a class="nav-link dropdown-toggle hide-arrow" href="#" data-bs-toggle="dropdown">
+                    <div class="avatar avatar-online">
+                        <img src="{% static 'assets/img/avatars/1.png' %}" alt class="rounded-circle"/>
+                    </div>
+                    <span class="ms-2">{{ request.user.get_full_name|default:request.user.username }}</span>
+                </a>
+                <ul class="dropdown-menu dropdown-menu-end text-end px-2" style="min-width: 220px">
+                    <li class="px-2 py-1">
+                        <strong>آخرین ورود:</strong><br>
+                        <small class="text-muted">{{ request.user.last_login|date:"Y/m/d H:i" }}</small>
+                    </li>
+                    <li class="dropdown-divider"></li>
+                    <li class="px-2 py-1">
+                        <strong>دسترسی‌ها:</strong>
+                        <ul class="list-unstyled small mb-0">
+                            {% for perm in request.user.get_all_permissions|slice:":4" %}
+                            <li>{{ perm }}</li>
+                            {% empty %}
+                            <li><em>هیچ دسترسی‌ای ندارد</em></li>
+                            {% endfor %}
+                        </ul>
+                        {% if request.user.get_all_permissions|length > 4 %}
+                        <small class="text-muted">...</small>
+                        {% endif %}
+                    </li>
+                    <li class="dropdown-divider"></li>
+                    <li>
+                        <a class="dropdown-item text-danger" href="{% url 'accounts:logout' %}">
+                            <i class="bx bx-power-off me-2"></i>
+                            <span class="align-middle">خروج</span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+            {% endif %}
+        </div>
+    </div>
+</nav>

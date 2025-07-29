@@ -1,0 +1,159 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}
+{% if form.instance.pk %}
+ویرایش گزارش تست تیلت
+{% else %}
+ایجاد گزارش تست تیلت
+{% endif %}
+{% endblock %}
+
+{% block content %}
+<h4 class="py-3 mb-4">
+    <span class="text-muted fw-light">خدمات کلینیکی /</span>
+    {% if form.instance.pk %}
+    ویرایش گزارش تست تیلت
+    {% else %}
+    ایجاد گزارش جدید
+    {% endif %}
+</h4>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card mb-4">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                {% if form.instance.pk %}
+                <h5 class="mb-0">ویرایش گزارش برای بیمار: {{ report.patient.full_name }}</h5>
+                {% else %}
+                <h5 class="mb-0">ایجاد گزارش برای بیمار: {{ patient.full_name }}</h5>
+                <small class="text-muted">خدمت: تست تیلت | کد پیگیری: {{ service.tracking_code }}</small>
+                {% endif %}
+            </div>
+            <div class="card-body">
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+
+                    <!-- نمایش خطاهای کلی فرم -->
+                    {% if form.non_field_errors %}
+                    <div class="alert alert-danger">
+                        {% for error in form.non_field_errors %}
+                        <p class="mb-0">{{ error }}</p>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+
+                    <div class="row">
+                        <!-- بخش اطلاعات ارجاع -->
+                        <div class="col-12">
+                            <h6 class="mt-2 mb-3 text-muted">اطلاعات ارجاع</h6>
+                            <hr class="mt-0">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="{{ form.referring_physician.id_for_label }}" class="form-label">{{
+                                form.referring_physician.label }}</label>
+                            {{ form.referring_physician }}
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="{{ form.referral_reason.id_for_label }}" class="form-label">{{
+                                form.referral_reason.label }}</label>
+                            {{ form.referral_reason }}
+                        </div>
+
+                        <!-- بخش علائم قبل از تست -->
+                        <div class="col-12">
+                            <h6 class="mt-4 mb-3 text-muted">علائم قبل از تست</h6>
+                            <hr class="mt-0">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="{{ form.prior_symptoms.id_for_label }}" class="form-label">{{
+                                form.prior_symptoms.label }}</label>
+                            {{ form.prior_symptoms }}
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="{{ form.last_event_time.id_for_label }}" class="form-label">{{
+                                form.last_event_time.label }}</label>
+                            {{ form.last_event_time }}
+                        </div>
+
+                        <!-- بخش پاسخ تست تیلت -->
+                        <div class="col-12">
+                            <h6 class="mt-4 mb-3 text-muted">پاسخ تست تیلت</h6>
+                            <hr class="mt-0">
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <label for="{{ form.had_syncope.id_for_label }}" class="form-label">{{
+                                form.had_syncope.label }}</label>
+                            {{ form.had_syncope }}
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <label for="{{ form.hr_during_syncope.id_for_label }}" class="form-label">{{
+                                form.hr_during_syncope.label }}</label>
+                            {{ form.hr_during_syncope }}
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <label for="{{ form.bp_drop.id_for_label }}" class="form-label">{{ form.bp_drop.label
+                                }}</label>
+                            {{ form.bp_drop }}
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <label for="{{ form.symptom_onset_time.id_for_label }}" class="form-label">{{
+                                form.symptom_onset_time.label }}</label>
+                            {{ form.symptom_onset_time }}
+                        </div>
+                        <div class="col-md-12 mb-3">
+                            <label for="{{ form.standing_symptoms.id_for_label }}" class="form-label">{{
+                                form.standing_symptoms.label }}</label>
+                            {{ form.standing_symptoms }}
+                        </div>
+
+                        <!-- بخش فاز بازیابی و نتیجه نهایی -->
+                        <div class="col-12">
+                            <h6 class="mt-4 mb-3 text-muted">نتیجه نهایی و فاز بازیابی</h6>
+                            <hr class="mt-0">
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label for="{{ form.recovery_time.id_for_label }}" class="form-label">{{
+                                form.recovery_time.label }}</label>
+                            {{ form.recovery_time }}
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label for="{{ form.response_type.id_for_label }}" class="form-label">{{
+                                form.response_type.label }}</label>
+                            {{ form.response_type }}
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label for="{{ form.final_result.id_for_label }}" class="form-label">{{
+                                form.final_result.label }}</label>
+                            {{ form.final_result }}
+                        </div>
+                        <div class="col-md-12 mb-3">
+                            <label for="{{ form.doctor_comment.id_for_label }}" class="form-label">{{
+                                form.doctor_comment.label }}</label>
+                            {{ form.doctor_comment }}
+                        </div>
+                        <div class="col-md-12 mb-3">
+                            <label for="{{ form.tilt_upload.id_for_label }}" class="form-label">{{
+                                form.tilt_upload.label }}</label>
+                            {{ form.tilt_upload }}
+                            {% if form.instance.tilt_upload %}
+                            <div class="form-text">فایل فعلی: <a href="{{ form.instance.tilt_upload.url }}"
+                                                                 target="_blank">{{ form.instance.tilt_upload.name
+                                }}</a></div>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div class="mt-4">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bx bx-save me-1"></i>
+                            ذخیره گزارش
+                        </button>
+                        <a href="{% url 'tilt:tilt_list' %}" class="btn btn-secondary">بازگشت به لیست</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

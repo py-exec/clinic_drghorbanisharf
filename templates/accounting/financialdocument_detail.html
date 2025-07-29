@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}جزئیات سند مالی{% endblock %}
+
+{% block content %}
+<h2 class="mb-4 text-center">💳 جزئیات سند مالی</h2>
+
+<div class="card">
+    <div class="card-header">
+        <h5 class="mb-0">📜 جزئیات سند مالی</h5>
+    </div>
+
+    <div class="card-body">
+        <dl class="row">
+            <dt class="col-sm-3">تاریخ ایجاد:</dt>
+            <dd class="col-sm-9">{{ financial_document.created_at|date:"Y/m/d H:i" }}</dd>
+
+            <dt class="col-sm-3">تاریخ بروزرسانی:</dt>
+            <dd class="col-sm-9">{{ financial_document.updated_at|date:"Y/m/d H:i" }}</dd>
+
+            <dt class="col-sm-3">تخفیف:</dt>
+            <dd class="col-sm-9">{{ financial_document.discount|intcomma }} ریال</dd>
+
+            <dt class="col-sm-3">وضعیت:</dt>
+            <dd class="col-sm-9">{{ financial_document.status }}</dd>
+
+            <dt class="col-sm-3">تسویه‌شده؟</dt>
+            <dd class="col-sm-9">{% if financial_document.is_paid %}✅ بله{% else %}❌ خیر{% endif %}</dd>
+
+            <dt class="col-sm-3">یادداشت‌ها:</dt>
+            <dd class="col-sm-9">{{ financial_document.notes|default:"-" }}</dd>
+        </dl>
+    </div>
+</div>
+{% endblock %}

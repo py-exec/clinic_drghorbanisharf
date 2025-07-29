@@ -1,0 +1,170 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}{{ view.object|default_if_none:"ثبت فاکتور جدید" }}{% endblock %}
+
+{% block content %}
+<h4 class="py-3 mb-4">
+    <span class="text-muted fw-light">حسابداری / فاکتورها /</span>
+    {% if view.object %}✏️ ویرایش فاکتور{% else %}➕ ثبت فاکتور جدید{% endif %}
+</h4>
+
+<div class="card">
+    <div class="card-header">
+        <h5 class="card-title mb-0">
+            {% if view.object %}ویرایش فاکتور: {{ view.object.invoice_number }}{% else %}ثبت فاکتور جدید{% endif %}
+        </h5>
+    </div>
+    <div class="card-body">
+        <form method="post" enctype="multipart/form-data" id="invoice-form"> {# اضافه کردن id برای دسترسی JS #}
+            {% csrf_token %}
+            {% if form.non_field_errors %}
+            <div class="alert alert-danger">
+                {% for error in form.non_field_errors %}
+                <p class="mb-0">{{ error }}</p>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            <div class="row g-3">
+
+                {% if view.object %}
+                <div class="col-md-6">
+                    <label class="form-label">شماره فاکتور</label>
+                    <input type="text" class="form-control" value="{{ view.object.invoice_number }}" disabled>
+                </div>
+                {% endif %}
+
+                <div class="col-md-6">
+                    <label for="{{ form.related_user.id_for_label }}" class="form-label">
+                        {{ form.related_user.label }}{% if form.related_user.field.required %}<span class="text-danger">*</span>{% endif %}
+                    </label>
+                    {{ form.related_user }}
+                    {% if form.related_user.errors %}{{ form.related_user.errors }}{% endif %}
+                </div>
+
+                <div class="col-md-6">
+                    <label for="{{ form.related_reception.id_for_label }}" class="form-label">
+                        {{ form.related_reception.label }}{% if form.related_reception.field.required %}<span class="text-danger">*</span>{% endif %}
+                    </label>
+                    {{ form.related_reception }}
+                    {% if form.related_reception.errors %}{{ form.related_reception.errors }}{% endif %}
+                </div>
+
+                <div class="col-md-6">
+                    <label for="{{ form.discount.id_for_label }}" class="form-label">
+                        {{ form.discount.label }}{% if form.discount.field.required %}<span class="text-danger">*</span>{% endif %}
+                    </label>
+                    {{ form.discount }}
+                    {% if form.discount.errors %}{{ form.discount.errors }}{% endif %}
+                </div>
+
+                <div class="col-md-6">
+                    <label for="{{ form.status.id_for_label }}" class="form-label">
+                        {{ form.status.label }}{% if form.status.field.required %}<span class="text-danger">*</span>{% endif %}
+                    </label>
+                    {{ form.status }}
+                    {% if form.status.errors %}{{ form.status.errors }}{% endif %}
+                </div>
+
+                <div class="col-md-6 form-check mt-4 pt-2"> {# کلاس های Bootstrap برای چک‌باکس #}
+                    {{ form.is_paid }} {{ form.is_paid.label_tag }}
+                    {% if form.is_paid.errors %}{{ form.is_paid.errors }}{% endif %}
+                </div>
+
+                <div class="col-12"> {# تمام عرض #}
+                    <label for="{{ form.notes.id_for_label }}" class="form-label">
+                        {{ form.notes.label }}{% if form.notes.field.required %}<span class="text-danger">*</span>{% endif %}
+                    </label>
+                    {{ form.notes }}
+                    {% if form.notes.errors %}{{ form.notes.errors }}{% endif %}
+                </div>
+
+                {# اگر این فیلد را در فرم ModelForm خود به صورت disabled یا ReadOnly تنظیم نکرده‌اید، ممکن است قابل ویرایش باشد. #}
+                {# بهتر است آن را فقط برای نمایش اطلاعات در view/template استفاده کنید نه در فرم ورودی. #}
+                {# اگر باید در فرم باشد اما غیرفعال، مطمئن شوید که در فرم ModelForm ویجت آن را disabled کرده‌اید. #}
+                <div class="col-md-6">
+                    <label for="{{ form.created_by.id_for_label }}" class="form-label">
+                        {{ form.created_by.label }}{% if form.created_by.field.required %}<span class="text-danger">*</span>{% endif %}
+                    </label>
+                    {{ form.created_by }}
+                    {% if form.created_by.errors %}{{ form.created_by.errors }}{% endif %}
+                </div>
+            </div>
+
+            <div class="mt-4 d-flex gap-2 justify-content-end">
+                <a href="{% url 'accounting:invoice_list' %}" class="btn btn-secondary btn-sm">🔙 بازگشت</a>
+                <button type="submit" class="btn btn-primary btn-sm">
+                    {% if view.object %}💾 بروزرسانی{% else %}💾 ذخیره{% endif %}
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const form = document.getElementById('invoice-form'); // شناسایی فرم با ID جدید
+        if (form) {
+            const formInputs = form.querySelectorAll('input:not([type="checkbox"]):not([type="file"]):not([type="submit"]):not([type="reset"]), select, textarea');
+
+            // اضافه کردن کلاس form-control به تمام input, select, textarea ها
+            formInputs.forEach(input => {
+                if (!input.classList.contains('form-control')) {
+                    input.classList.add('form-control');
+                }
+            });
+
+            // منطق جدا کردن ۳ رقم ۳ رقم برای فیلد مبلغ (discount)
+            const discountInput = document.getElementById('{{ form.discount.id_for_label }}');
+
+            if (discountInput) {
+                function cleanNumber(value) {
+                    return String(value).replace(/\D/g, ''); // اطمینان از اینکه value رشته است
+                }
+
+                function formatNumberWithSeparators(value) {
+                    const cleanedValue = cleanNumber(value);
+                    if (cleanedValue === '' || cleanedValue === '0') {
+                        return cleanedValue;
+                    }
+                    return cleanedValue.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+                }
+
+                discountInput.addEventListener('input', function (e) {
+                    const originalValue = e.target.value;
+                    const originalCursorPosition = e.target.selectionStart;
+
+                    const formattedValue = formatNumberWithSeparators(originalValue);
+                    e.target.value = formattedValue;
+
+                    let newCursorPosition = originalCursorPosition;
+                    const dotsAdded = (formattedValue.length - originalValue.length);
+
+                    // Adjust cursor position
+                    if (dotsAdded > 0 && originalCursorPosition > 0 && formattedValue.charAt(originalCursorPosition - 1) === '.') {
+                        newCursorPosition += 1;
+                    } else if (dotsAdded < 0 && originalCursorPosition > 0 && originalValue.charAt(originalCursorPosition - 1) === '.' && originalValue.charAt(originalCursorPosition) !== '.') {
+                        newCursorPosition -= 1;
+                    }
+                    // Ensure cursor stays within bounds
+                    newCursorPosition = Math.min(newCursorPosition, formattedValue.length);
+                    e.target.setSelectionRange(newCursorPosition, newCursorPosition);
+                });
+
+                discountInput.addEventListener('blur', function (e) {
+                    e.target.value = formatNumberWithSeparators(e.target.value);
+                });
+
+                discountInput.value = formatNumberWithSeparators(discountInput.value);
+
+                discountInput.form.addEventListener('submit', function () {
+                    discountInput.value = cleanNumber(discountInput.value);
+                });
+            }
+        }
+    });
+</script>
+{% endblock %}

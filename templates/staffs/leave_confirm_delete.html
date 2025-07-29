@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %}حذف درخواست مرخصی{% endblock %}
+
+{% block content %}
+<div class="alert alert-warning text-center">
+    <h5 class="mb-3">
+        ⚠ آیا از حذف مرخصی <strong>{{ object.get_leave_type_display }}</strong>
+        کارمند <strong>{{ object.staff.get_full_name }}</strong>
+        از <strong>{{ object.start_date }}</strong> تا <strong>{{ object.end_date }}</strong> اطمینان دارید؟
+    </h5>
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger">بله، حذف شود</button>
+        <a href="{% url 'staffs:leave-list' %}" class="btn btn-secondary">انصراف</a>
+    </form>
+</div>
+{% endblock %}

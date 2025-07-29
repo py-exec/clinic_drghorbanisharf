@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}{% if form.instance.pk %}ویرایش موقعیت شغلی{% else %}افزودن موقعیت شغلی{% endif %}{% endblock %}
+
+{% block content %}
+<h2 class="mb-4 text-center">{% if form.instance.pk %}ویرایش موقعیت شغلی{% else %}افزودن موقعیت شغلی جدید{% endif
+    %}</h2>
+
+<div class="card">
+    <div class="card-body">
+        <form method="post">
+            {% csrf_token %}
+            <div class="row g-3">
+                <div class="col-md-6">
+                    {{ form.title.label_tag }}
+                    {{ form.title }}
+                </div>
+                <div class="col-md-6">
+                    {{ form.code.label_tag }}
+                    {{ form.code }}
+                </div>
+                <div class="col-md-12">
+                    {{ form.description.label_tag }}
+                    {{ form.description }}
+                </div>
+                <div class="col-12 d-flex justify-content-end">
+                    <button type="submit" class="btn btn-success">ثبت</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

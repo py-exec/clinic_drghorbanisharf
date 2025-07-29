@@ -1,0 +1,29 @@
+{# partials/_sub_menu.html #}
+{% load static %}
+{% load menu_tags %}
+{% for item in children %}
+
+    {% if item.type == 'header' %}
+        <li class="menu-header small text-uppercase">{{ item.title }}</li>
+    {% elif item.type == 'divider' %}
+        <li class="menu-divider"></li>
+    {% else %}
+        <li class="menu-item {% if item.children %}has-sub{% endif %} {% if item.active %}active open{% endif %}">
+            <a href="{{ item.url|default:'#' }}"
+               class="menu-link {% if item.children %}menu-toggle{% endif %} {% if item.css_class %}{{ item.css_class }}{% endif %}"
+               {% if item.type == 'external_link' %}target="_blank"{% endif %}>
+                <div>{{ item.title }}</div>
+                {% if item.badge %}
+                    <span class="badge bg-danger rounded-pill ms-auto">{{ item.badge }}</span>
+                {% endif %}
+            </a>
+
+            {% if item.children %}
+                <ul class="menu-sub">
+                    <li>📦 Sub-submenu برای {{ item.title }}</li>
+                    {% render_sub_menu children=item.children %}
+                </ul>
+            {% endif %}
+        </li>
+    {% endif %}
+{% endfor %}

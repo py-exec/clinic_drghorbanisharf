@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}{{ view.object.pk|default:"افزودن" }} پزشک{% endblock %}
+
+{% block content %}
+<h2 class="mb-4 text-center">{{ view.object.pk|default:"افزودن" }} پزشک</h2>
+
+<div class="card">
+    <div class="card-body">
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+<div class="row g-3">
+    {% for field in form.visible_fields %}
+        {#  اصلاح: استفاده از تگ if برای منطق شرطی #}
+        <div class="col-md-{% if field.field.widget.input_type == 'checkbox' %}12{% else %}6{% endif %}">
+            <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
+            {{ field }}
+            {% if field.help_text %}
+                <div class="form-text">{{ field.help_text }}</div>
+            {% endif %}
+            {% for error in field.errors %}
+                <div class="text-danger small">{{ error }}</div>
+            {% endfor %}
+        </div>
+    {% endfor %}
+</div>
+
+
+                <div class="col-12 d-flex justify-content-between">
+                    <a href="{% url 'doctors:doctor-list' %}" class="btn btn-label-secondary">بازگشت</a>
+                    <button type="submit" class="btn btn-primary">ذخیره</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

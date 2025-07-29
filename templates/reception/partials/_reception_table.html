@@ -1,0 +1,78 @@
+{% load static %}
+{% load service_filters %}
+<div class="table-responsive">
+  <table class="table table-striped table-hover align-middle text-center">
+    <thead>
+      <tr>
+        <th>کد پذیرش</th>
+        <th>سطح خدمت</th>
+        <th>شماره پرونده</th>
+        <th>نام و نام خانوادگی</th>
+        <th>شماره تماس</th>
+        <th>نوع خدمت</th>
+        <th>نوبت</th>
+        <th>وضعیت خدمت</th>
+        <th>وضعیت پرداخت</th>
+        <th class="text-center">عملیات</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for r in receptions %}
+        {% with r.services.all as services %}
+          {% if services %}
+            {% for s in services %}
+              <tr class="{% if forloop.first %}table-primary fw-bold{% endif %}">
+                {% if forloop.first %}
+                  <td rowspan="{{ services|length }}">{{ r.admission_code }}</td>
+                  <td rowspan="{{ services|length }}">{{ r.get_service_level_display }}</td>
+                  <td rowspan="{{ services|length }}">{{ r.patient.record_number }}</td>
+                  <td rowspan="{{ services|length }}">{{ r.patient.full_name }}</td>
+                  <td rowspan="{{ services|length }}">{{ r.patient.mobile }}</td>
+                {% endif %}
+                <td>{{ s.get_service_type_display }}</td>
+                <td>{{ s.service_index|default:"—" }}</td>
+                <td>{{ s|status_badge|safe }}</td>
+                <td>
+                  {% if r.is_fully_paid %}
+                    <span class="badge bg-success">تسویه‌شده</span>
+                  {% else %}
+                    <span class="badge bg-danger">بدهکار</span>
+                  {% endif %}
+                </td>
+                <td class="text-center">
+                  <div class="dropdown">
+                    <button class="btn btn-sm btn-outline-secondary dropdown-toggle" data-bs-toggle="dropdown">
+                      عملیات
+                    </button>
+                    <ul class="dropdown-menu">
+                      <li><a class="dropdown-item" href="{% url 'reception:service-done' s.id %}">✅ انجام شد</a></li>
+                      <li><a class="dropdown-item" href="{% url 'reception:service-cancel' s.id %}">🚫 کنسل</a></li>
+                      <li><a class="dropdown-item" href="#">✏️ ویرایش</a></li>
+                    </ul>
+                  </div>
+                </td>
+              </tr>
+            {% endfor %}
+          {% else %}
+            <tr class="table-light">
+              <td>{{ r.get_service_level_display }}</td>
+              <td>{{ r.patient.record_number }}</td>
+              <td>{{ r.patient.full_name }}</td>
+              <td>{{ r.patient.mobile }}</td>
+              <td colspan="6" class="text-muted">
+                <div class="d-flex justify-content-center align-items-center gap-2">
+                  ❌ خدمتی ثبت نشده
+                  <a href="{% url 'reception:add-service' r.id %}" class="btn btn-sm btn-outline-primary">➕ افزودن خدمت</a>
+                </div>
+              </td>
+            </tr>
+          {% endif %}
+        {% endwith %}
+      {% empty %}
+        <tr>
+          <td colspan="10" class="text-center text-muted">⛔ پذیرشی یافت نشد.</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>

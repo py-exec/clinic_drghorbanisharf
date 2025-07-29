@@ -1,0 +1,40 @@
+
+        <!-- نمایش پیام‌های کلی خطا -->
+{% if messages %}
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        {% for message in messages %}
+        Swal.fire({
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 5000,
+            timerProgressBar: true,
+            icon: '{% if "error" in message.tags %}error{% elif "warning" in message.tags %}warning{% elif "info" in message.tags %}info{% else %}success{% endif %}',
+            title: '{{ message|escapejs }}'
+        });
+        {% endfor %}
+    });
+</script>
+{% endif %}
+{% if errors_with_labels %}
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        Swal.fire({
+            icon: 'error',
+            title: 'خطاهای فرم',
+            html: `
+                <ul style="text-align: right; direction: rtl;">
+                    {% for field_label, error_list in errors_with_labels.items %}
+                        {% for error in error_list %}
+                            <li><strong>{{ field_label }}:</strong> {{ error }}</li>
+                        {% endfor %}
+                    {% endfor %}
+                </ul>
+            `
+        });
+    });
+</script>
+{% endif %}
+
+

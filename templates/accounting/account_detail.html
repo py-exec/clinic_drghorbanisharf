@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}جزئیات حساب {{ account.name }}{% endblock %}
+
+{% block content %}
+<h2 class="mb-4 text-center">💼 جزئیات حساب</h2>
+
+<div class="card">
+    <div class="card-header">
+        <h5 class="mb-0">{{ account.name }}</h5>
+    </div>
+
+    <div class="card-body">
+        <dl class="row">
+            <dt class="col-sm-3">کد حساب:</dt>
+            <dd class="col-sm-9">{{ account.code }}</dd>
+
+            <dt class="col-sm-3">نام حساب:</dt>
+            <dd class="col-sm-9">{{ account.name }}</dd>
+
+            <dt class="col-sm-3">مانده:</dt>
+            <dd class="col-sm-9">{{ account.balance|intcomma }} ریال</dd>
+
+            <dt class="col-sm-3">توضیحات:</dt>
+            <dd class="col-sm-9">{{ account.description|default:"-" }}</dd>
+        </dl>
+    </div>
+</div>
+{% endblock %}

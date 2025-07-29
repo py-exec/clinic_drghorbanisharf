@@ -1,0 +1,115 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}جزئیات کالا{% endblock %}
+
+{% block content %}
+<h2 class="text-center mb-4">جزئیات کالا: {{ item.name }}</h2>
+
+<div class="card mb-4">
+  <!-- هدر کارت -->
+  <div class="card-header d-flex justify-content-between align-items-center">
+    <h5 class="mb-0">اطلاعات کالا</h5>
+    <button onclick="window.print()" class="btn btn-outline-primary btn-sm d-print-none">
+      🖨 چاپ
+    </button>
+  </div>
+
+  <!-- بدنه کارت -->
+  <div class="card-body">
+    <div class="row g-3">
+      <div class="col-md-6"><strong>نام کالا:</strong> {{ item.name }}</div>
+      <div class="col-md-6"><strong>دسته‌بندی:</strong> {{ item.get_category_display }}</div>
+      <div class="col-md-6"><strong>وضعیت:</strong> {{ item.get_status_display }}</div>
+      <div class="col-md-6"><strong>واحد شمارش:</strong> {{ item.unit }}</div>
+      <div class="col-md-6"><strong>برند:</strong> {{ item.brand }}</div>
+      <div class="col-md-6"><strong>مدل:</strong> {{ item.model }}</div>
+      <div class="col-md-6"><strong>سریال:</strong> {{ item.serial_number }}</div>
+      <div class="col-md-6"><strong>بارکد:</strong> {{ item.barcode }}</div>
+      <div class="col-md-6"><strong>سازنده:</strong> {{ item.manufacturer }}</div>
+      <div class="col-md-6"><strong>تاریخ خرید:</strong> {{ item.purchase_date|date:"Y-m-d" }}</div>
+      <div class="col-md-6"><strong>گارانتی از:</strong> {{ item.warranty_start|date:"Y-m-d" }}</div>
+      <div class="col-md-6"><strong>تا:</strong> {{ item.warranty_expiry|date:"Y-m-d" }}</div>
+      <div class="col-md-6"><strong>تأمین‌کننده:</strong> {{ item.supplier }}</div>
+      <div class="col-md-6"><strong>شرکت گارانتی:</strong> {{ item.warranty_provider }}</div>
+      <div class="col-md-6"><strong>محل فعلی:</strong> {{ item.current_location }}</div>
+      <div class="col-md-6"><strong>مصرفی؟</strong> {{ item.is_consumable|yesno:"بله,خیر" }}</div>
+      <div class="col-md-6"><strong>قابل امانت؟</strong> {{ item.is_loanable|yesno:"بله,خیر" }}</div>
+    </div>
+
+    {% if item.description %}
+    <hr>
+    <p><strong>توضیحات:</strong><br>{{ item.description }}</p>
+    {% endif %}
+  </div>
+</div>
+
+<!-- سوابق ورود -->
+<div class="card mb-4">
+  <div class="card-header"><h5 class="mb-0">۵ ورود اخیر</h5></div>
+  <div class="card-body p-0">
+    <table class="table table-sm table-striped mb-0">
+      <thead><tr><th>تاریخ</th><th>تعداد</th><th>سری ساخت</th><th>انقضا</th></tr></thead>
+      <tbody>
+        {% for entry in stockins %}
+        <tr>
+          <td>{{ entry.stock_in.date|date:"Y-m-d" }}</td>
+          <td>{{ entry.quantity }}</td>
+          <td>{{ entry.batch_number }}</td>
+          <td>{{ entry.expiration_date|default:"-" }}</td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="4" class="text-center text-muted">ورودی ثبت نشده است.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- سوابق خروج -->
+<div class="card mb-4">
+  <div class="card-header"><h5 class="mb-0">۵ خروج اخیر</h5></div>
+  <div class="card-body p-0">
+    <table class="table table-sm table-striped mb-0">
+      <thead><tr><th>تاریخ</th><th>تعداد</th><th>واحد مقصد</th><th>پرسنل</th></tr></thead>
+      <tbody>
+        {% for entry in stockouts %}
+        <tr>
+          <td>{{ entry.stock_out.date|date:"Y-m-d" }}</td>
+          <td>{{ entry.quantity }}</td>
+          <td>{{ entry.stock_out.department }}</td>
+          <td>{{ entry.stock_out.staff }}</td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="4" class="text-center text-muted">خروجی ثبت نشده است.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block extra_css %}
+<style>
+  @media print {
+    body {
+      background: white !important;
+      color: black !important;
+    }
+
+    .card, .table {
+      box-shadow: none !important;
+      border: 1px solid #ccc !important;
+    }
+
+    .btn, nav, footer, .d-print-none {
+      display: none !important;
+    }
+
+    .card {
+      margin-bottom: 1rem !important;
+    }
+  }
+</style>
+{% endblock %}

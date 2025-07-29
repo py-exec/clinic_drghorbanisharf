@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}{{ view.action_name|default:"ویرایش نقش" }}{% endblock %}
+
+{% block content %}
+    <h4 class="py-3 mb-4">
+        <span class="text-muted fw-light">مدیریت دسترسی /</span> {{ view.action_name|default:"ویرایش نقش" }}
+    </h4>
+
+    <div class="card">
+        <div class="card-body">
+            <form method="post" novalidate>
+                {% csrf_token %}
+
+                {% if form.non_field_errors %}
+                    <div class="alert alert-danger">
+                        {% for error in form.non_field_errors %}
+                            <div>{{ error }}</div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+
+                <!-- 📝 اطلاعات نقش -->
+                <fieldset class="border p-3 mb-4 rounded">
+                    <legend class="w-auto px-2 small">📝 اطلاعات نقش</legend>
+                    <div class="row g-3">
+                        <div class="col-md-4">
+                            <label for="{{ form.name.id_for_label }}" class="form-label">
+                                {{ form.name.label }}
+                                {% if form.name.field.required %}<span class="text-danger">*</span>{% endif %}
+                            </label>
+                            {{ form.name }}
+                            {% for error in form.name.errors %}
+                                <div class="text-danger small">{{ error }}</div>
+                            {% endfor %}
+                        </div>
+
+                        <div class="col-md-4">
+                            <label for="{{ form.code.id_for_label }}" class="form-label">
+                                {{ form.code.label }}
+                                {% if form.code.field.required %}<span class="text-danger">*</span>{% endif %}
+                            </label>
+                            {{ form.code }}
+                            {% for error in form.code.errors %}
+                                <div class="text-danger small">{{ error }}</div>
+                            {% endfor %}
+                        </div>
+
+                        <div class="col-md-4">
+                            <label for="{{ form.description.id_for_label }}" class="form-label">
+                                {{ form.description.label }}
+                            </label>
+                            {{ form.description }}
+                            {% for error in form.description.errors %}
+                                <div class="text-danger small">{{ error }}</div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </fieldset>
+
+                <!-- 🔐 سطح دسترسی‌ها -->
+                <fieldset class="border p-3 mb-4 rounded">
+                    <legend class="w-auto px-2 small">🔐 سطح دسترسی‌ها</legend>
+                    <div class="row">
+                        <div class="col-12">
+                            {{ form.permissions }}
+                            {% for error in form.permissions.errors %}
+                                <div class="text-danger small">{{ error }}</div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </fieldset>
+
+                <!-- دکمه‌ها -->
+                <div class="d-flex justify-content-between">
+                    <a href="{% url 'accounts:role-list' %}" class="btn btn-secondary">بازگشت</a>
+                    <button type="submit" class="btn btn-primary">💾 ذخیره تغییرات</button>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock %}

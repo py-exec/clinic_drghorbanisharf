@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}بررسی سوابق بیمار{% endblock %}
+
+{% block content %}
+<h4 class="py-3 mb-4">
+    <span class="text-muted fw-light">بیماران /</span> بررسی و ثبت بیمار
+</h4>
+
+<div class="row">
+    <div class="col-md-8 mx-auto">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">بررسی وجود بیمار در سیستم</h5>
+            </div>
+            <div class="card-body">
+                <p class="mb-3">
+                    لطفاً کد ملی یا شماره موبایل بیمار را وارد کنید. اگر قبلاً در سیستم ثبت شده باشد، به ویرایش اطلاعات منتقل خواهید شد. در غیر این صورت، فرم ثبت بیمار جدید باز خواهد شد.
+                </p>
+
+                <form method="post" action="{% url 'patient:patient_lookup' %}">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        {{ form.query.label_tag }}
+                        {{ form.query }}
+                        {% for error in form.query.errors %}
+                        <div class="invalid-feedback d-block">{{ error }}</div>
+                        {% endfor %}
+                    </div>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="bx bx-search me-1"></i> بررسی
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        {% if request.GET.query %}
+        <div class="alert alert-info mt-4">
+            <i class="bx bx-info-circle me-1"></i>
+            شما در حال ایجاد پروفایل جدید برای شماره یا کد ملی:
+            <strong>{{ request.GET.query }}</strong>
+            هستید. لطفاً اطلاعات بیمار را تکمیل کنید.
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

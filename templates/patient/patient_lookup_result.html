@@ -1,0 +1,99 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}نتیجه جستجوی بیمار{% endblock %}
+
+{% block content %}
+<h4 class="py-3 mb-4">
+    <span class="text-muted fw-light">بیماران /</span> نتیجه جستجو
+</h4>
+
+<div class="row">
+    <div class="col-md-8 mx-auto">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">نتیجه جستجو برای: "{{ query }}"</h5>
+            </div>
+            <div class="card-body">
+
+                {% if patient_found %}
+                <div class="alert alert-success">
+                    <h6 class="alert-heading">✅ بیمار پیدا شد</h6>
+                    <p>بیمار با مشخصات زیر در سیستم یافت شد. لطفاً اقدام بعدی را انتخاب کنید.</p>
+                </div>
+                <ul class="list-group">
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        نام کامل
+                        <span><strong>{{ patient_found.user.get_full_name }}</strong></span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        کد ملی
+                        <span>{{ patient_found.user.national_code }}</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        شماره موبایل
+                        <span>{{ patient_found.user.phone_number }}</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        شماره پرونده
+                        <span>{{ patient_found.record_number }}</span>
+                    </li>
+                </ul>
+                <div class="mt-4">
+                    <a href="{% url 'reception:create' %}?patient_id={{ patient_found.id }}" class="btn btn-primary">
+                        <i class="bx bx-list-plus me-1"></i>
+                        ایجاد پذیرش جدید برای این بیمار
+                    </a>
+                    <a href="{{ patient_found.get_absolute_url }}" class="btn btn-secondary">
+                        <i class="bx bx-user-circle me-1"></i>
+                        مشاهده پرونده کامل
+                    </a>
+                </div>
+
+                {% elif user_found_without_patient %}
+                <div class="alert alert-info">
+                    <h6 class="alert-heading">ℹ️ کاربر موجود است، اما پروفایل بیمار ندارد</h6>
+                    <p>یک کاربر با مشخصات زیر در سیستم یافت شد. برای تکمیل اطلاعات و ساخت پروفایل بیمار، روی دکمه زیر
+                        کلیک کنید.</p>
+                </div>
+                <ul class="list-group">
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        نام کامل
+                        <span><strong>{{ user.get_full_name }}</strong></span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        کد ملی
+                        <span>{{ user.national_code }}</span>
+                    </li>
+                </ul>
+                <div class="mt-4">
+                    <a href="{% url 'patient:patient_create' %}" class="btn btn-success">
+                        <i class="bx bx-user-check me-1"></i>
+                        تکمیل و ثبت اطلاعات بیمار
+                    </a>
+                </div>
+
+                {% else %}
+                <div class="alert alert-warning">
+                    <h6 class="alert-heading">⚠️ بیمار یافت نشد</h6>
+                    <p>هیچ بیمار یا کاربری با مشخصات وارد شده یافت نشد. می‌توانید یک بیمار کاملاً جدید ثبت کنید.</p>
+                </div>
+                <div class="mt-4">
+                    <a href="{% url 'patient:patient_create' %}" class="btn btn-success">
+                        <i class="bx bx-user-plus me-1"></i>
+                        ثبت بیمار کاملا جدید
+                    </a>
+                </div>
+                {% endif %}
+
+                <hr class="my-4">
+                <a href="{% url 'patient:patient_lookup' %}" class="btn btn-outline-secondary">
+                    <i class="bx bx-search me-1"></i>
+                    جستجوی مجدد
+                </a>
+
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}📁 لیست اسناد ضمیمه{% endblock %}
+
+{% block content %}
+<h2 class="mb-4 text-center">📁 لیست اسناد ضمیمه</h2>
+
+<div class="card">
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <h5 class="mb-0">📁 اسناد ضمیمه</h5>
+        <a href="{% url 'accounting:document_create' %}" class="btn btn-success btn-sm">
+            ➕ آپلود سند
+        </a>
+    </div>
+
+    <div class="card-body pt-0">
+        <div class="table-responsive">
+            <table class="table table-striped table-hover">
+                <thead>
+                <tr>
+                    <th>نوع</th>
+                    <th>تاریخ ثبت</th>
+                    <th>آپلودکننده</th>
+                    <th>مرتبط با</th>
+                    <th class="text-center">دانلود</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for doc in documents %}
+                <tr>
+                    <td>{{ doc.doc_type }}</td>
+                    <td>{{ doc.created_at|date:"Y/m/d H:i" }}</td>
+                    <td>{{ doc.uploaded_by }}</td>
+                    <td>
+                        {% if doc.invoice %}
+                        فاکتور: {{ doc.invoice.invoice_number }}
+                        {% elif doc.transaction %}
+                        تراکنش: {{ doc.transaction.invoice.invoice_number }}
+                        {% endif %}
+                    </td>
+                    <td class="text-center">
+                        {% if doc.file %}
+                        <a href="{{ doc.file.url }}" class="btn btn-sm btn-outline-primary" target="_blank">
+                            📥 دانلود
+                        </a>
+                        {% else %}
+                        <span class="text-muted">⛔ فایل موجود نیست</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="5" class="text-center text-muted">⛔ هیچ سندی موجود نیست.</td>
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- صفحه‌بندی -->
+        {% if is_paginated %}
+        <div class="d-flex justify-content-center mt-3">
+            <nav>
+                <ul class="pagination mb-0">
+                    {% if page_obj.has_previous %}
+                    <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">قبلی</a>
+                    </li>
+                    {% endif %}
+                    {% for num in paginator.page_range %}
+                    <li class="page-item {% if page_obj.number == num %}active{% endif %}">
+                        <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+                    </li>
+                    {% endfor %}
+                    {% if page_obj.has_next %}
+                    <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">بعدی</a>
+                    </li>
+                    {% endif %}
+                </ul>
+            </nav>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

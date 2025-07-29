@@ -1,0 +1,249 @@
+<!-- Basic Bootstrap Table -->
+{% extends "base.html" %}
+{% load static %}
+{% block title %}تست ورزش بیماران کلینیک آریتمی{% endblock %}
+
+{% block content %}
+<!--..............................-->
+<h1 class="text-center">تست تیلت</h1>
+<!-- Vertical Wizard -->
+<div class="col-12 mb-4">
+    <!--    <small class="text-light fw-semibold lh-2">عمودی</small>-->
+    <div class="bs-stepper wizard-vertical wizard-numbered vertical mt-2">
+        <div class="bs-stepper-header">
+            <!-- اطلاعات ارجاع -->
+            <div class="step" data-target="#account-details-1">
+                <button type="button" class="step-trigger">
+                    <span class="bs-stepper-circle">1</span>
+                    <span class="bs-stepper-label">اطلاعات ارجاع</span>
+                </button>
+            </div>
+            <!-- علائم قبل از تست -->
+            <div class="line"></div>
+            <div class="step" data-target="#personal-info-1">
+                <button type="button" class="step-trigger">
+                    <span class="bs-stepper-circle">2</span>
+                    <span class="bs-stepper-label">علائم قبل از تست</span>
+                </button>
+            </div>
+            <!-- پاسخ تست تیلت -->
+            <div class="line"></div>
+            <div class="step" data-target="#social-links-1">
+                <button type="button" class="step-trigger">
+                    <span class="bs-stepper-circle">3</span>
+                    <span class="bs-stepper-label">پاسخ تست تیلت</span>
+                </button>
+            </div>
+            <!-- فاز بازیابی و تفسیر -->
+            <div class="line"></div>
+            <div class="step" data-target="#Recovery_phase">
+                <button type="button" class="step-trigger">
+                    <span class="bs-stepper-circle">4</span>
+                    <span class="bs-stepper-label"> فاز بازیابی و تفسیر</span>
+                </button>
+            </div>
+        </div>
+        <div class="bs-stepper-content">
+            <form method="post">
+                <!-- اطلاعات ارجاع -->
+                <div id="account-details-1" class="content">
+                    <div class="content-header mb-3">
+                        <h6 class="mb-1">اطلاعات ارجاع</h6>
+                        <!--                        <small>جزئیات حساب خود را وارد کنید.</small>-->
+                    </div>
+                    <div class="row g-3" id="step1">
+                        <div class="col-sm-6">
+                            <label>نام بیمار</label>
+                            <input type="text" name="patient_name" class="form-control" readonly>
+                        </div>
+                        <div class="col-sm-6">
+                            <label>شماره پرونده</label>
+                            <input type="text" name="record_number" class="form-control" readonly>
+                        </div>
+                        <div class="col-sm-6">
+                            <label>پزشک ارجاع‌دهنده</label>
+                            <input type="text" name="referring_physician" class="form-control">
+                        </div>
+                        <div class="col-md-12">
+                            <label>علت ارجاع</label>
+                            <textarea name="referral_reason" class="form-control" rows="2"></textarea>
+                        </div>
+                        <div class="col-12 d-flex justify-content-between">
+                            <button class="btn btn-label-secondary btn-prev" disabled>
+                                <i class="bx bx-chevron-left bx-sm ms-sm-n2"></i>
+                                <span class="d-sm-inline-block d-none">قبلی</span>
+                            </button>
+                            <button class="btn btn-primary btn-next" type="button">
+                                <span class="d-sm-inline-block d-none me-sm-1">بعدی</span>
+                                <i class="bx bx-chevron-right bx-sm me-sm-n2"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <!-- اطلاعات ارجاع -->
+
+
+                <!-- علائم قبل از تست -->
+                <div id="personal-info-1" class="content">
+                    <div class="content-header mb-3">
+                        <h6 class="mb-1">موجودی دارو و مصرفی</h6>
+                        <!--                        <small>اطلاعات شخصی خود را وارد کنید.</small>-->
+                    </div>
+                    <div class="row g-3" id="step2">
+                        <div class="col-sm-6">
+                            <label>علائم قبلی</label>
+                            <select name="prior_symptoms" class="form-select">
+                                <option value="">انتخاب کنید</option>
+                                <option value="syncope">سنکوپ</option>
+                                <option value="dizziness">سرگیجه</option>
+                                <option value="visual">تاری دید</option>
+                                <option value="none">بدون علامت</option>
+                            </select>
+                        </div>
+                        <div class="col-sm-6">
+                            <label>آخرین حمله</label>
+                            <input type="datetime-local" name="last_event_time" class="form-control">
+                        </div>
+                        <div class="col-12 d-flex justify-content-between">
+                            <button class="btn btn-primary btn-prev" type="button">
+                                <i class="bx bx-chevron-left bx-sm ms-sm-n2"></i>
+                                <span class="d-sm-inline-block d-none">قبلی</span>
+                            </button>
+                            <button class="btn btn-primary btn-next" type="button">
+                                <span class="d-sm-inline-block d-none me-sm-1">بعدی</span>
+                                <i class="bx bx-chevron-right bx-sm me-sm-n2"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <!-- علائم قبل از تست -->
+
+                <!-- پاسخ تست تیلت -->
+                <div id="social-links-1" class="content">
+                    <div class="content-header mb-3">
+                        <h6 class="mb-1">پاسخ تست تیلت</h6>
+                        <!--                        <small>لینک های اجتماعی خود را وارد کنید.</small>-->
+                    </div>
+                    <div class="row g-3" id="step3">
+                        <div class="col-sm-6">
+                            <label>آیا سنکوپ رخ داد؟</label>
+                            <select name="had_syncope" class="form-select" id="hadSyncopeSelect">
+                                <option value="">انتخاب کنید</option>
+                                <option value="yes">بله</option>
+                                <option value="no">خیر</option>
+                            </select>
+                        </div>
+                        <div class="col-sm-6">
+                            <label>HR حین سنکوپ</label>
+                            <input type="number" name="hr_during_syncope" class="form-control">
+                        </div>
+                        <div class="col-sm-6">
+                            <label>فشار خون افت کرد؟</label>
+                            <select name="bp_drop" class="form-select">
+                                <option value="">انتخاب کنید</option>
+                                <option value="yes">بله</option>
+                                <option value="no">خیر</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label>زمان بروز علائم (دقیقه)</label>
+                            <input type="number" name="symptom_onset_time" class="form-control">
+                        </div>
+                        <div class="col-sm-6">
+                            <small class="fw-semibold d-block">علائم حین ایستادن</small>
+                            <div class="form-check form-check-inline mt-3">
+                                <input class="form-check-input" type="checkbox" name="symptoms[]" value="تعریق">
+                                <label class="form-check-label" >تعریق</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="checkbox" name="symptoms[]" value="تهوع">
+                                <label class="form-check-label" >تهوع</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="checkbox" name="symptoms[]" value="تاری دید">
+                                <label class="form-check-label" >تاری دید</label>
+                            </div>
+                        </div>
+                        <div class="col-12 d-flex justify-content-between">
+                            <button class="btn btn-primary btn-prev" type="button">
+                                <i class="bx bx-chevron-left bx-sm ms-sm-n2"></i>
+                                <span class="d-sm-inline-block d-none">قبلی</span>
+                            </button>
+                            <button class="btn btn-primary btn-next" type="button">
+                                <span class="d-sm-inline-block d-none me-sm-1">بعدی</span>
+                                <i class="bx bx-chevron-right bx-sm me-sm-n2"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <!-- علائم قبل از تست -->
+
+                <!-- فاز بازیابی و تفسیر -->
+                <div id="Recovery_phase" class="content">
+                    <div class="content-header mb-3">
+                        <h6 class="mb-1">فاز بازیابی و تفسیر</h6>
+                        <!--                        <small>اطلاعات شخصی خود را وارد کنید.</small>-->
+                    </div>
+                    <div class="row g-3"  id="step4" >
+                        <div class="col-sm-6">
+                            <label>زمان بازیابی (دقیقه)</label>
+                            <input type="number" name="recovery_time" class="form-control">
+                        </div>
+                        <div class="col-sm-6">
+                            <label>نوع پاسخ نهایی</label>
+                            <select name="response_type" class="form-select">
+                                <option>انتخاب کنید</option>
+                                <option>Cardioinhibitory</option>
+                                <option>Vasodepressor</option>
+                                <option>Mixed</option>
+                                <option>Normal</option>
+                            </select>
+                        </div>
+                        <div class="col-sm-6">
+                            <label>یافته نهایی پزشک</label>
+                            <select name="final_result" class="form-select">
+                                <option>انتخاب کنید</option>
+                                <option>نرمال</option>
+                                <option>غیرنرمال</option>
+                                <option>تکرار شود</option>
+                            </select>
+                        </div>
+                        <div class="col-sm-6">
+                            <label>آپلود فایل تصویری یا گزارش</label>
+                            <input type="file" name="tilt_upload" class="form-control">
+                        </div>
+                        <div class="col-sm-12">
+                            <label>توضیح پزشک</label>
+                            <textarea name="doctor_comment" class="form-control" rows="3"></textarea>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="consent" id="consent" required>
+                            <label class="form-check-label" for="consent">
+                                تأیید می‌کنم که اطلاعات وارد شده صحیح است .
+                            </label>
+                        </div>
+                        <div class="col-12 d-flex justify-content-between">
+                            <button class="btn btn-primary btn-prev" type="button">
+                                <i class="bx bx-chevron-left bx-sm ms-sm-n2"></i>
+                                <span class="d-sm-inline-block d-none">قبلی</span>
+                            </button>
+                            <button class="btn btn-success btn-submit" type="submit">ثبت</button>
+                        </div>
+                    </div>
+                </div>
+                <!-- فاز بازیابی و تفسیر -->
+
+
+            </form>
+        </div>
+
+    </div>
+</div>
+<!-- /Vertical Wizard -->
+
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/Tilt_test.js' %}"></script>
+{% endblock %}
+

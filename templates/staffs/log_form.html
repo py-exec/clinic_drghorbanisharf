@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}فرم گزارش روزانه{% endblock %}
+
+{% block content %}
+<h2 class="mb-4 text-center">{% if form.instance.pk %}ویرایش گزارش{% else %}ثبت گزارش روزانه{% endif %}</h2>
+
+<div class="card">
+    <div class="card-body">
+        <form method="post">
+            {% csrf_token %}
+            <div class="row g-3">
+                <div class="col-md-6">{{ form.staff.label_tag }}{{ form.staff }}</div>
+                <div class="col-md-6">{{ form.date.label_tag }}{{ form.date }}</div>
+                <div class="col-md-12">{{ form.notes.label_tag }}{{ form.notes }}</div>
+                <div class="col-12 d-flex justify-content-end">
+                    <button type="submit" class="btn btn-success">ثبت</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

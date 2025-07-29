@@ -1,0 +1,199 @@
+{% extends "base.html" %}
+{% load static %}
+{% load humanize %}
+
+{% block title %}جزئیات فرآیند هلتر ضربان{% endblock %}
+
+{% block content %}
+<h4 class="py-3 mb-4">
+    <span class="text-muted fw-light">هلتر ضربان /</span> جزئیات فرآیند برای {{ installation.patient.full_name }}
+</h4>
+
+<div class="row">
+    <!-- ستون اصلی: اطلاعات مراحل -->
+    <div class="col-12">
+        <!-- مرحله ۱: اطلاعات نصب دستگاه -->
+        <div class="card mb-4">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0"><i class="bx bxs-watch me-2"></i>مرحله ۱: اطلاعات نصب دستگاه</h5>
+                <a href="{% url 'holter_hr:holter_hr_install_update' installation.pk %}"
+                   class="btn btn-sm btn-outline-primary" data-bs-toggle="tooltip"
+                   title="ویرایش اطلاعات مربوط به نصب دستگاه">
+                    <i class="bx bx-edit-alt me-1"></i> ویرایش اطلاعات نصب
+                </a>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-4 mb-3">
+                        <small class="text-muted">بیمار</small>
+                        <p><strong>{{ installation.patient.full_name }}</strong></p>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <small class="text-muted">کد پیگیری</small>
+                        <p>{{ installation.tracking_code }}</p>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <small class="text-muted">دستگاه متصل شده</small>
+                        <p>{{ installation.device.name }}</p>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <small class="text-muted">زمان و تاریخ نصب</small>
+                        <p>{{ installation.install_datetime|date:"Y/m/d - H:i" }}</p>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <small class="text-muted">تکنسین نصب</small>
+                        <p>{{ installation.technician.get_full_name|default:"-" }}</p>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <small class="text-muted">آموزش به بیمار</small>
+                        <p>{% if installation.patient_education_given %}بله{% else %}خیر{% endif %}</p>
+                    </div>
+                    <div class="col-12">
+                        <small class="text-muted">یادداشت‌های زمان نصب</small>
+                        <p>{{ installation.notes|default:"-" }}</p>
+                    </div>
+                </div>
+                <div class="border-top pt-2 mt-2">
+                    <small class="text-muted">ثبت توسط: {{ installation.created_by.get_full_name|default:"-" }} در {{
+                        installation.created_at|date:"Y/m/d - H:i" }}</small>
+                </div>
+            </div>
+        </div>
+
+        <!-- مرحله ۲: اطلاعات دریافت دستگاه -->
+        <div class="card mb-4">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0"><i class="bx bx-log-in-circle me-2"></i>مرحله ۲: اطلاعات دریافت دستگاه</h5>
+                {% if installation.reception_record %}
+                <a href="{% url 'holter_hr:holter_hr_reception_update' installation.reception_record.pk %}"
+                   class="btn btn-sm btn-outline-primary" data-bs-toggle="tooltip"
+                   title="ویرایش اطلاعات مربوط به بازگشت دستگاه">
+                    <i class="bx bx-edit-alt me-1"></i> ویرایش اطلاعات دریافت
+                </a>
+                {% else %}
+                <a href="{% url 'holter_hr:holter_hr_reception_create' installation.pk %}"
+                   class="btn btn-sm btn-success" data-bs-toggle="tooltip" title="ثبت اطلاعات بازگشت دستگاه از بیمار">
+                    <i class="bx bx-plus me-1"></i> افزودن اطلاعات دریافت
+                </a>
+                {% endif %}
+            </div>
+            <div class="card-body">
+                {% if installation.reception_record %}
+                <div class="row">
+                    <div class="col-md-4 mb-3">
+                        <small class="text-muted">زمان و تاریخ دریافت</small>
+                        <p>{{ installation.reception_record.receive_datetime|date:"Y/m/d - H:i" }}</p>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <small class="text-muted">کاربر دریافت‌کننده</small>
+                        <p>{{ installation.reception_record.received_by.get_full_name|default:"-" }}</p>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <small class="text-muted">وضعیت دستگاه در بازگشت</small>
+                        <p>{{ installation.reception_record.device_condition_on_return|default:"-" }}</p>
+                    </div>
+                    <div class="col-12">
+                        <small class="text-muted">بازخورد بیمار</small>
+                        <p>{{ installation.reception_record.patient_feedback|default:"-" }}</p>
+                    </div>
+                </div>
+                {% else %}
+                <p class="text-muted">اطلاعات بازگشت دستگاه هنوز ثبت نشده است.</p>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- مرحله ۳: خوانش و تحلیل گزارش -->
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0"><i class="bx bx-file-find me-2"></i>مرحله ۳: خوانش و تحلیل گزارش</h5>
+                {% if installation.reading %}
+                <a href="{% url 'holter_hr:holter_hr_reading_update' installation.reading.pk %}"
+                   class="btn btn-sm btn-outline-primary" data-bs-toggle="tooltip" title="ویرایش گزارش نهایی">
+                    <i class="bx bx-edit-alt me-1"></i> ویرایش گزارش
+                </a>
+                {% elif installation.reception_record %}
+                <a href="{% url 'holter_hr:holter_hr_reading_create' installation.pk %}" class="btn btn-sm btn-success"
+                   data-bs-toggle="tooltip" title="ثبت گزارش نهایی تحلیل داده‌ها">
+                    <i class="bx bx-plus me-1"></i> افزودن گزارش خوانش
+                </a>
+                {% else %}
+                <span class="text-muted small">پس از ثبت دریافت دستگاه، می‌توانید گزارش را ثبت کنید.</span>
+                {% endif %}
+            </div>
+            <div class="card-body">
+                {% if installation.reading %}
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <small class="text-muted">زمان و تاریخ خوانش</small>
+                        <p>{{ installation.reading.read_datetime|date:"Y/m/d - H:i" }}</p>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <small class="text-muted">تحلیل‌گر</small>
+                        <p>{{ installation.reading.interpreted_by.get_full_name|default:"-" }}</p>
+                    </div>
+                    <div class="col-12">
+                        <h6 class="mt-4 mb-3 text-muted">مقادیر کلیدی ضربان قلب</h6>
+                        <div class="row">
+                            <div class="col-md-3"><small class="text-muted">میانگین</small>
+                                <p>{{ installation.reading.avg_heart_rate|default:"-" }} bpm</p></div>
+                            <div class="col-md-3"><small class="text-muted">کمترین</small>
+                                <p>{{ installation.reading.min_heart_rate|default:"-" }} bpm ({{
+                                    installation.reading.min_hr_time|default:"-" }})</p></div>
+                            <div class="col-md-3"><small class="text-muted">بیشترین</small>
+                                <p>{{ installation.reading.max_heart_rate|default:"-" }} bpm ({{
+                                    installation.reading.max_hr_time|default:"-" }})</p></div>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <h6 class="mt-4 mb-3 text-muted">خلاصه تحلیل</h6>
+                        <p>{{ installation.reading.summary|default:"-"|linebreaks }}</p>
+                    </div>
+                    {% if installation.reading.report_file %}
+                    <div class="col-md-12">
+                        <small class="text-muted">فایل گزارش نهایی</small>
+                        <p class="mt-2">
+                            <a href="{{ installation.reading.report_file.url }}" target="_blank"
+                               class="btn btn-sm btn-outline-info">
+                                <i class="bx bx-download me-1"></i> دانلود گزارش
+                            </a>
+                        </p>
+                    </div>
+                    {% endif %}
+                </div>
+                {% else %}
+                <p class="text-muted">گزارش خوانش و تحلیل هنوز ثبت نشده است.</p>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- بخش عملیات مدیریتی -->
+        <div class="mt-4 d-flex justify-content-between">
+            <div>
+                <button onclick="window.print();" class="btn btn-outline-secondary btn-sm">
+                    <i class="bx bx-printer me-1"></i> چاپ گزارش
+                </button>
+            </div>
+            <div>
+                {% if perms.holter_hr.delete_holterhrinstallation %}
+                <a href="{% url 'holter_hr:holter_hr_delete' installation.pk %}" class="btn btn-danger btn-sm">
+                    <i class="bx bx-trash me-1"></i> حذف کامل فرآیند هلتر
+                </a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // فعال‌سازی Tooltip ها
+    document.addEventListener('DOMContentLoaded', function () {
+        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+        var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+            return new bootstrap.Tooltip(tooltipTriggerEl)
+        })
+    });
+</script>
+{% endblock %}

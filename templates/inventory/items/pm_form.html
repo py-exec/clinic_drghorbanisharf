@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}ثبت نگهداری دوره‌ای (PM){% endblock %}
+
+{% block content %}
+<h2 class="text-center mb-4">فرم ثبت نگهداری دوره‌ای (PM)</h2>
+
+<div class="card">
+  <!-- هدر کارت -->
+  <div class="card-header">
+    <h5 class="mb-0">برنامه نگهداری پیشگیرانه</h5>
+    <small class="text-muted">لطفاً اطلاعات مربوط به برنامه PM را وارد نمایید.</small>
+  </div>
+
+  <!-- بدنه کارت -->
+  <div class="card-body">
+    <form method="post" novalidate>
+      {% csrf_token %}
+
+      {% if form.non_field_errors %}
+        <div class="alert alert-danger">{{ form.non_field_errors }}</div>
+      {% endif %}
+
+      <div class="row g-3">
+        {% for field in form.visible_fields %}
+          <div class="col-md-6">
+            <label class="form-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+            {{ field }}
+            {% if field.help_text %}
+              <div class="form-text">{{ field.help_text }}</div>
+            {% endif %}
+            {% for error in field.errors %}
+              <div class="text-danger small">{{ error }}</div>
+            {% endfor %}
+          </div>
+        {% endfor %}
+      </div>
+
+      <div class="mt-4 d-flex justify-content-between">
+        <a href="{% url 'inventory:item_detail' pk=item.pk %}" class="btn btn-outline-secondary">بازگشت</a>
+        <button type="submit" name="submit_pm" class="btn btn-success">ثبت PM</button>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}

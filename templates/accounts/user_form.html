@@ -1,0 +1,172 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}فرم کاربر{% endblock %}
+
+{% block content %}
+<h2 class="mb-4 text-center">{% if form.instance.pk %}ویرایش کاربر{% else %}ایجاد کاربر جدید{% endif %}</h2>
+
+<!-- فرم مرحله‌ای (Stepper) -->
+<div class="col-12 mb-4">
+    <div class="bs-stepper wizard-vertical wizard-numbered vertical mt-2">
+
+        <!-- هدر مرحله‌ها -->
+        <div class="bs-stepper-header">
+            <div class="step" data-target="#step1">
+                <button type="button" class="step-trigger">
+                    <span class="bs-stepper-circle">1</span>
+                    <span class="bs-stepper-label">اطلاعات پایه</span>
+                </button>
+            </div>
+            <div class="line"></div>
+            <div class="step" data-target="#step2">
+                <button type="button" class="step-trigger">
+                    <span class="bs-stepper-circle">2</span>
+                    <span class="bs-stepper-label">نقش و وضعیت</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- محتوا -->
+        <div class="bs-stepper-content">
+            <form method="post" enctype="multipart/form-data" novalidate>
+                {% csrf_token %}
+
+                <!-- ✅ مرحله ۱: اطلاعات پایه -->
+                <div id="step1" class="content">
+                    <div class="content-header mb-3">
+                        <h6 class="mb-1">اطلاعات هویتی کاربر</h6>
+                    </div>
+
+                    <div class="row g-3">
+                        <div class="col-md-3">
+                            {{ form.username.label_tag }}
+                            {{ form.username }}
+                            {% if form.username.errors %}
+                            <div class="text-danger">{{ form.username.errors }}</div>
+                            {% endif %}
+                        </div>
+
+                        <div class="col-md-3">
+                            {{ form.first_name.label_tag }}
+                            {{ form.first_name }}
+                            {% if form.first_name.errors %}
+                            <div class="text-danger">{{ form.first_name.errors }}</div>
+                            {% endif %}
+                        </div>
+
+                        <div class="col-md-3">
+                            {{ form.last_name.label_tag }}
+                            {{ form.last_name }}
+                            {% if form.last_name.errors %}
+                            <div class="text-danger">{{ form.last_name.errors }}</div>
+                            {% endif %}
+                        </div>
+
+                        <div class="col-md-3">
+                            {{ form.nickname.label_tag }}
+                            {{ form.nickname }}
+                            {% if form.nickname.errors %}
+                            <div class="text-danger">{{ form.nickname.errors }}</div>
+                            {% endif %}
+                        </div>
+
+                        <div class="col-md-3">
+                            {{ form.national_code.label_tag }}
+                            {{ form.national_code }}
+                            {% if form.national_code.errors %}
+                            <div class="text-danger">{{ form.national_code.errors }}</div>
+                            {% endif %}
+                        </div>
+
+                        <div class="col-md-3">
+                            {{ form.phone_number.label_tag }}
+                            {{ form.phone_number }}
+                            {% if form.phone_number.errors %}
+                            <div class="text-danger">{{ form.phone_number.errors }}</div>
+                            {% endif %}
+                        </div>
+
+                        <div class="col-md-3">
+                            {{ form.email.label_tag }}
+                            {{ form.email }}
+                            {% if form.email.errors %}
+                            <div class="text-danger">{{ form.email.errors }}</div>
+                            {% endif %}
+                        </div>
+
+                        <div class="col-md-3">
+                            {{ form.profile_image.label_tag }}
+                            {{ form.profile_image }}
+                            {% if form.profile_image.errors %}
+                            <div class="text-danger">{{ form.profile_image.errors }}</div>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div class="col-12 d-flex justify-content-between mt-4">
+                        <button class="btn btn-label-secondary btn-prev" disabled>
+                            <i class="bx bx-chevron-left bx-sm ms-sm-n2"></i>
+                            <span class="d-sm-inline-block d-none">قبلی</span>
+                        </button>
+                        <button class="btn btn-primary btn-next" type="button">
+                            <span class="d-sm-inline-block d-none me-sm-1">بعدی</span>
+                            <i class="bx bx-chevron-right bx-sm me-sm-n2"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- ✅ مرحله ۲: نقش و وضعیت -->
+                <div id="step2" class="content">
+                    <div class="content-header mb-3">
+                        <h6 class="mb-1">نقش، وضعیت و تاییدیه‌ها</h6>
+                    </div>
+
+                    <div class="row g-3">
+                        <div class="col-md-4">
+                            {{ form.role.label_tag }}
+                            {{ form.role }}
+                            {% if form.role.errors %}
+                            <div class="text-danger">{{ form.role.errors }}</div>
+                            {% endif %}
+                        </div>
+
+                        <div class="col-md-2">
+                            {{ form.is_verified.label_tag }}
+                            {{ form.is_verified }}
+                        </div>
+
+                        <div class="col-md-2">
+                            {{ form.phone_verified.label_tag }}
+                            {{ form.phone_verified }}
+                        </div>
+
+                        <div class="col-md-2">
+                            {{ form.email_verified.label_tag }}
+                            {{ form.email_verified }}
+                        </div>
+
+                        <div class="col-md-2">
+                            {{ form.is_active.label_tag }}
+                            {{ form.is_active }}
+                        </div>
+                    </div>
+
+                    <div class="col-12 d-flex justify-content-between mt-4">
+                        <button class="btn btn-primary btn-prev" type="button">
+                            <i class="bx bx-chevron-left bx-sm ms-sm-n2"></i>
+                            <span class="d-sm-inline-block d-none">قبلی</span>
+                        </button>
+                        <button class="btn btn-success btn-submit" type="submit">ثبت</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<!-- /فرم مرحله‌ای -->
+
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/stepper.js' %}"></script>
+{% endblock %}
