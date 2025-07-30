@@ -1,0 +1,307 @@
+{% extends "base.html" %}
+{% load static %}
+{% load humanize %}
+
+{% block title %}
+    {% if form.instance.pk %}ویرایش{% else %}ثبت{% endif %} گزارش اکو (TTE)
+{% endblock %}
+
+{% block content %}
+<h4 class="py-3 mb-4">
+    <span class="text-muted fw-light">گزارش‌ها / اکو TTE /</span>
+    {% if form.instance.pk %}ویرایش گزارش{% else %}ثبت گزارش جدید{% endif %}
+</h4>
+
+<div class="row">
+    <div class="col-lg-10 mx-auto">
+        <div class="card mb-4">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">
+                    {% if form.instance.pk %}ویرایش گزارش اکوکاردیوگرافی از راه قفسه سینه (TTE){% else %}ثبت گزارش جدید اکو TTE{% endif %}
+                </h5>
+                <div>
+                    <a href="{% url 'tte:tte_worklist' %}" class="btn btn-sm btn-outline-secondary me-2">
+                        <i class="bx bx-arrow-back me-1"></i> بازگشت به داشبورد
+                    </a>
+                </div>
+            </div>
+            <div class="card-body">
+                {% if patient %}
+                <div class="alert alert-info" role="alert">
+                    <h6 class="alert-heading mb-1">بیمار: <a href="{% url 'patient:patient_detail' patient.pk %}" class="alert-link">{{ patient.full_name }}</a></h6>
+                    <p class="mb-0">کد ملی: {{ patient.national_code|default:"--" }} | کد پذیرش: {% if service %}{{ service.reception.admission_code }}{% else %}--{% endif %}</p>
+                </div>
+                {% endif %}
+
+                <form method="post" enctype="multipart/form-data" class="row g-3">
+                    {% csrf_token %}
+
+                    {% if form.errors %}
+                        <div class="alert alert-danger">
+                            لطفاً خطاهای زیر را اصلاح کنید:
+                            <ul>
+                                {% for field, errors in form.errors.items %}
+                                    {% for error in errors %}
+                                        <li>{{ form.fields|get_item:field|default:field }}: {{ error }}</li>
+                                    {% endfor %}
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    {% endif %}
+
+                    {# Input fields for TTEEchoReportForm #}
+                    {# اطلاعات عمومی #}
+                    <div class="col-md-6">
+                        <label class="form-label" for="{{ form.prescription.id_for_label }}">نسخه</label>
+                        {% if prescriptions %}
+                            {{ form.prescription }}
+                        {% else %}
+                            <input type="text" class="form-control" value="نسخه‌ای برای این بیمار یافت نشد." disabled>
+                            {{ form.prescription.as_hidden }} {# Ensure hidden input for the field is still rendered #}
+                        {% endif %}
+                        {% if form.prescription.help_text %}<small class="form-text text-muted">{{ form.prescription.help_text }}</small>{% endif %}
+                        {% if form.prescription.errors %}<div class="text-danger">{{ form.prescription.errors }}</div>{% endif %}
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label" for="{{ form.exam_datetime.id_for_label }}">تاریخ و زمان معاینه</label>
+                        {{ form.exam_datetime }}
+                        {% if form.exam_datetime.help_text %}<small class="form-text text-muted">{{ form.exam_datetime.help_text }}</small>{% endif %}
+                        {% if form.exam_datetime.errors %}<div class="text-danger">{{ form.exam_datetime.errors }}</div>{% endif %}
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label" for="{{ form.technician.id_for_label }}">تکنسین</label>
+                        {{ form.technician }}
+                        {% if form.technician.help_text %}<small class="form-text text-muted">{{ form.technician.help_text }}</small>{% endif %}
+                        {% if form.technician.errors %}<div class="text-danger">{{ form.technician.errors }}</div>{% endif %}
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label" for="{{ form.reporting_physician.id_for_label }}">پزشک گزارش‌دهنده</label>
+                        {{ form.reporting_physician }}
+                        {% if form.reporting_physician.help_text %}<small class="form-text text-muted">{{ form.reporting_physician.help_text }}</small>{% endif %}
+                        {% if form.reporting_physician.errors %}<div class="text-danger">{{ form.reporting_physician.errors }}</div>{% endif %}
+                    </div>
+
+                    <div class="col-12">
+                        <label class="form-label" for="{{ form.technician_note.id_for_label }}">یادداشت تکنسین</label>
+                        {{ form.technician_note }}
+                        {% if form.technician_note.help_text %}<small class="form-text text-muted">{{ form.technician_note.help_text }}</small>{% endif %}
+                        {% if form.technician_note.errors %}<div class="text-danger">{{ form.technician_note.errors }}</div>{% endif %}
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label" for="{{ form.image_quality.id_for_label }}">کیفیت تصویر</label>
+                        {{ form.image_quality }}
+                        {% if form.image_quality.help_text %}<small class="form-text text-muted">{{ form.image_quality.help_text }}</small>{% endif %}
+                        {% if form.image_quality.errors %}<div class="text-danger">{{ form.image_quality.errors }}</div>{% endif %}
+                    </div>
+                     <div class="col-md-6">
+                        <label class="form-label" for="{{ form.image_limitation_reason.id_for_label }}">دلیل محدودیت تصویر</label>
+                        {{ form.image_limitation_reason }}
+                        {% if form.image_limitation_reason.help_text %}<small class="form-text text-muted">{{ form.image_limitation_reason.help_text }}</small>{% endif %}
+                        {% if form.image_limitation_reason.errors %}<div class="text-danger">{{ form.image_limitation_reason.errors }}</div>{% endif %}
+                    </div>
+                     <div class="col-md-6">
+                        <label class="form-label" for="{{ form.probe_type.id_for_label }}">نوع پروب</label>
+                        {{ form.probe_type }}
+                        {% if form.probe_type.help_text %}<small class="form-text text-muted">{{ form.probe_type.help_text }}</small>{% endif %}
+                        {% if form.probe_type.errors %}<div class="text-danger">{{ form.probe_type.errors }}</div>{% endif %}
+                    </div>
+                     <div class="col-md-6">
+                        <label class="form-check-label" for="{{ form.ecg_sync.id_for_label }}">هماهنگی ECG</label>
+                        {{ form.ecg_sync }}
+                        {% if form.ecg_sync.help_text %}<small class="form-text text-muted">{{ form.ecg_sync.help_text }}</small>{% endif %}
+                        {% if form.ecg_sync.errors %}<div class="text-danger">{{ form.ecg_sync.errors }}</div>{% endif %}
+                    </div>
+                     <div class="col-md-6">
+                        <label class="form-label" for="{{ form.patient_cooperation.id_for_label }}">همکاری بیمار</label>
+                        {{ form.patient_cooperation }}
+                        {% if form.patient_cooperation.help_text %}<small class="form-text text-muted">{{ form.patient_cooperation.help_text }}</small>{% endif %}
+                        {% if form.patient_cooperation.errors %}<div class="text-danger">{{ form.patient_cooperation.errors }}</div>{% endif %}
+                    </div>
+                     <div class="col-md-6">
+                        <label class="form-check-label" for="{{ form.all_views_taken.id_for_label }}">تمام نماها گرفته شد</label>
+                        {{ form.all_views_taken }}
+                        {% if form.all_views_taken.help_text %}<small class="form-text text-muted">{{ form.all_views_taken.help_text }}</small>{% endif %}
+                        {% if form.all_views_taken.errors %}<div class="text-danger">{{ form.all_views_taken.errors }}</div>{% endif %}
+                    </div>
+
+                    <hr class="mt-4 mb-4">
+                    <h6><i class="bx bx-heart me-1"></i> عملکرد بطن چپ</h6>
+                    <div class="col-md-4">
+                        <label class="form-label" for="{{ form.ef.id_for_label }}">EF</label>
+                        {{ form.ef }}
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label" for="{{ form.lv_dysfunction.id_for_label }}">LV Dysfunction</label>
+                        {{ form.lv_dysfunction }}
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label" for="{{ form.lvedd.id_for_label }}">LVEDD</label>
+                        {{ form.lvedd }}
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label" for="{{ form.lvesd.id_for_label }}">LVESD</label>
+                        {{ form.lvesd }}
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label" for="{{ form.gls.id_for_label }}">GLS</label>
+                        {{ form.gls }}
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label" for="{{ form.image_type.id_for_label }}">Image Type</label>
+                        {{ form.image_type }}
+                    </div>
+
+                    <hr class="mt-4 mb-4">
+                    <h6><i class="bx bx-plus-medical me-1"></i> عملکرد بطن راست و فشار ریوی</h6>
+                    <div class="col-md-4">
+                        <label class="form-label" for="{{ form.tapse.id_for_label }}">TAPSE</label>
+                        {{ form.tapse }}
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label" for="{{ form.spap.id_for_label }}">SPAP</label>
+                        {{ form.spap }}
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label" for="{{ form.ivc_status.id_for_label }}">IVC Status</label>
+                        {{ form.ivc_status }}
+                    </div>
+
+                    <hr class="mt-4 mb-4">
+                    <h6><i class="bx bx-plus-medical me-1"></i> دریچه‌ها</h6>
+                    <div class="col-md-4">
+                        <label class="form-label" for="{{ form.mitral_type.id_for_label }}">میترال (نوع)</label>
+                        {{ form.mitral_type }}
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label" for="{{ form.mitral_severity.id_for_label }}">میترال (شدت)</label>
+                        {{ form.mitral_severity }}
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label" for="{{ form.mitral_features.id_for_label }}">میترال (ویژگی‌ها)</label>
+                        {{ form.mitral_features }}
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label" for="{{ form.aortic_type.id_for_label }}">آئورت (نوع)</label>
+                        {{ form.aortic_type }}
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label" for="{{ form.aortic_severity.id_for_label }}">آئورت (شدت)</label>
+                        {{ form.aortic_severity }}
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label" for="{{ form.aortic_features.id_for_label }}">آئورت (ویژگی‌ها)</label>
+                        {{ form.aortic_features }}
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label" for="{{ form.tricuspid_type.id_for_label }}">تریکوسپید (نوع)</label>
+                        {{ form.tricuspid_type }}
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label" for="{{ form.tricuspid_severity.id_for_label }}">تریکوسپید (شدت)</label>
+                        {{ form.tricuspid_severity }}
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label" for="{{ form.pulmonary_type.id_for_label }}">پولموناری (نوع)</label>
+                        {{ form.pulmonary_type }}
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label" for="{{ form.pulmonary_severity.id_for_label }}">پولموناری (شدت)</label>
+                        {{ form.pulmonary_severity }}
+                    </div>
+
+                    <hr class="mt-4 mb-4">
+                    <h6><i class="bx bx-notepad me-1"></i> سایر یافته‌ها</h6>
+                    <div class="col-md-6">
+                        <label class="form-label" for="{{ form.pericardial_effusion.id_for_label }}">افیوژن پریکارد</label>
+                        {{ form.pericardial_effusion }}
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label" for="{{ form.pleural_effusion.id_for_label }}">افیوژن پلورال</label>
+                        {{ form.pleural_effusion }}
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label" for="{{ form.mass_or_clot.id_for_label }}">توده یا لخته</label>
+                        {{ form.mass_or_clot }}
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label" for="{{ form.aneurysm.id_for_label }}">آنوریسم</label>
+                        {{ form.aneurysm }}
+                    </div>
+
+                    <hr class="mt-4 mb-4">
+                    <h6><i class="bx bx-file-blank me-1"></i> نظر نهایی پزشک</h6>
+                    <div class="col-md-6">
+                        <label class="form-label" for="{{ form.need_advanced_echo.id_for_label }}">نیاز به اکوی پیشرفته</label>
+                        {{ form.need_advanced_echo }}
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label" for="{{ form.reason_advanced_echo.id_for_label }}">دلیل اکوی پیشرفته</label>
+                        {{ form.reason_advanced_echo }}
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label" for="{{ form.report_date.id_for_label }}">تاریخ گزارش</label>
+                        {{ form.report_date }}
+                    </div>
+                    <div class="col-12">
+                        <label class="form-label" for="{{ form.final_report.id_for_label }}">گزارش نهایی</label>
+                        {{ form.final_report }}
+                    </div>
+
+                    <hr class="mt-4 mb-4">
+                    <h6><i class="bx bx-paperclip me-1"></i> فایل پیوست</h6>
+                    <div class="col-12">
+                        <label for="{{ form.upload_file.id_for_label }}" class="form-label">فایل پیوست</label>
+                        {{ form.upload_file }}
+                        {% if form.upload_file.help_text %}<small class="form-text text-muted">{{ form.upload_file.help_text }}</small>{% endif %}
+                        {% if form.upload_file.errors %}<div class="text-danger">{{ form.upload_file.errors }}</div>{% endif %}
+                        {% if form.instance.upload_file %}
+                            <p class="mt-2">فایل فعلی: <a href="{{ form.instance.upload_file.url }}" target="_blank">{{ form.instance.upload_file.name }}</a></p>
+                        {% endif %}
+                    </div>
+
+
+                    <div class="col-12 text-end">
+                        <button type="submit" class="btn btn-primary me-2">
+                            <i class="bx bx-save me-1"></i>
+                            {% if form.instance.pk %}ذخیره تغییرات{% else %}ثبت گزارش{% endif %}
+                        </button>
+                        <a href="{% if form.instance.pk %}{% url 'tte:tte_detail' form.instance.pk %}{% else %}{% url 'tte:tte_worklist' %}{% endif %}" class="btn btn-outline-secondary">
+                            <i class="bx bx-x me-1"></i>
+                            لغو
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{# Helper filter to get dictionary item by key. Add this to your template filters if not already present #}
+{% comment %}
+    If you don't have a custom template filter for 'get_item', you'll get an error.
+    You might need to create a `templatetags` directory in your app and define it.
+    Example `apps/echo_tte/templatetags/my_filters.py`:
+    ```python
+    from django import template
+    register = template.Library()
+
+    @register.filter
+    def get_item(dictionary, key):
+        return dictionary.get(key)
+    ```
+    Then, in your template, add `{% load my_filters %}`
+{% endcomment %}
+{% if form.errors %}
+    <script>
+        // Small script to scroll to the error messages if form has errors
+        document.addEventListener('DOMContentLoaded', function() {
+            const errorDiv = document.querySelector('.alert-danger');
+            if (errorDiv) {
+                errorDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+        });
+    </script>
+{% endif %}
+
+{% endblock %}

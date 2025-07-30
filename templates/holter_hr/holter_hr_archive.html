@@ -1,0 +1,215 @@
+{% extends "base.html" %}
+{% load static %}
+{% load humanize %}
+
+{% block title %}📈 آرشیو گزارش‌های هلتر ضربان{% endblock %}
+
+{% block content %}
+<h4 class="py-3 mb-4">
+    <span class="text-muted fw-light">خدمات کلینیکی /</span> آرشیو گزارش‌های هلتر ضربان
+</h4>
+
+<div class="card">
+    <div class="card-header">
+        <div class="d-flex flex-wrap justify-content-between align-items-center gap-3">
+            <h5 class="card-title mb-0">لیست گزارش‌های نصب هلتر ضربان</h5>
+
+            <div class="d-flex flex-wrap align-items-center gap-2">
+                <div class="dropdown">
+                    <button class="btn btn-outline-secondary btn-sm dropdown-toggle" type="button" id="column-toggler"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="bx bx-table me-1"></i> نمایش ستون‌ها
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="column-toggler" id="column-list">
+                        <li><label class="dropdown-item"><input type="checkbox" class="form-check-input me-2"
+                                                                data-column="patient" checked> بیمار</label></li>
+                        <li><label class="dropdown-item"><input type="checkbox" class="form-check-input me-2"
+                                                                data-column="tracking_code"> کد پیگیری</label></li>
+                        <li><label class="dropdown-item"><input type="checkbox" class="form-check-input me-2"
+                                                                data-column="install_datetime" checked> تاریخ نصب</label></li>
+                        <li><label class="dropdown-item"><input type="checkbox" class="form-check-input me-2"
+                                                                data-column="technician"> تکنسین نصب</label></li>
+                        <li><label class="dropdown-item"><input type="checkbox" class="form-check-input me-2"
+                                                                data-column="receive_datetime"> تاریخ دریافت</label></li>
+                        <li><label class="dropdown-item"><input type="checkbox" class="form-check-input me-2"
+                                                                data-column="interpreted_by"> تحلیل‌گر (خوانش)</label></li>
+                        <li><label class="dropdown-item"><input type="checkbox" class="form-check-input me-2"
+                                                                data-column="created_at"> تاریخ ثبت گزارش (نصب)</label></li>
+                    </ul>
+                </div>
+
+                {# اگر نیاز به خروجی PDF برای آرشیو هلتر دارید، این را فعال کنید #}
+                {# <a href="?export=pdf" class="btn btn-outline-danger btn-sm"> #}
+                {# <i class="bx bxs-file-pdf me-1"></i> خروجی PDF #}
+                {# </a> #}
+            </div>
+        </div>
+    </div>
+
+    <div class="card-body">
+        <div class="table-responsive text-nowrap">
+            <table class="table table-hover table-striped" id="reports-table">
+                <thead>
+                <tr>
+                    <th data-column="patient">بیمار</th>
+                    <th data-column="tracking_code">کد پیگیری</th>
+                    <th data-column="install_datetime">تاریخ و زمان نصب</th>
+                    <th data-column="technician">تکنسین نصب</th>
+                    <th data-column="receive_datetime">تاریخ و زمان دریافت</th>
+                    <th data-column="interpreted_by">تحلیل‌گر (خوانش)</th>
+                    <th data-column="created_at">تاریخ ثبت (نصب)</th>
+                    <th class="text-center">عملیات</th>
+                </tr>
+                </thead>
+                <tbody class="table-border-bottom-0">
+                {% for installation in page_obj %}
+                <tr>
+                    <td data-column="patient"><strong>{{ installation.patient.full_name|default:"-" }}</strong></td>
+                    <td data-column="tracking_code">{{ installation.tracking_code|default:"-" }}</td>
+                    <td data-column="install_datetime">{{ installation.install_datetime|date:"Y/m/d H:i" }}</td>
+                    <td data-column="technician">{{ installation.technician.get_full_name|default:"-" }}</td>
+                    <td data-column="receive_datetime">
+                        {% if installation.reception_record %}
+                            {{ installation.reception_record.receive_datetime|date:"Y/m/d H:i" }}
+                        {% else %}
+                            -
+                        {% endif %}
+                    </td>
+                    <td data-column="interpreted_by">
+                        {% if installation.reading %}
+                            {{ installation.reading.interpreted_by.get_full_name|default:"-" }}
+                        {% else %}
+                            -
+                        {% endif %}
+                    </td>
+                    <td data-column="created_at">{{ installation.created_at|date:"Y/m/d H:i" }}</td>
+                    <td class="text-center">
+                        <div class="dropdown">
+                            <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
+                                <i class="bx bx-dots-vertical-rounded"></i>
+                            </button>
+                            <div class="dropdown-menu">
+                                <a class="dropdown-item" href="{% url 'holter_hr:holter_hr_detail' installation.pk %}">
+                                    <i class="bx bx-show-alt me-1"></i> مشاهده جزئیات
+                                </a>
+                                {% if not installation.reception_record %}
+                                    <a class="dropdown-item" href="{% url 'holter_hr:holter_hr_install_update' installation.pk %}">
+                                        <i class="bx bx-edit-alt me-1"></i> ویرایش نصب
+                                    </a>
+                                    <a class="dropdown-item" href="{% url 'holter_hr:holter_hr_reception_create' installation.pk %}">
+                                        <i class="bx bx-log-in-circle me-1"></i> ثبت دریافت
+                                    </a>
+                                {% elif not installation.reading %}
+                                    <a class="dropdown-item" href="{% url 'holter_hr:holter_hr_reception_update' installation.reception_record.pk %}">
+                                        <i class="bx bx-edit-alt me-1"></i> ویرایش دریافت
+                                    </a>
+                                    <a class="dropdown-item" href="{% url 'holter_hr:holter_hr_reading_create' installation.pk %}">
+                                        <i class="bx bx-analyse me-1"></i> ثبت خوانش
+                                    </a>
+                                {% else %}
+                                     <a class="dropdown-item" href="{% url 'holter_hr:holter_hr_reading_update' installation.reading.pk %}">
+                                        <i class="bx bx-edit-alt me-1"></i> ویرایش خوانش
+                                    </a>
+                                    {# اگر فایل گزارش وجود دارد، دکمه دانلود را نشان دهید #}
+                                    {% if installation.reading.report_file %}
+                                        <a class="dropdown-item" href="{{ installation.reading.report_file.url }}" target="_blank">
+                                            <i class="bx bx-download me-1"></i> دانلود گزارش
+                                        </a>
+                                    {% endif %}
+                                {% endif %}
+                                <a class="dropdown-item text-danger" href="{% url 'holter_hr:holter_hr_delete' installation.pk %}">
+                                    <i class="bx bx-trash me-1"></i> حذف فرآیند
+                                </a>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="8" class="text-center py-4">هیچ گزارش هلتر ضربانی یافت نشد.</td>
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        {% if page_obj.has_other_pages %}
+        <div class="d-flex justify-content-center mt-4">
+            <nav aria-label="Page navigation">
+                <ul class="pagination">
+                    {% if page_obj.has_previous %}
+                    <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">قبلی</a>
+                    </li>
+                    {% else %}
+                    <li class="page-item disabled"><span class="page-link">قبلی</span></li>
+                    {% endif %}
+
+                    {% for num in page_obj.paginator.page_range %}
+                    {% if page_obj.number == num %}
+                    <li class="page-item active"><span class="page-link">{{ num }}</span></li>
+                    {% else %}
+                    <li class="page-item"><a class="page-link" href="?page={{ num }}">{{ num }}</a></li>
+                    {% endif %}
+                    {% endfor %}
+
+                    {% if page_obj.has_next %}
+                    <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">بعدی</a>
+                    </li>
+                    {% else %}
+                    <li class="page-item disabled"><span class="page-link">بعدی</span></li>
+                    {% endif %}
+                </ul>
+            </nav>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const table = document.getElementById('reports-table');
+        const columnCheckboxes = document.querySelectorAll('#column-list input[type="checkbox"]');
+        const storageKey = 'holterHrArchiveColumnVisibility'; // Changed storage key
+
+        function updateColumnVisibility() {
+            const visibilityState = {};
+            columnCheckboxes.forEach(checkbox => {
+                const column = checkbox.dataset.column;
+                const isVisible = checkbox.checked;
+                visibilityState[column] = isVisible;
+
+                const cells = table.querySelectorAll(`[data-column="${column}"]`);
+                cells.forEach(cell => {
+                    cell.style.display = isVisible ? '' : 'none';
+                });
+            });
+            localStorage.setItem(storageKey, JSON.stringify(visibilityState));
+        }
+
+        function loadColumnVisibility() {
+            const savedState = JSON.parse(localStorage.getItem(storageKey));
+            if (savedState) {
+                columnCheckboxes.forEach(checkbox => {
+                    const column = checkbox.dataset.column;
+                    if (savedState[column] !== undefined) {
+                        checkbox.checked = savedState[column];
+                    }
+                });
+            }
+            updateColumnVisibility();
+        }
+
+        columnCheckboxes.forEach(checkbox => {
+            checkbox.addEventListener('change', updateColumnVisibility);
+        });
+
+        document.getElementById('column-list').addEventListener('click', function (e) {
+            e.stopPropagation(); // Prevent dropdown from closing when clicking checkbox
+        });
+
+        loadColumnVisibility();
+    });
+</script>
+{% endblock %}

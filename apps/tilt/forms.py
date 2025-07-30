@@ -19,6 +19,7 @@ class TiltTestReportForm(forms.ModelForm):
             'prescription',
             'created_by',
             'created_at',
+            'patient',  # 👈 اضافه کن
         ]
         widgets = {
             'last_event_time': forms.DateTimeInput(attrs={'type': 'datetime-local', 'class': 'form-control'}),

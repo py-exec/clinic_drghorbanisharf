@@ -1,12 +1,25 @@
+# apps/echo_tee/models.py
+
 from django.db import models
 from django.utils import timezone
 from django.contrib.auth import get_user_model
 from apps.patient.models import Patient
-from apps.prescriptions.models import Prescription  # نسخه پزشک
+from apps.prescriptions.models import Prescription
+from django.contrib.contenttypes.fields import GenericForeignKey # NEW: Import GenericForeignKey
+from django.contrib.contenttypes.models import ContentType # NEW: Import ContentType
 
 User = get_user_model()
 
 class TEEEchoReport(models.Model):
+    """
+    مدل گزارش اکو از راه مری (TEE).
+    این مدل به عنوان رکورد تخصصی یک خدمت ReceptionService عمل می‌کند.
+    """
+    # NEW: GenericForeignKey for linking to ReceptionService
+    content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE, null=True, blank=True) # Temporarily nullable for migration
+    object_id = models.PositiveIntegerField(null=True, blank=True) # Temporarily nullable for migration
+    reception_service = GenericForeignKey('content_type', 'object_id')
+
     patient = models.ForeignKey(
         Patient, on_delete=models.CASCADE,
         related_name="tee_echos", verbose_name="بیمار"
@@ -46,7 +59,7 @@ class TEEEchoReport(models.Model):
     doctor_opinion = models.TextField("نظر پزشک", blank=True, null=True)
     recommendation = models.TextField("توصیه", blank=True, null=True)
 
-    echo_file = models.FileField("فایل پیوست", upload_to="echo/tee/", null=True, blank=True)
+    echo_file = models.FileField("فایل پیوست", upload_to="echo/tee/", null=True, blank=True) # Renamed to align with a more generic name if needed, but current name is echo_file
 
     created_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, verbose_name="ایجادکننده")
     created_at = models.DateTimeField(default=timezone.now, verbose_name="تاریخ ثبت")
@@ -58,3 +71,20 @@ class TEEEchoReport(models.Model):
 
     def __str__(self):
         return f"TEE برای {self.patient.first_name} {self.patient.last_name} در {self.exam_datetime.strftime('%Y-%m-%d')}"
+
+    # NEW: Override save to update ReceptionService status and trigger signals
+    def save(self, *args, **kwargs):
+        is_new = self._state.adding
+        self.full_clean() # Run full validation before saving
+        super().save(*args, **kwargs)
+
+        # After saving the TEE report, update the status of the related ReceptionService
+        if self.reception_service:
+            from apps.reception.status_service import change_service_status # Lazy import
+            # TEE is a single-stage report, so completing it means service is completed
+            change_service_status(
+                self.reception_service, 
+                'completed', # Set service status to 'completed'
+                user=self.created_by, # Use created_by for status change if available
+                note=f"گزارش اکو مری (TEE) ثبت/به‌روزرسانی شد."
+            )

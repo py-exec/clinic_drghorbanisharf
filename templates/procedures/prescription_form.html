@@ -1,0 +1,464 @@
+{% extends "base.html" %}
+{% load static %}
+{% load humanize %}
+
+{% block title %}
+    {% if form.instance.pk %}ویرایش{% else %}ثبت{% endif %} نسخه
+{% endblock %}
+
+{% block content %}
+<h4 class="py-3 mb-4">
+    <span class="text-muted fw-light">پزشکی / نسخه‌ها /</span>
+    {% if form.instance.pk %}ویرایش نسخه{% else %}ثبت نسخه جدید{% endif %}
+</h4>
+
+<div class="row">
+    <div class="col-lg-10 mx-auto">
+        <div class="card mb-4">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">
+                    {% if form.instance.pk %}ویرایش نسخه{% else %}ثبت نسخه جدید{% endif %}
+                </h5>
+                <div>
+                    <a href="{% if patient %}{% url 'patient:patient_detail' patient.pk %}{% else %}{% url 'prescriptions:prescription_list' %}{% endif %}" class="btn btn-sm btn-outline-secondary me-2">
+                        <i class="bx bx-arrow-back me-1"></i> بازگشت
+                    </a>
+                </div>
+            </div>
+            <div class="card-body">
+                {% if patient %}
+                <div class="alert alert-info" role="alert">
+                    <h6 class="alert-heading mb-1">بیمار: <a href="{% url 'patient:patient_detail' patient.pk %}" class="alert-link">{{ patient.full_name }}</a></h6>
+                    <p class="mb-0">کد ملی: {{ patient.national_code|default:"--" }} | کد پذیرش: {% if service %}{{ service.reception.admission_code }}{% else %}--{% endif %}</p>
+                </div>
+                {% endif %}
+
+                <form method="post" enctype="multipart/form-data" class="row g-3">
+                    {% csrf_token %}
+
+                    {% if form.errors or medication_formset.errors or test_request_form.errors or device_assessment_form.errors or surgery_plan_form.errors %}
+                        <div class="alert alert-danger">
+                            لطفاً خطاهای زیر را اصلاح کنید:
+                            <ul>
+                                {% for field, errors in form.errors.items %}
+                                    {% for error in errors %}
+                                        <li>{{ field }}: {{ error }}</li>
+                                    {% endfor %}
+                                {% endfor %}
+                                {% for formset_errors in medication_formset.errors %}
+                                    {% if formset_errors %}
+                                        <li>خطا در فرم دارو: {{ formset_errors }}</li>
+                                    {% endif %}
+                                {% endfor %}
+                                {% if test_request_form.errors %}
+                                    <li>خطا در فرم درخواست تست: {{ test_request_form.errors }}</li>
+                                {% endif %}
+                                {% if device_assessment_form.errors %}
+                                    <li>خطا در فرم ارزیابی دستگاه: {{ device_assessment_form.errors }}</li>
+                                {% endif %}
+                                {% if surgery_plan_form.errors %}
+                                    <li>خطا در فرم برنامه جراحی: {{ surgery_plan_form.errors }}</li>
+                                {% endif %}
+                            </ul>
+                        </div>
+                    {% endif %}
+
+                    {# بخش اصلی نسخه #}
+                    <h6><i class="bx bx-first-aid me-1"></i> اطلاعات نسخه</h6>
+                    <div class="col-md-6">
+                        <label class="form-label" for="{{ form.doctor.id_for_label }}">پزشک معالج</label>
+                        {{ form.doctor }}
+                        {% if form.doctor.help_text %}<small class="form-text text-muted">{{ form.doctor.help_text }}</small>{% endif %}
+                        {% if form.doctor.errors %}<div class="text-danger">{{ form.doctor.errors }}</div>{% endif %}
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label" for="{{ form.symptom_onset.id_for_label }}">تاریخ شروع علائم</label>
+                        {{ form.symptom_onset }}
+                        {% if form.symptom_onset.help_text %}<small class="form-text text-muted">{{ form.symptom_onset.help_text }}</small>{% endif %}
+                        {% if form.symptom_onset.errors %}<div class="text-danger">{{ form.symptom_onset.errors }}</div>{% endif %}
+                    </div>
+                    <div class="col-12">
+                        <label class="form-label" for="{{ form.angiography_result.id_for_label }}">نتیجه آنژیوگرافی</label>
+                        {{ form.angiography_result }}
+                        {% if form.angiography_result.help_text %}<small class="form-text text-muted">{{ form.angiography_result.help_text }}</small>{% endif %}
+                        {% if form.angiography_result.errors %}<div class="text-danger">{{ form.angiography_result.errors }}</div>{% endif %}
+                    </div>
+
+                    <hr class="mt-4 mb-4">
+                    {# Formset برای داروهای نسخه #}
+                    <h6><i class="bx bx-capsule me-1"></i> داروهای نسخه</h6>
+                    <div id="medication-form-container" class="col-12">
+                        {{ medication_formset.management_form }}
+                        {% for formset_form in medication_formset %}
+                            <div class="medication-formset-row row mb-3 p-2 border rounded {% if formset_form.DELETE %}bg-light{% endif %}" id="medication-form-{{ forloop.counter0 }}">
+                                {% for hidden_field in formset_form.hidden_fields %}{{ hidden_field }}{% endfor %}
+                                <div class="col-md-3">
+                                    <label class="form-label" for="{{ formset_form.name.id_for_label }}">نام دارو</label>
+                                    {{ formset_form.name }}
+                                </div>
+                                <div class="col-md-2">
+                                    <label class="form-label" for="{{ formset_form.dose.id_for_label }}">دوز</label>
+                                    {{ formset_form.dose }}
+                                </div>
+                                <div class="col-md-2">
+                                    <label class="form-label" for="{{ formset_form.total.id_for_label }}">تعداد کل</label>
+                                    {{ formset_form.total }}
+                                </div>
+                                <div class="col-md-2">
+                                    <label class="form-label" for="{{ formset_form.per_day.id_for_label }}">مصرف روزانه</label>
+                                    {{ formset_form.per_day }}
+                                </div>
+                                <div class="col-md-2">
+                                    <label class="form-label" for="{{ formset_form.med_type.id_for_label }}">نوع مصرف</label>
+                                    {{ formset_form.med_type }}
+                                </div>
+                                {% if medication_formset.can_delete %}
+                                <div class="col-md-1 d-flex align-items-end">
+                                    <button type="button" class="btn btn-outline-danger btn-sm remove-formset-row" data-formset-id="{{ forloop.counter0 }}">
+                                        <i class="bx bx-trash"></i>
+                                    </button>
+                                </div>
+                                {% endif %}
+                            </div>
+                        {% endfor %}
+                    </div>
+                    <div class="col-12 text-center mt-3">
+                        <button type="button" class="btn btn-outline-success btn-sm" id="add-medication-form">
+                            <i class="bx bx-plus me-1"></i> افزودن داروی جدید
+                        </button>
+                    </div>
+
+                    <hr class="mt-4 mb-4">
+                    {# Formset برای درخواست تست‌ها #}
+                    <h6><i class="bx bx-test-tube me-1"></i> درخواست تست‌ها</h6>
+                    <div id="test-request-form-container" class="col-12">
+                        {{ test_request_form.management_form }}
+                        {% for formset_form in test_request_form %}
+                            <div class="test-request-formset-row row mb-3 p-2 border rounded" id="test-request-form-{{ forloop.counter0 }}">
+                                {% for hidden_field in formset_form.hidden_fields %}{{ hidden_field }}{% endfor %}
+                                <div class="col-md-4">
+                                    <label class="form-label" for="{{ formset_form.holter_ecg.id_for_label }}">هولتر ECG</label>
+                                    {{ formset_form.holter_ecg }}
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label" for="{{ formset_form.holter_bp.id_for_label }}">هولتر BP</label>
+                                    {{ formset_form.holter_bp }}
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label" for="{{ formset_form.tilt_test.id_for_label }}">تست تیلت</label>
+                                    {{ formset_form.tilt_test }}
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label" for="{{ formset_form.stress_test.id_for_label }}">تست ورزش</label>
+                                    {{ formset_form.stress_test }}
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label" for="{{ formset_form.echo.id_for_label }}">اکو</label>
+                                    {{ formset_form.echo }}
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label" for="{{ formset_form.tee.id_for_label }}">اکو مری</label>
+                                    {{ formset_form.tee }}
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                    {# TestRequest به دلیل OneToOneField معمولا دکمه افزودن ندارد #}
+
+                    <hr class="mt-4 mb-4">
+                    {# Formset برای ارزیابی دستگاه #}
+                    <h6><i class="bx bx-devices me-1"></i> ارزیابی دستگاه قلبی</h6>
+                    <div id="device-assessment-form-container" class="col-12">
+                        {{ device_assessment_form.management_form }}
+                        {% for formset_form in device_assessment_form %}
+                            <div class="device-assessment-formset-row row mb-3 p-2 border rounded" id="device-assessment-form-{{ forloop.counter0 }}">
+                                {% for hidden_field in formset_form.hidden_fields %}{{ hidden_field }}{% endfor %}
+                                <div class="col-md-6">
+                                    <label class="form-label" for="{{ formset_form.device_type.id_for_label }}">نوع دستگاه</label>
+                                    {{ formset_form.device_type }}
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label" for="{{ formset_form.battery_percent.id_for_label }}">درصد باتری</label>
+                                    {{ formset_form.battery_percent }}
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label" for="{{ formset_form.device_implant_date.id_for_label }}">تاریخ نصب</label>
+                                    {{ formset_form.device_implant_date }}
+                                </div>
+                                <div class="col-md-6 form-check mt-3">
+                                    {{ formset_form.shock_occurred }}
+                                    <label class="form-check-label" for="{{ formset_form.shock_occurred.id_for_label }}">شوک ثبت شده؟</label>
+                                </div>
+                                <div class="col-md-6 form-check mt-3">
+                                    {{ formset_form.lead_problem }}
+                                    <label class="form-check-label" for="{{ formset_form.lead_problem.id_for_label }}">لید دارای مشکل؟</label>
+                                </div>
+                                <div class="col-12">
+                                    <label class="form-label" for="{{ formset_form.notes.id_for_label }}">یادداشت پزشک</label>
+                                    {{ formset_form.notes }}
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+
+                    <hr class="mt-4 mb-4">
+                    {# Formset برای برنامه جراحی #}
+                    <h6><i class="bx bx-cut me-1"></i> برنامه جراحی</h6>
+                    <div id="surgery-plan-form-container" class="col-12">
+                        {{ surgery_plan_form.management_form }}
+                        {% for formset_form in surgery_plan_form %}
+                            <div class="surgery-plan-formset-row row mb-3 p-2 border rounded" id="surgery-plan-form-{{ forloop.counter0 }}">
+                                {% for hidden_field in formset_form.hidden_fields %}{{ hidden_field }}{% endfor %}
+                                <div class="col-md-4 form-check mt-3">
+                                    {{ formset_form.need_battery_replacement }}
+                                    <label class="form-check-label" for="{{ formset_form.need_battery_replacement.id_for_label }}">نیاز به تعویض باتری؟</label>
+                                </div>
+                                <div class="col-md-4 form-check mt-3">
+                                    {{ formset_form.need_lead_revision }}
+                                    <label class="form-check-label" for="{{ formset_form.need_lead_revision.id_for_label }}">نیاز به اصلاح لید؟</label>
+                                </div>
+                                <div class="col-md-4 form-check mt-3">
+                                    {{ formset_form.need_device_extraction }}
+                                    <label class="form-check-label" for="{{ formset_form.need_device_extraction.id_for_label }}">نیاز به استخراج دستگاه؟</label>
+                                </div>
+                                <div class="col-md-6 form-check mt-3">
+                                    {{ formset_form.general_surgery_needed }}
+                                    <label class="form-check-label" for="{{ formset_form.general_surgery_needed.id_for_label }}">نیاز به جراحی عمومی دیگر؟</label>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label" for="{{ formset_form.general_surgery_reason.id_for_label }}">توضیح جراحی عمومی</label>
+                                    {{ formset_form.general_surgery_reason }}
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label" for="{{ formset_form.suggested_surgery_type.id_for_label }}">نوع جراحی پیشنهادی</label>
+                                    {{ formset_form.suggested_surgery_type }}
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label" for="{{ formset_form.suggested_surgery_note.id_for_label }}">توضیحات جراحی</label>
+                                    {{ formset_form.suggested_surgery_note }}
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label" for="{{ formset_form.implant_location.id_for_label }}">محل پیشنهادی نصب</label>
+                                    {{ formset_form.implant_location }}
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label" for="{{ formset_form.implant_location_note.id_for_label }}">توضیحات محل نصب</label>
+                                    {{ formset_form.implant_location_note }}
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label" for="{{ formset_form.preferred_surgery_date.id_for_label }}">تاریخ پیشنهادی</label>
+                                    {{ formset_form.preferred_surgery_date }}
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label" for="{{ formset_form.surgery_center.id_for_label }}">مرکز جراحی ارجاعی</label>
+                                    {{ formset_form.surgery_center }}
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label" for="{{ formset_form.surgeon_name.id_for_label }}">نام جراح</label>
+                                    {{ formset_form.surgeon_name }}
+                                </div>
+                                <div class="col-12">
+                                    <label class="form-label" for="{{ formset_form.doctor_notes.id_for_label }}">یادداشت نهایی پزشک</label>
+                                    {{ formset_form.doctor_notes }}
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+
+                    <hr class="mt-4 mb-4">
+                    {# بخش پیگیری نهایی #}
+                    <h6><i class="bx bx-check-double me-1"></i> پیگیری نهایی</h6>
+                    <div class="col-12">
+                        <label class="form-label" for="{{ form.followup_plan.id_for_label }}">توصیه به پیگیری</label>
+                        {{ form.followup_plan }}
+                        {% if form.followup_plan.help_text %}<small class="form-text text-muted">{{ form.followup_plan.help_text }}</small>{% endif %}
+                        {% if form.followup_plan.errors %}<div class="text-danger">{{ form.followup_plan.errors }}</div>{% endif %}
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label" for="{{ form.referral_specialist.id_for_label }}">ارجاع به تخصص دیگر</label>
+                        {{ form.referral_specialist }}
+                        {% if form.referral_specialist.help_text %}<small class="form-text text-muted">{{ form.referral_specialist.help_text }}</small>{% endif %}
+                        {% if form.referral_specialist.errors %}<div class="text-danger">{{ form.referral_specialist.errors }}</div>{% endif %}
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label" for="{{ form.review_date.id_for_label }}">تاریخ بررسی</label>
+                        {{ form.review_date }}
+                        {% if form.review_date.help_text %}<small class="form-text text-muted">{{ form.review_date.help_text }}</small>{% endif %}
+                        {% if form.review_date.errors %}<div class="text-danger">{{ form.review_date.errors }}</div>{% endif %}
+                    </div>
+                    <div class="col-12">
+                        <label class="form-label" for="{{ form.final_doctor_note.id_for_label }}">نظر نهایی پزشک</label>
+                        {{ form.final_doctor_note }}
+                        {% if form.final_doctor_note.help_text %}<small class="form-text text-muted">{{ form.final_doctor_note.help_text }}</small>{% endif %}
+                        {% if form.final_doctor_note.errors %}<div class="text-danger">{{ form.final_doctor_note.errors }}</div>{% endif %}
+                    </div>
+
+
+                    <div class="col-12 text-end mt-4">
+                        <button type="submit" class="btn btn-primary me-2">
+                            <i class="bx bx-save me-1"></i>
+                            {% if form.instance.pk %}ذخیره تغییرات{% else %}ثبت نسخه{% endif %}
+                        </button>
+                        <a href="{% if form.instance.pk %}{% url 'prescriptions:prescription_detail' form.instance.pk %}{% else %}{% url 'prescriptions:prescription_list' %}{% endif %}" class="btn btn-outline-secondary">
+                            <i class="bx bx-x me-1"></i>
+                            لغو
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Function to clone a formset row
+        function cloneFormsetRow(prefix, containerId, templateId) {
+            const container = document.getElementById(containerId);
+            const totalForms = document.getElementById(`id_${prefix}-TOTAL_FORMS`);
+            const templateRow = document.getElementById(templateId);
+
+            if (!container || !totalForms || !templateRow) {
+                console.error(`Missing elements for formset cloning: container=${containerId}, totalForms=${totalForms}, templateRow=${templateId}`);
+                return;
+            }
+
+            const newFormsetCount = parseInt(totalForms.value);
+            const newRowHtml = templateRow.innerHTML.replace(/__prefix__/g, newFormsetCount);
+            
+            // Create a temporary div to parse the new HTML
+            const tempDiv = document.createElement('div');
+            tempDiv.innerHTML = newRowHtml.trim();
+            const newRow = tempDiv.firstChild;
+
+            // Update IDs and names in the new row
+            newRow.querySelectorAll('[id^="id_"], [name^="'+ prefix +'"]').forEach(element => {
+                if (element.id) element.id = element.id.replace('__prefix__', newFormsetCount);
+                if (element.name) element.name = element.name.replace('__prefix__', newFormsetCount);
+            });
+
+            // Re-apply select2 to new select elements if applicable
+            newRow.querySelectorAll('select.select2').forEach(selectElement => {
+                $(selectElement).select2(); // Re-initialize Select2
+            });
+
+            container.appendChild(newRow);
+            totalForms.value = newFormsetCount + 1;
+
+            // Add event listener to new remove button if it exists
+            const removeButton = newRow.querySelector('.remove-formset-row');
+            if (removeButton) {
+                removeButton.addEventListener('click', function() {
+                    newRow.remove(); // Remove the parent row of the button
+                    updateFormsetTotals(prefix);
+                });
+            }
+        }
+
+        // Function to update TOTAL_FORMS for deletion
+        function updateFormsetTotals(prefix) {
+            const totalForms = document.getElementById(`id_${prefix}-TOTAL_FORMS`);
+            if (totalForms) {
+                // Decrement TOTAL_FORMS count
+                totalForms.value = parseInt(totalForms.value) - 1;
+            }
+        }
+
+
+        // Medication Formset Add Button
+        document.getElementById('add-medication-form').addEventListener('click', function() {
+            const totalForms = document.getElementById('id_medications-TOTAL_FORMS');
+            const currentForms = document.querySelectorAll('#medication-form-container .medication-formset-row').length;
+            const newFormsetCount = parseInt(totalForms.value);
+            
+            const templateHtml = `
+                <div class="medication-formset-row row mb-3 p-2 border rounded">
+                    {{ medication_formset.empty_form.as_table }}
+                    <div class="col-md-1 d-flex align-items-end">
+                        <button type="button" class="btn btn-outline-danger btn-sm remove-formset-row" data-formset-id="__prefix__">
+                            <i class="bx bx-trash"></i>
+                        </button>
+                    </div>
+                </div>
+            `;
+            // Remove table tags if any
+            let cleanTemplateHtml = templateHtml.replace(/<table[^>]*>|<\/table>/g, '');
+            cleanTemplateHtml = cleanTemplateHtml.replace(/<tr>/g, '<div class="row g-2">');
+            cleanTemplateHtml = cleanTemplateHtml.replace(/<\/tr>/g, '</div>');
+            cleanTemplateHtml = cleanTemplateHtml.replace(/<th>.*?<\/th>/g, ''); // Remove th if any
+            cleanTemplateHtml = cleanTemplateHtml.replace(/<td>/g, '<div class="col-md-3">'); // Adjust column count based on your fields
+            cleanTemplateHtml = cleanTemplateHtml.replace(/<\/td>/g, '</div>');
+
+            const newRow = cleanTemplateHtml.replace(/__prefix__/g, newFormsetCount);
+            
+            document.getElementById('medication-form-container').insertAdjacentHTML('beforeend', newRow);
+            totalForms.value = newFormsetCount + 1;
+
+            // Re-initialize Select2 for newly added elements
+            const lastRow = document.querySelector('#medication-form-container .medication-formset-row:last-child');
+            if (lastRow) {
+                lastRow.querySelectorAll('select.select2').forEach(selectElement => {
+                    $(selectElement).select2();
+                });
+            }
+
+            // Attach remove listener to the new row's delete button
+            const removeButton = lastRow.querySelector('.remove-formset-row');
+            if (removeButton) {
+                removeButton.addEventListener('click', function() {
+                    const formToRemove = this.closest('.medication-formset-row');
+                    if (formToRemove) {
+                        // Mark for deletion if it's an existing form, otherwise just remove
+                        const deleteCheckbox = formToRemove.querySelector('input[id$="-DELETE"]');
+                        if (deleteCheckbox) {
+                            deleteCheckbox.checked = true;
+                            formToRemove.style.display = 'none'; // Hide instead of removing
+                        } else {
+                            formToRemove.remove();
+                        }
+                        updateFormsetTotals('medications');
+                    }
+                });
+            }
+            
+            // Adjust input classes for new row as well
+            lastRow.querySelectorAll('.form-control').forEach(input => {
+                input.classList.remove('form-control'); // Remove initial one from ModelForm.as_table, if exists
+                if (!input.classList.contains('form-check-input')) { // Exclude checkboxes
+                    input.classList.add('form-control');
+                }
+            });
+            lastRow.querySelectorAll('.form-check-input').forEach(input => {
+                 input.classList.add('form-check-input');
+            });
+        });
+
+        // Initial setup for remove buttons
+        document.querySelectorAll('.remove-formset-row').forEach(button => {
+            button.addEventListener('click', function() {
+                const formToRemove = this.closest('.medication-formset-row');
+                if (formToRemove) {
+                    const deleteCheckbox = formToRemove.querySelector('input[id$="-DELETE"]');
+                    if (deleteCheckbox) {
+                        deleteCheckbox.checked = true;
+                        formToRemove.style.display = 'none'; // Hide instead of removing
+                    } else {
+                        formToRemove.remove();
+                    }
+                    updateFormsetTotals('medications');
+                }
+            });
+        });
+
+        // Initialize Select2 for existing elements
+        $('.select2').select2();
+
+        // Scroll to error messages
+        const errorDiv = document.querySelector('.alert-danger');
+        if (errorDiv) {
+            errorDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+    });
+</script>
+{% endblock %}

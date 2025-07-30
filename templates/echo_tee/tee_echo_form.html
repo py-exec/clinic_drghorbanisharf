@@ -1,0 +1,191 @@
+{% extends "base.html" %}
+{% load static %}
+{% load humanize %}
+
+{% block title %}
+    {% if form.instance.pk %}ویرایش{% else %}ثبت{% endif %} گزارش اکو (TEE)
+{% endblock %}
+
+{% block content %}
+<h4 class="py-3 mb-4">
+    <span class="text-muted fw-light">گزارش‌ها / اکو TEE /</span>
+    {% if form.instance.pk %}ویرایش گزارش{% else %}ثبت گزارش جدید{% endif %}
+</h4>
+
+<div class="row">
+    <div class="col-lg-10 mx-auto">
+        <div class="card mb-4">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">
+                    {% if form.instance.pk %}ویرایش گزارش اکو از راه مری (TEE){% else %}ثبت گزارش جدید اکو TEE{% endif %}
+                </h5>
+                <div>
+                    <a href="{% url 'echo_tee:tee_worklist' %}" class="btn btn-sm btn-outline-secondary me-2">
+                        <i class="bx bx-arrow-back me-1"></i> بازگشت به داشبورد
+                    </a>
+                </div>
+            </div>
+            <div class="card-body">
+                {% if patient %}
+                <div class="alert alert-info" role="alert">
+                    <h6 class="alert-heading mb-1">بیمار: <a href="{% url 'patient:patient_detail' patient.pk %}" class="alert-link">{{ patient.full_name }}</a></h6>
+                    <p class="mb-0">کد ملی: {{ patient.national_code|default:"--" }} | کد پذیرش: {% if service %}{{ service.reception.admission_code }}{% else %}--{% endif %}</p>
+                </div>
+                {% endif %}
+
+                <form method="post" enctype="multipart/form-data" class="row g-3">
+                    {% csrf_token %}
+
+                    {% if form.errors %}
+                        <div class="alert alert-danger">
+                            لطفاً خطاهای زیر را اصلاح کنید:
+                            <ul>
+                                {% for field, errors in form.errors.items %}
+                                    {% for error in errors %}
+                                        <li>{{ field }}: {{ error }}</li>
+                                    {% endfor %}
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    {% endif %}
+
+                    {# Input fields for TEEEchoReportForm #}
+                    {# اطلاعات عمومی #}
+                    <div class="col-md-6">
+                        <label class="form-label" for="{{ form.patient.id_for_label }}">بیمار</label>
+                        {{ form.patient }}
+                        {% if form.patient.help_text %}<small class="form-text text-muted">{{ form.patient.help_text }}</small>{% endif %}
+                        {% if form.patient.errors %}<div class="text-danger">{{ form.patient.errors }}</div>{% endif %}
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label" for="{{ form.prescription.id_for_label }}">نسخه</label>
+                        {{ form.prescription }}
+                        {% if form.prescription.help_text %}<small class="form-text text-muted">{{ form.prescription.help_text }}</small>{% endif %}
+                        {% if form.prescription.errors %}<div class="text-danger">{{ form.prescription.errors }}</div>{% endif %}
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label" for="{{ form.exam_datetime.id_for_label }}">تاریخ انجام</label>
+                        {{ form.exam_datetime }}
+                        {% if form.exam_datetime.help_text %}<small class="form-text text-muted">{{ form.exam_datetime.help_text }}</small>{% endif %}
+                        {% if form.exam_datetime.errors %}<div class="text-danger">{{ form.exam_datetime.errors }}</div>{% endif %}
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label" for="{{ form.created_by.id_for_label }}">ایجادکننده</label>
+                        {{ form.created_by }}
+                        {% if form.created_by.help_text %}<small class="form-text text-muted">{{ form.created_by.help_text }}</small>{% endif %}
+                        {% if form.created_by.errors %}<div class="text-danger">{{ form.created_by.errors }}</div>{% endif %}
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label" for="{{ form.sedation_used.id_for_label }}">نوع آرام‌بخش</label>
+                        {{ form.sedation_used }}
+                        {% if form.sedation_used.help_text %}<small class="form-text text-muted">{{ form.sedation_used.help_text }}</small>{% endif %}
+                        {% if form.sedation_used.errors %}<div class="text-danger">{{ form.sedation_used.errors }}</div>{% endif %}
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label" for="{{ form.patient_cooperation.id_for_label }}">میزان همکاری بیمار</label>
+                        {{ form.patient_cooperation }}
+                        {% if form.patient_cooperation.help_text %}<small class="form-text text-muted">{{ form.patient_cooperation.help_text }}</small>{% endif %}
+                        {% if form.patient_cooperation.errors %}<div class="text-danger">{{ form.patient_cooperation.errors }}</div>{% endif %}
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label" for="{{ form.visualization_quality.id_for_label }}">کیفیت تصاویر</label>
+                        {{ form.visualization_quality }}
+                        {% if form.visualization_quality.help_text %}<small class="form-text text-muted">{{ form.visualization_quality.help_text }}</small>{% endif %}
+                        {% if form.visualization_quality.errors %}<div class="text-danger">{{ form.visualization_quality.errors }}</div>{% endif %}
+                    </div>
+
+                    <hr class="mt-4 mb-4">
+                    <h6><i class="bx bx-line-chart me-1"></i> یافته‌ها</h6>
+                    <div class="col-md-6">
+                        <label class="form-label" for="{{ form.la_appendage_status.id_for_label }}">وضعیت LAA</label>
+                        {{ form.la_appendage_status }}
+                        {% if form.la_appendage_status.help_text %}<small class="form-text text-muted">{{ form.la_appendage_status.help_text }}</small>{% endif %}
+                        {% if form.la_appendage_status.errors %}<div class="text-danger">{{ form.la_appendage_status.errors }}</div>{% endif %}
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label" for="{{ form.interatrial_septum.id_for_label }}">سپتوم بین دهلیزی</label>
+                        {{ form.interatrial_septum }}
+                        {% if form.interatrial_septum.help_text %}<small class="form-text text-muted">{{ form.interatrial_septum.help_text }}</small>{% endif %}
+                        {% if form.interatrial_septum.errors %}<div class="text-danger">{{ form.interatrial_septum.errors }}</div>{% endif %}
+                    </div>
+                    <div class="col-md-12">
+                        <label class="form-label" for="{{ form.valvular_findings.id_for_label }}">مشاهدات مربوط به دریچه‌ها</label>
+                        {{ form.valvular_findings }}
+                        {% if form.valvular_findings.help_text %}<small class="form-text text-muted">{{ form.valvular_findings.help_text }}</small>{% endif %}
+                        {% if form.valvular_findings.errors %}<div class="text-danger">{{ form.valvular_findings.errors }}</div>{% endif %}
+                    </div>
+                    <div class="col-md-6 form-check mt-3">
+                        {{ form.presence_of_clot }}
+                        <label class="form-check-label" for="{{ form.presence_of_clot.id_for_label }}">وجود لخته؟</label>
+                        {% if form.presence_of_clot.help_text %}<small class="form-text text-muted">{{ form.presence_of_clot.help_text }}</small>{% endif %}
+                        {% if form.presence_of_clot.errors %}<div class="text-danger">{{ form.presence_of_clot.errors }}</div>{% endif %}
+                    </div>
+                    <div class="col-md-6 form-check mt-3">
+                        {{ form.pericardial_effusion }}
+                        <label class="form-check-label" for="{{ form.pericardial_effusion.id_for_label }}">افیوژن پریکارد؟</label>
+                        {% if form.pericardial_effusion.help_text %}<small class="form-text text-muted">{{ form.pericardial_effusion.help_text }}</small>{% endif %}
+                        {% if form.pericardial_effusion.errors %}<div class="text-danger">{{ form.pericardial_effusion.errors }}</div>{% endif %}
+                    </div>
+                    <div class="col-12">
+                        <label class="form-label" for="{{ form.findings.id_for_label }}">یافته‌ها</label>
+                        {{ form.findings }}
+                        {% if form.findings.help_text %}<small class="form-text text-muted">{{ form.findings.help_text }}</small>{% endif %}
+                        {% if form.findings.errors %}<div class="text-danger">{{ form.findings.errors }}</div>{% endif %}
+                    </div>
+
+                    <hr class="mt-4 mb-4">
+                    <h6><i class="bx bx-comment-detail me-1"></i> نظر نهایی و توصیه</h6>
+                    <div class="col-12">
+                        <label class="form-label" for="{{ form.doctor_opinion.id_for_label }}">نظر پزشک</label>
+                        {{ form.doctor_opinion }}
+                        {% if form.doctor_opinion.help_text %}<small class="form-text text-muted">{{ form.doctor_opinion.help_text }}</small>{% endif %}
+                        {% if form.doctor_opinion.errors %}<div class="text-danger">{{ form.doctor_opinion.errors }}</div>{% endif %}
+                    </div>
+                    <div class="col-12">
+                        <label class="form-label" for="{{ form.recommendation.id_for_label }}">توصیه</label>
+                        {{ form.recommendation }}
+                        {% if form.recommendation.help_text %}<small class="form-text text-muted">{{ form.recommendation.help_text }}</small>{% endif %}
+                        {% if form.recommendation.errors %}<div class="text-danger">{{ form.recommendation.errors }}</div>{% endif %}
+                    </div>
+
+                    <hr class="mt-4 mb-4">
+                    <h6><i class="bx bx-paperclip me-1"></i> فایل پیوست</h6>
+                    <div class="col-12">
+                        <label for="{{ form.echo_file.id_for_label }}" class="form-label">فایل پیوست</label>
+                        {{ form.echo_file }}
+                        {% if form.echo_file.help_text %}<small class="form-text text-muted">{{ form.echo_file.help_text }}</small>{% endif %}
+                        {% if form.echo_file.errors %}<div class="text-danger">{{ form.echo_file.errors }}</div>{% endif %}
+                        {% if form.instance.echo_file %}
+                            <p class="mt-2">فایل فعلی: <a href="{{ form.instance.echo_file.url }}" target="_blank">{{ form.instance.echo_file.name }}</a></p>
+                        {% endif %}
+                    </div>
+
+                    <div class="col-12 text-end">
+                        <button type="submit" class="btn btn-primary me-2">
+                            <i class="bx bx-save me-1"></i>
+                            {% if form.instance.pk %}ذخیره تغییرات{% else %}ثبت گزارش{% endif %}
+                        </button>
+                        <a href="{% if form.instance.pk %}{% url 'echo_tee:tee_detail' form.instance.pk %}{% else %}{% url 'echo_tee:tee_worklist' %}{% endif %}" class="btn btn-outline-secondary">
+                            <i class="bx bx-x me-1"></i>
+                            لغو
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% if form.errors %}
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const errorDiv = document.querySelector('.alert-danger');
+            if (errorDiv) {
+                errorDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+        });
+    </script>
+{% endif %}
+
+{% endblock %}

@@ -1,16 +1,29 @@
+# apps/exercise_stress_test/models.py
+
 from django.db import models
 from django.utils import timezone
 from django.contrib.auth import get_user_model
 from apps.patient.models import Patient
-from apps.prescriptions.models import Prescription  # نسخه پزشک
+from apps.prescriptions.models import Prescription
+from django.contrib.contenttypes.fields import GenericForeignKey  # NEW: Import GenericForeignKey
+from django.contrib.contenttypes.models import ContentType  # NEW: Import ContentType
 
 User = get_user_model()
 
+
 class StressTestReport(models.Model):
+    # ==== NEW: GenericForeignKey for linking to ReceptionService ====
+    content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE, null=True,
+                                     blank=True)  # Temporarily nullable for migration
+    object_id = models.PositiveIntegerField(null=True, blank=True)  # Temporarily nullable for migration
+    reception_service = GenericForeignKey('content_type', 'object_id')
+
     # عمومی
     patient = models.ForeignKey(Patient, on_delete=models.CASCADE, related_name="stress_tests", verbose_name="بیمار")
-    prescription = models.ForeignKey(Prescription, on_delete=models.SET_NULL, null=True, blank=True, related_name="stress_tests", verbose_name="نسخه")
-    created_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, verbose_name="ایجادکننده")
+    prescription = models.ForeignKey(Prescription, on_delete=models.SET_NULL, null=True, blank=True,
+                                     related_name="stress_tests", verbose_name="نسخه")
+    created_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True,
+                                   verbose_name="ایجادکننده")  # Added blank=True
     created_at = models.DateTimeField(default=timezone.now, verbose_name="تاریخ ثبت")
     exam_datetime = models.DateTimeField("تاریخ انجام تست", default=timezone.now)
 
@@ -19,7 +32,7 @@ class StressTestReport(models.Model):
     protocol = models.CharField("پروتکل تست", max_length=100, null=True, blank=True)
     stress_duration = models.PositiveSmallIntegerField(null=True, blank=True, verbose_name="مدت تست (دقیقه)")
     test_duration = models.DurationField("مدت تست (فرمت زمان)", null=True, blank=True)
-    stress_start_time = models.TimeField(null=True, blank=True, verbose_name="زمان شروع تست")
+    stress_start_time = models.TimeField(null=True, blank=True, verbose_name="زمان شروع تست")  # TimeField
     stress_stop_reason = models.CharField(max_length=100, null=True, blank=True, verbose_name="علت توقف تست")
     stress_conditions = models.TextField(null=True, blank=True, verbose_name="شرایط حین تست")
 
@@ -42,7 +55,7 @@ class StressTestReport(models.Model):
     hr_recovery = models.PositiveSmallIntegerField(null=True, blank=True, verbose_name="ضربان قلب در ریکاوری")
     sbp_recovery = models.PositiveSmallIntegerField(null=True, blank=True, verbose_name="فشار سیستولیک در ریکاوری")
     recovery_st_change = models.CharField(max_length=50, null=True, blank=True, verbose_name="تغییرات ST در ریکاوری")
-    recovery_symptoms = models.JSONField(null=True, blank=True, verbose_name="علائم در ریکاوری")
+    recovery_symptoms = models.JSONField(null=True, blank=True, verbose_name="علائم در ریکاوری")  # JSONField
     recovery_monitoring = models.TextField(null=True, blank=True, verbose_name="پایش در ریکاوری")
 
     # پیش تست
@@ -53,7 +66,7 @@ class StressTestReport(models.Model):
     pretest_contra = models.CharField(max_length=100, null=True, blank=True, verbose_name="موارد منع قبل از تست")
 
     # علائم بالینی و نتایج تست
-    symptoms = models.JSONField(null=True, blank=True, verbose_name="علائم حین تست")
+    symptoms = models.JSONField(null=True, blank=True, verbose_name="علائم حین تست")  # JSONField
     stress_symptomatic = models.CharField(max_length=50, null=True, blank=True, verbose_name="تست علامت‌دار")
     borg_scale = models.CharField(max_length=10, null=True, blank=True, verbose_name="مقیاس بورگ")
     test_result = models.CharField("نتیجه تست", max_length=200, null=True, blank=True)
@@ -95,3 +108,22 @@ class StressTestReport(models.Model):
 
     def __str__(self):
         return f"تست ورزش {self.patient} در {self.exam_datetime.strftime('%Y-%m-%d')}"
+
+    # NEW: Override save to update ReceptionService status and trigger signals
+    def save(self, *args, **kwargs):
+        is_new = self._state.adding
+
+        # Call full validation before saving
+        self.full_clean()
+        super().save(*args, **kwargs)
+
+        # After saving the Stress Test report, update the status of the related ReceptionService
+        if self.reception_service:
+            from apps.reception.status_service import change_service_status  # Lazy import
+            # Stress Test is a single-stage report, so creating/updating it means service is completed
+            change_service_status(
+                self.reception_service,
+                'completed',  # Set service status to 'completed'
+                user=self.created_by,  # Use created_by for status change if available
+                note=f"گزارش تست ورزش ثبت/به‌روزرسانی شد. نتیجه: {self.final_diagnosis[:50]}"
+            )

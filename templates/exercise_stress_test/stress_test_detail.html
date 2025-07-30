@@ -1,0 +1,217 @@
+{% extends "base.html" %}
+{% load static %}
+{% load humanize %}
+
+{% block title %}جزئیات گزارش تست ورزش - {{ report.patient.full_name }}{% endblock %}
+
+{% block content %}
+<h4 class="py-3 mb-4">
+    <span class="text-muted fw-light">گزارش‌ها / تست ورزش /</span> جزئیات گزارش
+</h4>
+
+<div class="row">
+    <div class="col-lg-10 mx-auto">
+        <div class="card mb-4">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">گزارش تست ورزش / استرس اکو</h5>
+                <div>
+                    <a href="{% url 'exercise_stress_test:stress_update' report.pk %}" class="btn btn-sm btn-primary me-2">
+                        <i class="bx bx-edit-alt me-1"></i> ویرایش
+                    </a>
+                    <a href="{% url 'exercise_stress_test:stress_list' %}" class="btn btn-sm btn-outline-secondary">
+                        <i class="bx bx-arrow-back me-1"></i> بازگشت به لیست
+                    </a>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <strong>بیمار:</strong>
+                        <a href="{% url 'patient:patient_detail' report.patient.pk %}">{{ report.patient.full_name }} (کد ملی: {{ report.patient.national_code|default:"--" }})</a>
+                    </div>
+                    <div class="col-md-6">
+                        <strong>کد پذیرش:</strong>
+                        {% if report.reception_service %}
+                            <a href="{% url 'reception:service_detail' report.reception_service.pk %}">
+                                {{ report.reception_service.reception.admission_code }}
+                            </a>
+                        {% else %}
+                            --
+                        {% endif %}
+                    </div>
+                </div>
+                <hr>
+
+                <h6><i class="bx bx-info-circle me-1"></i> اطلاعات عمومی تست</h6>
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <strong>نسخه:</strong> {{ report.prescription.title|default:"--" }}
+                    </div>
+                    <div class="col-md-6">
+                        <strong>تاریخ انجام تست:</strong> {{ report.exam_datetime|date:"Y/m/d - H:i" }}
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <strong>نوع تست:</strong> {{ report.stress_type|default:"--" }}
+                    </div>
+                    <div class="col-md-6">
+                        <strong>پروتکل:</strong> {{ report.protocol|default:"--" }}
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <strong>مدت تست (دقیقه):</strong> {{ report.stress_duration|default:"--" }}
+                    </div>
+                    <div class="col-md-6">
+                        <strong>مدت تست (زمان):</strong> {{ report.test_duration|default:"--" }}
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <strong>زمان شروع تست:</strong> {{ report.stress_start_time|date:"H:i"|default:"--" }}
+                    </div>
+                    <div class="col-md-6">
+                        <strong>علت توقف تست:</strong> {{ report.stress_stop_reason|default:"--" }}
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-12"><strong>شرایط حین تست:</strong> {{ report.stress_conditions|default:"--" }}</div>
+                </div>
+
+                <hr>
+                <h6><i class="bx bx-pulse me-1"></i> شاخص‌های عملکرد قلب</h6>
+                <div class="row mb-3">
+                    <div class="col-md-4"><strong>سن بیمار:</strong> {{ report.patient_age|default:"--" }}</div>
+                    <div class="col-md-4"><strong>METs:</strong> {{ report.mets|default:"--" }}</div>
+                    <div class="col-md-4"><strong>HR استراحت/اوج:</strong> {{ report.hr_rest|default:"--" }} / {{ report.hr_peak|default:"--" }}</div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-4"><strong>HR اوج (متریک):</strong> {{ report.hr_peak_metric|default:"--" }}</div>
+                    <div class="col-md-4"><strong>حداکثر HR:</strong> {{ report.max_hr|default:"--" }}</div>
+                    <div class="col-md-4"><strong>هدف HR:</strong> {{ report.target_hr|default:"--" }}</div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-4"><strong>SBP استراحت/اوج:</strong> {{ report.sbp_rest|default:"--" }} / {{ report.sbp_peak|default:"--" }}</div>
+                    <div class="col-md-4"><strong>SBP اوج (متریک):</strong> {{ report.sbp_peak_metric|default:"--" }}</div>
+                    <div class="col-md-4"><strong>BP حین تست:</strong> {{ report.bp_during_test|default:"--" }}</div>
+                </div>
+
+                <hr>
+                <h6><i class="bx bx-refresh me-1"></i> ریکاوری</h6>
+                <div class="row mb-3">
+                    <div class="col-md-4"><strong>مدت ریکاوری:</strong> {{ report.recovery_duration|default:"--" }}</div>
+                    <div class="col-md-4"><strong>HR در ریکاوری:</strong> {{ report.hr_recovery|default:"--" }}</div>
+                    <div class="col-md-4"><strong>SBP در ریکاوری:</strong> {{ report.sbp_recovery|default:"--" }}</div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-6"><strong>تغییرات ST در ریکاوری:</strong> {{ report.recovery_st_change|default:"--" }}</div>
+                    <div class="col-md-6"><strong>علائم در ریکاوری:</strong> {% for symptom in report.recovery_symptoms %}{{ symptom }}{% if not forloop.last %}, {% endif %}{% empty %}--{% endfor %}</div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-12"><strong>پایش در ریکاوری:</strong> {{ report.recovery_monitoring|default:"--" }}</div>
+                </div>
+
+                <hr>
+                <h6><i class="bx bx-notepad me-1"></i> پیش تست</h6>
+                <div class="row mb-3">
+                    <div class="col-md-12"><strong>داروهای قبل از تست:</strong> {{ report.pretest_medications|default:"--" }}</div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-6"><strong>ECG پایه:</strong> {{ report.baseline_ecg|default:"--" }}</div>
+                    <div class="col-md-6"><strong>SBP / DBP قبل از تست:</strong> {{ report.pretest_sbp|default:"--" }} / {{ report.pretest_dbp|default:"--" }}</div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-12"><strong>موارد منع قبل از تست:</strong> {{ report.pretest_contra|default:"--" }}</div>
+                </div>
+
+                <hr>
+                <h6><i class="bx bx-plus-medical me-1"></i> علائم بالینی و نتایج تست</h6>
+                <div class="row mb-3">
+                    <div class="col-md-6"><strong>علائم حین تست:</strong> {% for symptom in report.symptoms %}{{ symptom }}{% if not forloop.last %}, {% endif %}{% empty %}--{% endfor %}</div>
+                    <div class="col-md-6"><strong>تست علامت‌دار:</strong> {{ report.stress_symptomatic|default:"--" }}</div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-6"><strong>مقیاس بورگ:</strong> {{ report.borg_scale|default:"--" }}</div>
+                    <div class="col-md-6"><strong>نتیجه تست:</strong> {{ report.test_result|default:"--" }}</div>
+                </div>
+
+                <hr>
+                <h6><i class="bx bx-chart me-1"></i> یافته‌های ECG</h6>
+                <div class="row mb-3">
+                    <div class="col-md-6"><strong>نوع آریتمی:</strong> {{ report.arrhythmia_type|default:"--" }}</div>
+                    <div class="col-md-6"><strong>لیدهای ECG:</strong> {{ report.ecg_leads|default:"--" }}</div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-12"><strong>تغییرات ECG:</strong> {{ report.ecg_changes|default:"--" }}</div>
+                </div>
+                
+                <hr>
+                <h6><i class="bx bx-echo me-1"></i> یافته‌های اکو</h6>
+                <div class="row mb-3">
+                    <div class="col-md-6"><strong>اختلال حرکتی دیواره:</strong> {{ report.wall_motion_abnormalities|yesno:"بله,خیر" }}</div>
+                    <div class="col-md-6"><strong>تغییرات ایسکمیک:</strong> {{ report.ischemic_changes|yesno:"بله,خیر" }}</div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-6"><strong>آریتمی در حین تست:</strong> {{ report.arrhythmia_occurred|yesno:"بله,خیر" }}</div>
+                    <div class="col-md-6"><strong>شدت RWMA:</strong> {{ report.rwma_severity|default:"--" }}</div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-6"><strong>EF در استراحت/پس از تست:</strong> {{ report.ef_rest|default:"--" }} / {{ report.ef_post|default:"--" }}</div>
+                    <div class="col-md-6"><strong>درجه MR:</strong> {{ report.mr_grade|default:"--" }}</div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-12"><strong>دیواره‌های درگیر RWMA:</strong> {{ report.rwma_walls|default:"--" }}</div>
+                </div>
+
+                <hr>
+                <h6><i class="bx bx-message-square-detail me-1"></i> نتیجه نهایی</h6>
+                <div class="row mb-3">
+                    <div class="col-md-12"><strong>یافته‌ها:</strong> <p class="text-break">{{ report.findings|default:"--" }}</p></div>
+                    <div class="col-md-12"><strong>نظر پزشک:</strong> <p class="text-break">{{ report.doctor_opinion|default:"--" }}</p></div>
+                    <div class="col-md-12"><strong>توصیه بعد از تست:</strong> <p class="text-break">{{ report.recommendation|default:"--" }}</p></div>
+                    <div class="col-md-12"><strong>توضیح نهایی:</strong> <p class="text-break">{{ report.final_comment|default:"--" }}</p></div>
+                    <div class="col-md-6"><strong>تشخیص نهایی:</strong> {{ report.final_diagnosis|default:"--" }}</div>
+                    <div class="col-md-6"><strong>برنامه نهایی:</strong> {{ report.final_plan|default:"--" }}</div>
+                </div>
+                
+                <hr>
+                <h6><i class="bx bx-user me-1"></i> اطلاعات ثبت</h6>
+                <div class="row mb-3">
+                    <div class="col-md-6"><strong>ایجادکننده:</strong> {{ report.created_by.full_name|default:"--" }}</div>
+                    <div class="col-md-6"><strong>تاریخ ثبت:</strong> {{ report.created_at|date:"Y/m/d - H:i" }}</div>
+                </div>
+
+                <hr>
+                <h6><i class="bx bx-paperclip me-1"></i> فایل‌ها و مستندات</h6>
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <strong>ویدیوی تست:</strong>
+                        {% if report.stress_video %}
+                            <a href="{{ report.stress_video.url }}" target="_blank" class="btn btn-sm btn-outline-info ms-2">
+                                <i class="bx bx-download me-1"></i> دانلود
+                            </a>
+                        {% else %}
+                            --
+                        {% endif %}
+                    </div>
+                    <div class="col-md-6">
+                        <strong>فایل تست اکو:</strong>
+                        {% if report.echo_file %}
+                            <a href="{{ report.echo_file.url }}" target="_blank" class="btn btn-sm btn-outline-info ms-2">
+                                <i class="bx bx-download me-1"></i> دانلود
+                            </a>
+                        {% else %}
+                            --
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-6"><strong>تصاویر ذخیره شده:</strong> {{ report.image_saved|default:"--" }}</div>
+                    <div class="col-md-6"><strong>مشکلات فنی:</strong> {{ report.technical_issues|default:"--" }}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

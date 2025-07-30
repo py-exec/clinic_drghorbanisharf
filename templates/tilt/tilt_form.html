@@ -50,13 +50,11 @@
                             <hr class="mt-0">
                         </div>
                         <div class="col-md-6 mb-3">
-                            <label for="{{ form.referring_physician.id_for_label }}" class="form-label">{{
-                                form.referring_physician.label }}</label>
+                            <label for="{{ form.referring_physician.id_for_label }}" class="form-label">{{form.referring_physician.label }}</label>
                             {{ form.referring_physician }}
                         </div>
                         <div class="col-md-6 mb-3">
-                            <label for="{{ form.referral_reason.id_for_label }}" class="form-label">{{
-                                form.referral_reason.label }}</label>
+                            <label for="{{ form.referral_reason.id_for_label }}" class="form-label">{{form.referral_reason.label }}</label>
                             {{ form.referral_reason }}
                         </div>
 
@@ -66,13 +64,11 @@
                             <hr class="mt-0">
                         </div>
                         <div class="col-md-6 mb-3">
-                            <label for="{{ form.prior_symptoms.id_for_label }}" class="form-label">{{
-                                form.prior_symptoms.label }}</label>
+                            <label for="{{ form.prior_symptoms.id_for_label }}" class="form-label">{{form.prior_symptoms.label }}</label>
                             {{ form.prior_symptoms }}
                         </div>
                         <div class="col-md-6 mb-3">
-                            <label for="{{ form.last_event_time.id_for_label }}" class="form-label">{{
-                                form.last_event_time.label }}</label>
+                            <label for="{{ form.last_event_time.id_for_label }}" class="form-label">{{form.last_event_time.label }}</label>
                             {{ form.last_event_time }}
                         </div>
 
@@ -82,28 +78,23 @@
                             <hr class="mt-0">
                         </div>
                         <div class="col-md-3 mb-3">
-                            <label for="{{ form.had_syncope.id_for_label }}" class="form-label">{{
-                                form.had_syncope.label }}</label>
+                            <label for="{{ form.had_syncope.id_for_label }}" class="form-label">{{form.had_syncope.label }}</label>
                             {{ form.had_syncope }}
                         </div>
                         <div class="col-md-3 mb-3">
-                            <label for="{{ form.hr_during_syncope.id_for_label }}" class="form-label">{{
-                                form.hr_during_syncope.label }}</label>
+                            <label for="{{ form.hr_during_syncope.id_for_label }}" class="form-label">{{form.hr_during_syncope.label }}</label>
                             {{ form.hr_during_syncope }}
                         </div>
                         <div class="col-md-3 mb-3">
-                            <label for="{{ form.bp_drop.id_for_label }}" class="form-label">{{ form.bp_drop.label
-                                }}</label>
+                            <label for="{{ form.bp_drop.id_for_label }}" class="form-label">{{ form.bp_drop.label}}</label>
                             {{ form.bp_drop }}
                         </div>
                         <div class="col-md-3 mb-3">
-                            <label for="{{ form.symptom_onset_time.id_for_label }}" class="form-label">{{
-                                form.symptom_onset_time.label }}</label>
+                            <label for="{{ form.symptom_onset_time.id_for_label }}" class="form-label">{{form.symptom_onset_time.label }}</label>
                             {{ form.symptom_onset_time }}
                         </div>
                         <div class="col-md-12 mb-3">
-                            <label for="{{ form.standing_symptoms.id_for_label }}" class="form-label">{{
-                                form.standing_symptoms.label }}</label>
+                            <label for="{{ form.standing_symptoms.id_for_label }}" class="form-label">{{form.standing_symptoms.label }}</label>
                             {{ form.standing_symptoms }}
                         </div>
 
@@ -113,33 +104,28 @@
                             <hr class="mt-0">
                         </div>
                         <div class="col-md-4 mb-3">
-                            <label for="{{ form.recovery_time.id_for_label }}" class="form-label">{{
-                                form.recovery_time.label }}</label>
+                            <label for="{{ form.recovery_time.id_for_label }}" class="form-label">{{form.recovery_time.label }}</label>
                             {{ form.recovery_time }}
                         </div>
                         <div class="col-md-4 mb-3">
-                            <label for="{{ form.response_type.id_for_label }}" class="form-label">{{
-                                form.response_type.label }}</label>
+                            <label for="{{ form.response_type.id_for_label }}" class="form-label">{{form.response_type.label }}</label>
                             {{ form.response_type }}
                         </div>
                         <div class="col-md-4 mb-3">
-                            <label for="{{ form.final_result.id_for_label }}" class="form-label">{{
-                                form.final_result.label }}</label>
+                            <label for="{{ form.final_result.id_for_label }}" class="form-label">{{form.final_result.label }}</label>
                             {{ form.final_result }}
                         </div>
                         <div class="col-md-12 mb-3">
-                            <label for="{{ form.doctor_comment.id_for_label }}" class="form-label">{{
-                                form.doctor_comment.label }}</label>
+                            <label for="{{ form.doctor_comment.id_for_label }}" class="form-label">{{form.doctor_comment.label }}</label>
                             {{ form.doctor_comment }}
                         </div>
                         <div class="col-md-12 mb-3">
-                            <label for="{{ form.tilt_upload.id_for_label }}" class="form-label">{{
-                                form.tilt_upload.label }}</label>
+                            <label for="{{ form.tilt_upload.id_for_label }}" class="form-label">{{form.tilt_upload.label }}</label>
                             {{ form.tilt_upload }}
                             {% if form.instance.tilt_upload %}
                             <div class="form-text">فایل فعلی: <a href="{{ form.instance.tilt_upload.url }}"
-                                                                 target="_blank">{{ form.instance.tilt_upload.name
-                                }}</a></div>
+                                                                 target="_blank">{{ form.instance.tilt_upload.name}}
+                            </a></div>
                             {% endif %}
                         </div>
                     </div>
@@ -149,7 +135,7 @@
                             <i class="bx bx-save me-1"></i>
                             ذخیره گزارش
                         </button>
-                        <a href="{% url 'tilt:tilt_list' %}" class="btn btn-secondary">بازگشت به لیست</a>
+                        <a href="{% url 'tilt:tilt_worklist' %}" class="btn btn-secondary">بازگشت به لیست</a>
                     </div>
                 </form>
             </div>

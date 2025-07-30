@@ -9,7 +9,6 @@
     <span class="text-muted fw-light">خدمات کلینیکی /</span> داشبورد کاری هلتر ضربان
 </h4>
 
-<!-- بخش آمار روزانه -->
 <div class="row g-4 mb-4">
     <div class="col-sm-6 col-xl-4">
         <div class="card">
@@ -18,7 +17,7 @@
                     <div class="content-left">
                         <span>گزارش‌های تکمیل شده (امروز)</span>
                         <div class="d-flex align-items-end mt-2">
-                            <h3 class="mb-0 me-2">{{ done_today|intcomma }}</h3>
+                            <h3 class="mb-0 me-2" data-type="done_today">{{ done_today|intcomma }}</h3>
                         </div>
                         <small>تعداد گزارش‌های تحلیل شده</small>
                     </div>
@@ -36,7 +35,7 @@
                     <div class="content-left">
                         <span>کل وظایف در صف</span>
                         <div class="d-flex align-items-end mt-2">
-                            <h3 class="mb-0 me-2">{{ in_queue_total|intcomma }}</h3>
+                            <h3 class="mb-0 me-2" data-type="in_queue_total">{{ in_queue_total|intcomma }}</h3>
                         </div>
                         <small>مجموع بیماران در تمام صف‌ها</small>
                     </div>
@@ -69,31 +68,29 @@
     </div>
 </div>
 
-<!-- تب‌های صف کاری -->
 <div class="nav-align-top mb-4">
     <ul class="nav nav-pills mb-3" role="tablist">
         <li class="nav-item">
             <button type="button" class="nav-link active" role="tab" data-bs-toggle="tab"
                     data-bs-target="#navs-pills-install">
                 <i class="bx bx-time-five me-1"></i> صف انتظار نصب
-                <span class="badge rounded-pill badge-center h-px-20 w-px-20 bg-warning ms-1">{{ waiting_for_install_list|length }}</span>
+                <span class="badge rounded-pill badge-center h-px-20 w-px-20 bg-warning ms-1" id="install-queue-count">{{ waiting_for_install_list|length }}</span>
             </button>
         </li>
         <li class="nav-item">
             <button type="button" class="nav-link" role="tab" data-bs-toggle="tab" data-bs-target="#navs-pills-return">
                 <i class="bx bx-revision me-1"></i> منتظر بازگشت
-                <span class="badge rounded-pill badge-center h-px-20 w-px-20 bg-info ms-1">{{ waiting_for_return_list|length }}</span>
+                <span class="badge rounded-pill badge-center h-px-20 w-px-20 bg-info ms-1" id="return-queue-count">{{ waiting_for_return_list|length }}</span>
             </button>
         </li>
         <li class="nav-item">
             <button type="button" class="nav-link" role="tab" data-bs-toggle="tab" data-bs-target="#navs-pills-reading">
                 <i class="bx bx-file-find me-1"></i> منتظر خوانش
-                <span class="badge rounded-pill badge-center h-px-20 w-px-20 bg-primary ms-1">{{ waiting_for_reading_list|length }}</span>
+                <span class="badge rounded-pill badge-center h-px-20 w-px-20 bg-primary ms-1" id="reading-queue-count">{{ waiting_for_reading_list|length }}</span>
             </button>
         </li>
     </ul>
     <div class="tab-content">
-        <!-- تب اول: صف انتظار نصب -->
         <div class="tab-pane fade show active" id="navs-pills-install" role="tabpanel">
             <div class="table-responsive text-nowrap">
                 <table class="table table-hover">
@@ -104,9 +101,9 @@
                         <th class="text-center">عملیات</th>
                     </tr>
                     </thead>
-                    <tbody>
+                    <tbody id="install-table-body">
                     {% for service in waiting_for_install_list %}
-                    <tr>
+                    <tr id="service-row-{{ service.pk }}">
                         <td><strong>{{ service.reception.patient.full_name }}</strong></td>
                         <td title="{{ service.created_at|date:'Y/m/d - H:i' }}">{{ service.created_at|naturaltime }}
                         </td>
@@ -118,7 +115,7 @@
                         </td>
                     </tr>
                     {% empty %}
-                    <tr>
+                    <tr id="no-install-patient-row">
                         <td colspan="3" class="text-center py-4">در حال حاضر بیماری در این صف نیست.</td>
                     </tr>
                     {% endfor %}
@@ -126,7 +123,6 @@
                 </table>
             </div>
         </div>
-        <!-- تب دوم: دستگاه‌های منتظر بازگشت -->
         <div class="tab-pane fade" id="navs-pills-return" role="tabpanel">
             <div class="table-responsive text-nowrap">
                 <table class="table table-hover">
@@ -137,9 +133,9 @@
                         <th class="text-center">عملیات</th>
                     </tr>
                     </thead>
-                    <tbody>
+                    <tbody id="return-table-body">
                     {% for installation in waiting_for_return_list %}
-                    <tr>
+                    <tr id="installation-return-row-{{ installation.pk }}">
                         <td><strong>{{ installation.patient.full_name }}</strong></td>
                         <td title="{{ installation.install_datetime|date:'Y/m/d - H:i' }}">{{
                             installation.install_datetime|naturaltime }}
@@ -152,7 +148,7 @@
                         </td>
                     </tr>
                     {% empty %}
-                    <tr>
+                    <tr id="no-return-installation-row">
                         <td colspan="3" class="text-center py-4">در حال حاضر دستگاهی منتظر بازگشت نیست.</td>
                     </tr>
                     {% endfor %}
@@ -160,7 +156,6 @@
                 </table>
             </div>
         </div>
-        <!-- تب سوم: دستگاه‌های منتظر خوانش -->
         <div class="tab-pane fade" id="navs-pills-reading" role="tabpanel">
             <div class="table-responsive text-nowrap">
                 <table class="table table-hover">
@@ -171,9 +166,9 @@
                         <th class="text-center">عملیات</th>
                     </tr>
                     </thead>
-                    <tbody>
+                    <tbody id="reading-table-body">
                     {% for installation in waiting_for_reading_list %}
-                    <tr>
+                    <tr id="installation-reading-row-{{ installation.pk }}">
                         <td><strong>{{ installation.patient.full_name }}</strong></td>
                         <td title="{{ installation.reception_record.receive_datetime|date:'Y/m/d - H:i' }}">{{
                             installation.reception_record.receive_datetime|naturaltime }}
@@ -186,7 +181,7 @@
                         </td>
                     </tr>
                     {% empty %}
-                    <tr>
+                    <tr id="no-reading-installation-row">
                         <td colspan="3" class="text-center py-4">در حال حاضر دستگاهی منتظر خوانش نیست.</td>
                     </tr>
                     {% endfor %}
@@ -196,4 +191,155 @@
         </div>
     </div>
 </div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // Elements for stats
+        const doneTodayElem = document.querySelector("h3[data-type='done_today']");
+        const inQueueTotalElem = document.querySelector("h3[data-type='in_queue_total']");
+
+        // Table bodies for dynamic updates
+        const installTableBody = document.getElementById('install-table-body');
+        const returnTableBody = document.getElementById('return-table-body');
+        const readingTableBody = document.getElementById('reading-table-body');
+
+        // Elements for queue counts in tabs
+        const installQueueCountElem = document.getElementById('install-queue-count');
+        const returnQueueCountElem = document.getElementById('return-queue-count');
+        const readingQueueCountElem = document.getElementById('reading-queue-count');
+
+        // Placeholder rows
+        const noInstallPatientRow = '<tr id="no-install-patient-row"><td colspan="3" class="text-center py-4">در حال حاضر بیماری در این صف نیست.</td></tr>';
+        const noReturnInstallationRow = '<tr id="no-return-installation-row"><td colspan="3" class="text-center py-4">در حال حاضر دستگاهی منتظر بازگشت نیست.</td></tr>';
+        const noReadingInstallationRow = '<tr id="no-reading-installation-row"><td colspan="3" class="text-center py-4">در حال حاضر دستگاهی منتظر خوانش نیست.</td></tr>';
+
+        function updateDashboardStats(data) {
+            if (doneTodayElem) doneTodayElem.textContent = data.done_today.toLocaleString('fa-IR');
+            if (inQueueTotalElem) inQueueTotalElem.textContent = data.in_queue_total.toLocaleString('fa-IR');
+
+            if (installQueueCountElem) installQueueCountElem.textContent = data.waiting_for_install_count;
+            if (returnQueueCountElem) returnQueueCountElem.textContent = data.waiting_for_return_count;
+            if (readingQueueCountElem) readingQueueCountElem.textContent = data.waiting_for_reading_count;
+        }
+
+        function updateTable(tableBody, rowId, newRowHtml, noItemRowHtml) {
+            const existingRow = document.getElementById(rowId);
+            if (existingRow) {
+                existingRow.remove();
+            }
+
+            // Remove existing "no patient" message if present
+            const tempDiv = document.createElement('div');
+            tempDiv.innerHTML = noItemRowHtml.trim();
+            const noPatientMsgId = tempDiv.firstChild ? tempDiv.firstChild.id : null;
+            if (noPatientMsgId) {
+                const noPatientMsg = document.getElementById(noPatientMsgId);
+                if (noPatientMsg) {
+                    noPatientMsg.remove();
+                }
+            }
+
+            if (newRowHtml) { // If a new row is provided, add it
+                tableBody.insertAdjacentHTML('beforeend', newRowHtml);
+            }
+
+            // If table becomes empty, add the "no patient" message
+            if (tableBody.children.length === 0 && noItemRowHtml) {
+                tableBody.innerHTML = noItemRowHtml;
+            }
+        }
+
+        const holterHrSocket = new WebSocket(`ws://${window.location.host}/ws/reception/updates/`);
+
+        holterHrSocket.onopen = () => {
+            console.log("✅ WebSocket connection opened for Holter HR Worklist");
+        };
+
+        holterHrSocket.onmessage = (e) => {
+            const data = JSON.parse(e.data);
+            console.log("Received WebSocket message:", data);
+
+            // Update general dashboard stats first
+            if (data.stats) {
+                updateDashboardStats(data.stats);
+            }
+
+            const service = data.service;
+            const serviceId = service.id;
+            const installationId = service.installation_id; // Get installation_id from message
+
+            // Always try to remove the service from all tables first to avoid duplicates
+            updateTable(installTableBody, `service-row-${serviceId}`, null, noInstallPatientRow);
+            if (installationId) { // Only attempt to remove from return/reading if installationId exists
+                updateTable(returnTableBody, `installation-return-row-${installationId}`, null, noReturnInstallationRow);
+                updateTable(readingTableBody, `installation-reading-row-${installationId}`, null, noReadingInstallationRow);
+            }
+
+            // Handle service creation (initial entry into install queue)
+            if (data.message_type === 'service_created' && service.is_holter_hr) {
+                if (service.status_code === 'pending' && !service.installation_exists) {
+                     const newInstallRow = `
+                        <tr id="service-row-${serviceId}">
+                            <td><strong>${service.patient_name}</strong></td>
+                            <td title="${new Date(service.created_at).toLocaleString('en-US', {year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit'})}">${new Date(service.created_at).toLocaleTimeString('fa-IR')}</td>
+                            <td class="text-center">
+                                <a href="/services/holter-hr/install/for-service/${serviceId}/" class="btn btn-success btn-sm">
+                                    <i class="bx bxs-watch me-1"></i> ثبت نصب
+                                </a>
+                            </td>
+                        </tr>
+                    `;
+                    updateTable(installTableBody, `service-row-${serviceId}`, newInstallRow, noInstallPatientRow);
+                }
+            }
+            // Handle status changes for Holter HR
+            else if (data.message_type === 'status_changed' && service.is_holter_hr) {
+                // If service is Holter HR and its status changed
+                const currentStatus = service.status_code;
+
+                if (currentStatus === 'in_progress') {
+                    // Item has been installed or received
+                    if (service.installation_exists && !service.reception_record_exists) {
+                        // Installed, waiting for return
+                        const newReturnRow = `
+                            <tr id="installation-return-row-${installationId}">
+                                <td><strong>${service.patient_name}</strong></td>
+                                <td title="${new Date(service.created_at).toLocaleString('en-US', {year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit'})}">${new Date(service.created_at).toLocaleTimeString('fa-IR')}</td>
+                                <td class="text-center">
+                                    <a href="/services/holter-hr/${installationId}/" class="btn btn-outline-secondary btn-sm" title="مشاهده جزئیات"><i class="bx bx-show"></i></a>
+                                    <a href="/services/holter-hr/installation/${installationId}/return/" class="btn btn-info btn-sm"><i class="bx bx-log-in-circle me-1"></i> ثبت دریافت</a>
+                                </td>
+                            </tr>
+                        `;
+                        updateTable(returnTableBody, `installation-return-row-${installationId}`, newReturnRow, noReturnInstallationRow);
+                    } else if (service.installation_exists && service.reception_record_exists && !service.reading_exists) {
+                        // Returned, waiting for reading
+                        const newReadingRow = `
+                            <tr id="installation-reading-row-${installationId}">
+                                <td><strong>${service.patient_name}</strong></td>
+                                <td title="${new Date(service.created_at).toLocaleString('en-US', {year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit'})}">${new Date(service.created_at).toLocaleTimeString('fa-IR')}</td>
+                                <td class="text-center">
+                                    <a href="/services/holter-hr/${installationId}/" class="btn btn-outline-secondary btn-sm" title="مشاهده جزئیات"><i class="bx bx-show"></i></a>
+                                    <a href="/services/holter-hr/installation/${installationId}/read/" class="btn btn-primary btn-sm"><i class="bx bx-analyse me-1"></i> ثبت گزارش خوانش</a>
+                                </td>
+                            </tr>
+                        `;
+                        updateTable(readingTableBody, `installation-reading-row-${installationId}`, newReadingRow, noReadingInstallationRow);
+                    }
+                } else if (currentStatus === 'done' || currentStatus === 'cancelled') {
+                    // Service is done or cancelled, remove from all lists (already done by initial removals)
+                }
+            } else if (data.message_type === 'service_deleted' && service.is_holter_hr) {
+                // If a Holter HR service is deleted, ensure it's removed from all queues
+                // (already done by initial removals)
+            }
+        };
+
+        holterHrSocket.onclose = () => {
+            console.warn("⚠️ WebSocket for Holter HR Worklist closed.");
+        };
+    });
+</script>
 {% endblock %}

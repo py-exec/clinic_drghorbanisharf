@@ -1,72 +1,115 @@
 {% extends "base.html" %}
 {% load static %}
+{% load humanize %}
 
-{% block title %}جزئیات نقش: {{ role.name }}{% endblock %}
+{% block title %}جزئیات پذیرش: {{ reception.admission_code }}{% endblock %}
 
 {% block content %}
-    <h4 class="py-3 mb-4">
-        <span class="text-muted fw-light">مدیریت دسترسی /</span> جزئیات نقش
-    </h4>
+<h4 class="py-3 mb-4">
+    <span class="text-muted fw-light">پذیرش /</span> جزئیات پذیرش
+</h4>
 
-    <div class="card">
-        <div class="card-header d-flex justify-content-between align-items-center">
-            <h5 class="mb-0">🛡️ نقش "{{ role.name }}"</h5>
-            <div class="d-print-none">
-                <a href="{% url 'accounts:role_update' role.pk %}" class="btn btn-sm btn-outline-primary">
-                    <i class="bx bx-edit"></i> ویرایش
-                </a>
-                <a href="{% url 'accounts:role_list' %}" class="btn btn-sm btn-outline-secondary">
-                    بازگشت
-                </a>
-                <button onclick="window.print()" class="btn btn-sm btn-outline-info">
-                    <i class="bx bx-printer"></i> چاپ
-                </button>
-            </div>
-        </div>
-        <div class="card-body">
-            <!-- اطلاعات نقش -->
-            <h6 class="mt-2 mb-2">اطلاعات پایه نقش</h6>
-            <table class="table table-bordered">
-                <tbody>
-                <tr>
-                    <th>نام نقش</th>
-                    <td>{{ role.name }}</td>
-                    <th>کد نقش</th>
-                    <td><code>{{ role.code }}</code></td>
-                </tr>
-                <tr>
-                    <th>توضیح</th>
-                    <td colspan="3">{{ role.description|default:"—" }}</td>
-                </tr>
-                </tbody>
-            </table>
-
-            <!-- سطح دسترسی‌ها -->
-            <h6 class="mt-4 mb-2">سطح دسترسی‌ها</h6>
-            {% if role.permissions.exists %}
-                <table class="table table-bordered">
-                    <thead>
-                    <tr>
-                        <th>ردیف</th>
-                        <th>ماژول</th>
-                        <th>نام دسترسی</th>
-                        <th>کد</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {% for perm in role.permissions.all %}
-                        <tr>
-                            <td>{{ forloop.counter }}</td>
-                            <td>{{ perm.content_type.app_label }}</td>
-                            <td>{{ perm.name }}</td>
-                            <td><code>{{ perm.codename }}</code></td>
-                        </tr>
-                    {% endfor %}
-                    </tbody>
-                </table>
-            {% else %}
-                <p class="text-muted">🚫 هیچ سطح دسترسی‌ای به این نقش اختصاص داده نشده است.</p>
-            {% endif %}
+<div class="card">
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <h5 class="mb-0">📄 پذیرش شماره {{ reception.admission_code }}</h5>
+        <div class="d-print-none">
+            <a href="{% url 'reception:update' reception.pk %}" class="btn btn-sm btn-outline-primary">
+                <i class="bx bx-edit"></i> ویرایش
+            </a>
+            <a href="{% url 'reception:list' %}" class="btn btn-sm btn-outline-secondary">بازگشت</a>
+            <button onclick="window.print()" class="btn btn-sm btn-outline-info">
+                <i class="bx bx-printer"></i> چاپ
+            </button>
         </div>
     </div>
+    <div class="card-body">
+
+        <!-- اطلاعات پذیرش -->
+        <h6 class="mt-2 mb-2">اطلاعات پذیرش</h6>
+        <table class="table table-bordered">
+            <tbody>
+                <tr>
+                    <th>کد پذیرش</th>
+                    <td>{{ reception.admission_code }}</td>
+                    <th>تاریخ پذیرش</th>
+                    <td>{{ jalali_date }}</td>
+                </tr>
+                <tr>
+                    <th>بیمار</th>
+                    <td>{{ reception.patient.full_name }}</td>
+                    <th>شماره پرونده</th>
+                    <td>{{ reception.patient.record_number }}</td>
+                </tr>
+                <tr>
+                    <th>پذیرش‌کننده</th>
+                    <td>{{ reception.receptionist.get_full_name }}</td>
+                    <th>محل پذیرش</th>
+                    <td>{{ reception.location|default:"—" }}</td>
+                </tr>
+                <tr>
+                    <th>سطح خدمت</th>
+                    <td colspan="3">{{ reception.get_service_level_display }}</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <!-- لیست خدمات -->
+        <h6 class="mt-4 mb-2">لیست خدمات</h6>
+        {% if reception.services.exists %}
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>ردیف</th>
+                    <th>نوع خدمت</th>
+                    <th>تعرفه</th>
+                    <th>وضعیت خدمت</th>
+                    <th>ثبت‌شده توسط</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for service in reception.services.all %}
+                <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td>{{ service.tariff.service_type.name }}</td>
+                    <td>{{ service.tariff.amount|intcomma }} ریال</td>
+                    <td>
+                        {% if service.latest_status %}
+                            {{ service.get_latest_status_display }}
+                        {% else %}
+                            <span class="text-muted">—</span>
+                        {% endif %}
+                    </td>
+                    <td>{{ service.created_by.get_full_name|default:"—" }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <p class="text-muted">🚫 هیچ خدمتی برای این پذیرش ثبت نشده است.</p>
+        {% endif %}
+
+        <!-- وضعیت مالی -->
+        <h6 class="mt-4 mb-2">وضعیت مالی</h6>
+        <table class="table table-bordered">
+            <tbody>
+                <tr>
+                    <th>هزینه کل</th>
+                    <td>{{ total_cost|intcomma }} ریال</td>
+                    <th>پرداختی</th>
+                    <td>{{ paid_amount|intcomma }} ریال</td>
+                </tr>
+                <tr>
+                    <th>باقی‌مانده</th>
+                    <td colspan="3">
+                        {% if paid_amount >= total_cost %}
+                            <span class="text-success">تسویه شده</span>
+                        {% else %}
+                            <span class="text-danger">{{ remaining_amount|intcomma }} ریال بدهی</span>
+                        {% endif %}
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
 {% endblock %}

@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block title %}حذف پذیرش{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h4>آیا مطمئن هستید که می‌خواهید این پذیرش را حذف کنید؟</h4>
+
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger">بله، حذف شود</button>
+        <a href="{% url 'reception:list' %}" class="btn btn-secondary">بازگشت</a>
+    </form>
+</div>
+{% endblock %}

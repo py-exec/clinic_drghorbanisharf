@@ -1,0 +1,118 @@
+{% extends "base.html" %}
+{% load static %}
+{% load humanize %}
+
+{% block title %}آرشیو نسخه‌ها و نظرات پزشک{% endblock %}
+
+{% block content %}
+<h4 class="py-3 mb-4">
+    <span class="text-muted fw-light">پزشکی /</span> آرشیو نسخه‌ها و نظرات پزشک
+</h4>
+
+<div class="card">
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <h5 class="mb-0">لیست نسخه‌های ثبت شده</h5>
+        <div>
+            {# اگر نیاز به دکمه ایجاد نسخه جدید دارید، آن را به اینجا اضافه کنید، مثلاً از طریق انتخاب بیمار #}
+            {# <a href="{% url 'prescriptions:prescription_create_for_patient' patient.pk %}" class="btn btn-primary btn-sm">
+                <i class="bx bx-plus me-1"></i> ایجاد نسخه جدید
+            </a> #}
+        </div>
+    </div>
+    <div class="table-responsive text-nowrap">
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>بیمار</th>
+                    <th>پزشک معالج</th>
+                    <th>تاریخ ثبت</th>
+                    <th>تاریخ بررسی</th>
+                    <th>نتیجه نهایی</th>
+                    <th>ارجاع به</th>
+                    <th class="text-center">عملیات</th>
+                </tr>
+            </thead>
+            <tbody class="table-border-bottom-0">
+                {% for prescription in prescriptions %}
+                <tr>
+                    <td>
+                        <a href="{% url 'patient:patient_detail' prescription.patient.pk %}">
+                            <strong>{{ prescription.patient.full_name }}</strong>
+                        </a>
+                    </td>
+                    <td>{{ prescription.doctor.full_name|default:"--" }}</td>
+                    <td>{{ prescription.created_at|date:"Y/m/d - H:i" }}</td>
+                    <td>{{ prescription.review_date|date:"Y/m/d"|default:"--" }}</td>
+                    <td>{{ prescription.final_doctor_note|truncatechars:50|default:"--" }}</td>
+                    <td>{{ prescription.get_referral_specialist_display|default:"--" }}</td>
+                    <td class="text-center">
+                        <div class="dropdown">
+                            <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
+                                <i class="bx bx-dots-vertical-rounded"></i>
+                            </button>
+                            <div class="dropdown-menu">
+                                <a class="dropdown-item" href="{% url 'prescriptions:prescription_detail' prescription.pk %}">
+                                    <i class="bx bx-show-alt me-1"></i> مشاهده
+                                </a>
+                                <a class="dropdown-item" href="{% url 'prescriptions:prescription_update' prescription.pk %}">
+                                    <i class="bx bx-edit-alt me-1"></i> ویرایش
+                                </a>
+                                <form action="{% url 'prescriptions:prescription_delete' prescription.pk %}" method="post" style="display:inline;">
+                                    {% csrf_token %}
+                                    <button type="submit" class="dropdown-item text-danger" onclick="return confirm('آیا از حذف این نسخه مطمئن هستید؟');">
+                                        <i class="bx bx-trash me-1"></i> حذف
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="7" class="text-center py-4">نسخه‌ای یافت نشد.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <div class="card-footer d-flex justify-content-center">
+        <nav aria-label="Page navigation">
+            <ul class="pagination">
+                {% if page_obj.has_previous %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page=1" aria-label="First">
+                            <i class="tf-icon bx bx-chevrons-right"></i>
+                        </a>
+                    </li>
+                    <li class="page-item prev">
+                        <a class="page-link" href="?page={{ page_obj.previous_page_number }}" aria-label="Previous">
+                            <i class="tf-icon bx bx-chevron-right"></i>
+                        </a>
+                    </li>
+                {% endif %}
+
+                {% for num in page_obj.paginator.page_range %}
+                    {% if page_obj.number == num %}
+                        <li class="page-item active"><a class="page-link" href="#">{{ num }}</a></li>
+                    {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                        <li class="page-item"><a class="page-link" href="?page={{ num }}">{{ num }}</a></li>
+                    {% endif %}
+                {% endfor %}
+
+                {% if page_obj.has_next %}
+                    <li class="page-item next">
+                        <a class="page-link" href="?page={{ page_obj.next_page_number }}" aria-label="Next">
+                            <i class="tf-icon bx bx-chevron-left"></i>
+                        </a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}" aria-label="Last">
+                            <i class="tf-icon bx bx-chevrons-left"></i>
+                        </a>
+                    </li>
+                {% endif %}
+            </ul>
+        </nav>
+    </div>
+</div>
+{% endblock %}

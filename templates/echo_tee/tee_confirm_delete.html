@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}حذف گزارش اکو (TEE){% endblock %}
+
+{% block content %}
+<h4 class="py-3 mb-4">
+    <span class="text-muted fw-light">گزارش‌ها / اکو TEE /</span> حذف گزارش
+</h4>
+
+<div class="row">
+    <div class="col-md-6 mx-auto">
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">تأیید حذف گزارش اکو از راه مری (TEE)</h5>
+            </div>
+            <div class="card-body">
+                <p class="card-text">
+                    آیا مطمئن هستید که می‌خواهید گزارش اکو از راه مری (TEE)
+                    برای بیمار <strong>"{{ report.patient.full_name }}"</strong>
+                    با تاریخ انجام <strong>"{{ report.exam_datetime|date:"Y/m/d H:i" }}"</strong> را حذف کنید؟
+                </p>
+                <div class="alert alert-danger" role="alert">
+                    <h5 class="alert-heading mb-1"><i class="bx bx-error-alt me-1"></i> هشدار!</h5>
+                    <p class="mb-0">این عملیات غیرقابل بازگشت است و گزارش برای همیشه حذف خواهد شد.</p>
+                </div>
+                <form method="post">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger me-2">
+                        <i class="bx bx-trash me-1"></i> حذف کن
+                    </button>
+                    <a href="{% url 'echo_tee:tee_detail' report.pk %}" class="btn btn-outline-secondary">
+                        <i class="bx bx-x me-1"></i> لغو
+                    </a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

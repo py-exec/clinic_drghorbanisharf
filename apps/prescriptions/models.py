@@ -3,6 +3,9 @@ from django.utils import timezone
 from django.contrib.auth import get_user_model
 from apps.patient.models import Patient
 from apps.doctors.models import Doctor
+from django.contrib.contenttypes.fields import GenericForeignKey # NEW: For linking to ReceptionService
+from django.contrib.contenttypes.models import ContentType # NEW: For linking to ReceptionService
+
 
 User = get_user_model()
 
@@ -24,10 +27,16 @@ class TestStatus(models.TextChoices):
 
 # ===== نسخه =====
 class Prescription(TimeStampedModel):
+    # NEW: GenericForeignKey for linking to ReceptionService (Optional, if prescription is a service itself)
+    # Keeping it nullable initially for migration safety.
+    content_type = models.ForeignKey(ContentType, on_delete=models.SET_NULL, null=True, blank=True)
+    object_id = models.PositiveIntegerField(null=True, blank=True)
+    reception_service = GenericForeignKey('content_type', 'object_id')
+
     patient = models.ForeignKey(Patient, on_delete=models.CASCADE, related_name="prescriptions")
     created_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name="created_prescriptions")
     doctor = models.ForeignKey(Doctor, on_delete=models.SET_NULL, null=True, blank=True, related_name="prescriptions", verbose_name="پزشک معالج")
-    created_at = models.DateTimeField(default=timezone.now)
+    # created_at = models.DateTimeField(default=timezone.now) # Inherited from TimeStampedModel
 
     # خلاصه تشخیصی
     symptom_onset = models.DateField("تاریخ شروع علائم", null=True, blank=True)
@@ -49,7 +58,8 @@ class Prescription(TimeStampedModel):
 
     final_doctor_note = models.TextField("نظر نهایی پزشک", null=True, blank=True)
     review_date = models.DateField("تاریخ بررسی", null=True, blank=True)
-    doctor_name = models.CharField("نام پزشک", max_length=100, null=True, blank=True)
+    # REMOVED: doctor_name - Redundant with 'doctor' ForeignKey
+    # doctor_name = models.CharField("نام پزشک", max_length=100, null=True, blank=True)
 
     class Meta:
         ordering = ["-created_at"]
@@ -58,6 +68,24 @@ class Prescription(TimeStampedModel):
 
     def __str__(self):
         return f"نسخه {self.patient.full_name} - {self.created_at.strftime('%Y-%m-%d')}"
+
+    # NEW: Override save to integrate with ReceptionService if Prescription is treated as a service
+    def save(self, *args, **kwargs):
+        is_new = self._state.adding
+        self.full_clean()
+        super().save(*args, **kwargs)
+
+        # If this Prescription is linked to a ReceptionService, update its status
+        # This assumes Prescription itself can be a "completed" service in the Reception flow
+        if self.reception_service:
+            from apps.reception.status_service import change_service_status # Lazy import
+            # A prescription is usually 'completed' once issued
+            change_service_status(
+                self.reception_service,
+                'completed', # A prescription is 'completed' once it's created/updated
+                user=self.created_by,
+                note=f"نسخه برای بیمار {self.patient.full_name} ثبت/به‌روزرسانی شد."
+            )
 
 
 # ===== داروهای نسخه =====

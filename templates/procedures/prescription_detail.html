@@ -1,0 +1,164 @@
+{% extends "base.html" %}
+{% load static %}
+{% load humanize %}
+
+{% block title %}جزئیات نسخه - {{ prescription.patient.full_name }}{% endblock %}
+
+{% block content %}
+<h4 class="py-3 mb-4">
+    <span class="text-muted fw-light">پزشکی / نسخه‌ها /</span> جزئیات نسخه
+</h4>
+
+<div class="row">
+    <div class="col-lg-10 mx-auto">
+        <div class="card mb-4">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">نسخه بیمار: {{ prescription.patient.full_name }}</h5>
+                <div>
+                    <a href="{% url 'prescriptions:prescription_update' prescription.pk %}" class="btn btn-sm btn-primary me-2">
+                        <i class="bx bx-edit-alt me-1"></i> ویرایش نسخه
+                    </a>
+                    <a href="{% url 'prescriptions:prescription_list' %}" class="btn btn-sm btn-outline-secondary">
+                        <i class="bx bx-arrow-back me-1"></i> بازگشت به لیست
+                    </a>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <strong>بیمار:</strong>
+                        <a href="{% url 'patient:patient_detail' prescription.patient.pk %}">{{ prescription.patient.full_name }} (کد ملی: {{ prescription.patient.national_code|default:"--" }})</a>
+                    </div>
+                    <div class="col-md-6">
+                        <strong>پزشک معالج:</strong> {{ prescription.doctor.full_name|default:"--" }}
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <strong>تاریخ ثبت:</strong> {{ prescription.created_at|date:"Y/m/d - H:i" }}
+                    </div>
+                    <div class="col-md-6">
+                        <strong>ایجادکننده:</strong> {{ prescription.created_by.full_name|default:"--" }}
+                    </div>
+                </div>
+                <hr>
+
+                <h6><i class="bx bx-file-text me-1"></i> خلاصه تشخیصی</h6>
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <strong>تاریخ شروع علائم:</strong> {{ prescription.symptom_onset|date:"Y/m/d"|default:"--" }}
+                    </div>
+                    <div class="col-md-6">
+                        <strong>نتیجه آنژیوگرافی:</strong> {{ prescription.angiography_result|default:"--" }}
+                    </div>
+                </div>
+
+                <hr>
+                <h6><i class="bx bx-capsule me-1"></i> داروهای نسخه</h6>
+                {% if prescription.medications.all %}
+                <ul class="list-group mb-3">
+                    {% for medication in prescription.medications.all %}
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <div>
+                            <strong>{{ medication.name }}</strong> ({{ medication.dose }})
+                            <br>
+                            <small class="text-muted">تعداد: {{ medication.total }} | مصرف روزانه: {{ medication.per_day }} | نوع: {{ medication.get_med_type_display }}</small>
+                        </div>
+                    </li>
+                    {% endfor %}
+                </ul>
+                {% else %}
+                <p>دارویی برای این نسخه ثبت نشده است.</p>
+                {% endif %}
+
+                <hr>
+                <h6><i class="bx bx-test-tube me-1"></i> درخواست تست‌ها</h6>
+                {% with test_request=prescription.test_request %}
+                {% if test_request %}
+                <div class="row mb-3">
+                    <div class="col-md-4"><strong>هولتر ECG:</strong> {{ test_request.get_holter_ecg_display }}</div>
+                    <div class="col-md-4"><strong>هولتر BP:</strong> {{ test_request.get_holter_bp_display }}</div>
+                    <div class="col-md-4"><strong>تست تیلت:</strong> {{ test_request.get_tilt_test_display }}</div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-4"><strong>تست ورزش:</strong> {{ test_request.get_stress_test_display }}</div>
+                    <div class="col-md-4"><strong>اکو:</strong> {{ test_request.get_echo_display }}</div>
+                    <div class="col-md-4"><strong>اکو مری (TEE):</strong> {{ test_request.get_tee_display }}</div>
+                </div>
+                {% else %}
+                <p>درخواست تستی برای این نسخه ثبت نشده است.</p>
+                {% endif %}
+                {% endwith %}
+
+                <hr>
+                <h6><i class="bx bx-devices me-1"></i> ارزیابی دستگاه قلبی</h6>
+                {% with device_assessment=prescription.device_assessment %}
+                {% if device_assessment %}
+                <div class="row mb-3">
+                    <div class="col-md-4"><strong>نوع دستگاه:</strong> {{ device_assessment.device_type|default:"--" }}</div>
+                    <div class="col-md-4"><strong>درصد باتری:</strong> {{ device_assessment.battery_percent|default:"--" }}</div>
+                    <div class="col-md-4"><strong>تاریخ نصب:</strong> {{ device_assessment.device_implant_date|date:"Y/m/d"|default:"--" }}</div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-6"><strong>شوک ثبت شده؟:</strong> {{ device_assessment.shock_occurred|yesno:"بله,خیر,نامشخص" }}</div>
+                    <div class="col-md-6"><strong>لید دارای مشکل؟:</strong> {{ device_assessment.lead_problem|yesno:"بله,خیر,نامشخص" }}</div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-12"><strong>یادداشت پزشک:</strong> {{ device_assessment.notes|default:"--" }}</div>
+                </div>
+                {% else %}
+                <p>ارزیابی دستگاهی برای این نسخه ثبت نشده است.</p>
+                {% endif %}
+                {% endwith %}
+
+                <hr>
+                <h6><i class="bx bx-cut me-1"></i> برنامه جراحی</h6>
+                {% with surgery_plan=prescription.surgery_plan %}
+                {% if surgery_plan %}
+                <div class="row mb-3">
+                    <div class="col-md-4"><strong>نیاز به تعویض باتری:</strong> {{ surgery_plan.need_battery_replacement|yesno:"بله,خیر,نامشخص" }}</div>
+                    <div class="col-md-4"><strong>نیاز به اصلاح لید:</strong> {{ surgery_plan.need_lead_revision|yesno:"بله,خیر,نامشخص" }}</div>
+                    <div class="col-md-4"><strong>نیاز به استخراج دستگاه:</strong> {{ surgery_plan.need_device_extraction|yesno:"بله,خیر,نامشخص" }}</div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-6"><strong>نیاز به جراحی عمومی دیگر:</strong> {{ surgery_plan.general_surgery_needed|yesno:"بله,خیر,نامشخص" }}</div>
+                    <div class="col-md-6"><strong>توضیح جراحی عمومی:</strong> {{ surgery_plan.general_surgery_reason|default:"--" }}</div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-6"><strong>نوع جراحی پیشنهادی:</strong> {{ surgery_plan.get_suggested_surgery_type_display|default:"--" }}</div>
+                    <div class="col-md-6"><strong>توضیحات جراحی:</strong> {{ surgery_plan.suggested_surgery_note|default:"--" }}</div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-6"><strong>محل پیشنهادی نصب:</strong> {{ surgery_plan.get_implant_location_display|default:"--" }}</div>
+                    <div class="col-md-6"><strong>توضیحات محل نصب:</strong> {{ surgery_plan.implant_location_note|default:"--" }}</div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-4"><strong>تاریخ پیشنهادی:</strong> {{ surgery_plan.preferred_surgery_date|date:"Y/m/d"|default:"--" }}</div>
+                    <div class="col-md-4"><strong>مرکز جراحی ارجاعی:</strong> {{ surgery_plan.surgery_center|default:"--" }}</div>
+                    <div class="col-md-4"><strong>نام جراح:</strong> {{ surgery_plan.surgeon_name|default:"--" }}</div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-12"><strong>یادداشت نهایی پزشک:</strong> {{ surgery_plan.doctor_notes|default:"--" }}</div>
+                </div>
+                {% else %}
+                <p>برنامه جراحی برای این نسخه ثبت نشده است.</p>
+                {% endif %}
+                {% endwith %}
+
+                <hr>
+                <h6><i class="bx bx-check-double me-1"></i> پیگیری نهایی</h6>
+                <div class="row mb-3">
+                    <div class="col-md-12"><strong>توصیه به پیگیری:</strong> {{ prescription.followup_plan|default:"--" }}</div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-6"><strong>ارجاع به تخصص دیگر:</strong> {{ prescription.get_referral_specialist_display|default:"--" }}</div>
+                    <div class="col-md-6"><strong>تاریخ بررسی:</strong> {{ prescription.review_date|date:"Y/m/d"|default:"--" }}</div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-12"><strong>نظر نهایی پزشک:</strong> <p class="text-break">{{ prescription.final_doctor_note|default:"--" }}</p></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

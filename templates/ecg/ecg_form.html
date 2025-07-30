@@ -1,0 +1,299 @@
+{% extends "base.html" %}
+{% load static %}
+{% load humanize %}
+
+{% block title %}
+    {% if form.instance.pk %}ویرایش{% else %}ثبت{% endif %} گزارش نوار قلب (ECG)
+{% endblock %}
+
+{% block content %}
+<h4 class="py-3 mb-4">
+    <span class="text-muted fw-light">گزارش‌ها / ECG /</span>
+    {% if form.instance.pk %}ویرایش گزارش{% else %}ثبت گزارش جدید{% endif %}
+</h4>
+
+<div class="row">
+    <div class="col-lg-10 mx-auto">
+        <div class="card mb-4">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">
+                    {% if form.instance.pk %}ویرایش گزارش نوار قلب (ECG){% else %}ثبت گزارش جدید نوار قلب (ECG){% endif %}
+                </h5>
+                <div>
+                    <a href="{% url 'ecg:ecg_worklist' %}" class="btn btn-sm btn-outline-secondary me-2">
+                        <i class="bx bx-arrow-back me-1"></i> بازگشت به داشبورد
+                    </a>
+                </div>
+            </div>
+            <div class="card-body">
+                {% if patient %}
+                <div class="alert alert-info" role="alert">
+                    <h6 class="alert-heading mb-1">بیمار: <a href="{% url 'patient:patient_detail' patient.pk %}" class="alert-link">{{ patient.full_name }}</a></h6>
+                    <p class="mb-0">کد ملی: {{ patient.national_code|default:"--" }} | کد پذیرش: {% if service %}{{ service.reception.admission_code }}{% else %}--{% endif %}</p>
+                </div>
+                {% endif %}
+
+                <form method="post" enctype="multipart/form-data" class="row g-3">
+                    {% csrf_token %}
+
+                    {% if form.errors %}
+                        <div class="alert alert-danger">
+                            لطفاً خطاهای زیر را اصلاح کنید:
+                            <ul>
+                                {% for field, errors in form.errors.items %}
+                                    {% for error in errors %}
+                                        <li>{{ field }}: {{ error }}</li> {# Use field name directly, or use a custom filter like get_item if needed #}
+                                    {% endfor %}
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    {% endif %}
+
+                    {# Input fields for ECGRecordForm #}
+                    {# اطلاعات عمومی #}
+                    <div class="col-md-6">
+                        <label class="form-label" for="{{ form.prescription.id_for_label }}">نسخه</label>
+                        {% if prescriptions %}
+                            {{ form.prescription }}
+                        {% else %}
+                            <input type="text" class="form-control" value="نسخه‌ای برای این بیمار یافت نشد." disabled>
+                            {{ form.prescription.as_hidden }} {# Ensure hidden input for the field is still rendered #}
+                        {% endif %}
+                        {% if form.prescription.help_text %}<small class="form-text text-muted">{{ form.prescription.help_text }}</small>{% endif %}
+                        {% if form.prescription.errors %}<div class="text-danger">{{ form.prescription.errors }}</div>{% endif %}
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label" for="{{ form.exam_datetime.id_for_label }}">تاریخ و زمان معاینه</label>
+                        {{ form.exam_datetime }}
+                        {% if form.exam_datetime.help_text %}<small class="form-text text-muted">{{ form.exam_datetime.help_text }}</small>{% endif %}
+                        {% if form.exam_datetime.errors %}<div class="text-danger">{{ form.exam_datetime.errors }}</div>{% endif %}
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label" for="{{ form.created_by.id_for_label }}">کاربر ثبت‌کننده</label>
+                        {{ form.created_by }}
+                        {% if form.created_by.help_text %}<small class="form-text text-muted">{{ form.created_by.help_text }}</small>{% endif %}
+                        {% if form.created_by.errors %}<div class="text-danger">{{ form.created_by.errors }}</div>{% endif %}
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label" for="{{ form.is_approved_by_doctor.id_for_label }}">تأیید پزشک</label>
+                        {{ form.is_approved_by_doctor }}
+                        {% if form.is_approved_by_doctor.help_text %}<small class="form-text text-muted">{{ form.is_approved_by_doctor.help_text }}</small>{% endif %}
+                        {% if form.is_approved_by_doctor.errors %}<div class="text-danger">{{ form.is_approved_by_doctor.errors }}</div>{% endif %}
+                    </div>
+
+
+                    <hr class="mt-4 mb-4">
+                    <h6><i class="bx bx-card me-1"></i> اطلاعات ثبت نوار</h6>
+                    <div class="col-md-4">
+                        <label class="form-label" for="{{ form.ecg_type.id_for_label }}">نوع نوار</label>
+                        {{ form.ecg_type }}
+                        {% if form.ecg_type.help_text %}<small class="form-text text-muted">{{ form.ecg_type.help_text }}</small>{% endif %}
+                        {% if form.ecg_type.errors %}<div class="text-danger">{{ form.ecg_type.errors }}</div>{% endif %}
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label" for="{{ form.patient_position.id_for_label }}">وضعیت بیمار هنگام ثبت</label>
+                        {{ form.patient_position }}
+                        {% if form.patient_position.help_text %}<small class="form-text text-muted">{{ form.patient_position.help_text }}</small>{% endif %}
+                        {% if form.patient_position.errors %}<div class="text-danger">{{ form.patient_position.errors }}</div>{% endif %}
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label" for="{{ form.room_temp.id_for_label }}">دمای اتاق</label>
+                        {{ form.room_temp }}
+                        {% if form.room_temp.help_text %}<small class="form-text text-muted">{{ form.room_temp.help_text }}</small>{% endif %}
+                        {% if form.room_temp.errors %}<div class="text-danger">{{ form.room_temp.errors }}</div>{% endif %}
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label" for="{{ form.ecg_location.id_for_label }}">محل انجام نوار</label>
+                        {{ form.ecg_location }}
+                        {% if form.ecg_location.help_text %}<small class="form-text text-muted">{{ form.ecg_location.help_text }}</small>{% endif %}
+                        {% if form.ecg_location.errors %}<div class="text-danger">{{ form.ecg_location.errors }}</div>{% endif %}
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label" for="{{ form.ecg_quality.id_for_label }}">کیفیت نوار</label>
+                        {{ form.ecg_quality }}
+                        {% if form.ecg_quality.help_text %}<small class="form-text text-muted">{{ form.ecg_quality.help_text }}</small>{% endif %}
+                        {% if form.ecg_quality.errors %}<div class="text-danger">{{ form.ecg_quality.errors }}</div>{% endif %}
+                    </div>
+                    <div class="col-md-6 form-check mt-3">
+                        {{ form.tech_issue }}
+                        <label class="form-check-label" for="{{ form.tech_issue.id_for_label }}">آیا مشکل تکنیکی وجود داشت؟</label>
+                        {% if form.tech_issue.help_text %}<small class="form-text text-muted">{{ form.tech_issue.help_text }}</small>{% endif %}
+                        {% if form.tech_issue.errors %}<div class="text-danger">{{ form.tech_issue.errors }}</div>{% endif %}
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label" for="{{ form.issue_desc.id_for_label }}">توضیح مشکل (در صورت وجود)</label>
+                        {{ form.issue_desc }}
+                        {% if form.issue_desc.help_text %}<small class="form-text text-muted">{{ form.issue_desc.help_text }}</small>{% endif %}
+                        {% if form.issue_desc.errors %}<div class="text-danger">{{ form.issue_desc.errors }}</div>{% endif %}
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label" for="{{ form.device_serial.id_for_label }}">شماره سریال دستگاه ECG</label>
+                        {{ form.device_serial }}
+                        {% if form.device_serial.help_text %}<small class="form-text text-muted">{{ form.device_serial.help_text }}</small>{% endif %}
+                        {% if form.device_serial.errors %}<div class="text-danger">{{ form.device_serial.errors }}</div>{% endif %}
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label" for="{{ form.start_time.id_for_label }}">زمان شروع</label>
+                        {{ form.start_time }}
+                        {% if form.start_time.help_text %}<small class="form-text text-muted">{{ form.start_time.help_text }}</small>{% endif %}
+                        {% if form.start_time.errors %}<div class="text-danger">{{ form.start_time.errors }}</div>{% endif %}
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label" for="{{ form.end_time.id_for_label }}">زمان پایان</label>
+                        {{ form.end_time }}
+                        {% if form.end_time.help_text %}<small class="form-text text-muted">{{ form.end_time.help_text }}</small>{% endif %}
+                        {% if form.end_time.errors %}<div class="text-danger">{{ form.end_time.errors }}</div>{% endif %}
+                    </div>
+
+                    <hr class="mt-4 mb-4">
+                    <h6><i class="bx bx-line-chart me-1"></i> تحلیل اولیه ECG</h6>
+                    <div class="col-md-3">
+                        <label class="form-label" for="{{ form.hr.id_for_label }}">HR (ضربان)</label>
+                        {{ form.hr }}
+                        {% if form.hr.help_text %}<small class="form-text text-muted">{{ form.hr.help_text }}</small>{% endif %}
+                        {% if form.hr.errors %}<div class="text-danger">{{ form.hr.errors }}</div>{% endif %}
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label" for="{{ form.rhythm.id_for_label }}">ریتم غالب</label>
+                        {{ form.rhythm }}
+                        {% if form.rhythm.help_text %}<small class="form-text text-muted">{{ form.rhythm.help_text }}</small>{% endif %}
+                        {% if form.rhythm.errors %}<div class="text-danger">{{ form.rhythm.errors }}</div>{% endif %}
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label" for="{{ form.axis.id_for_label }}">محور قلب (Axis)</label>
+                        {{ form.axis }}
+                        {% if form.axis.help_text %}<small class="form-text text-muted">{{ form.axis.help_text }}</small>{% endif %}
+                        {% if form.axis.errors %}<div class="text-danger">{{ form.axis.errors }}</div>{% endif %}
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label" for="{{ form.qrs.id_for_label }}">QRS</label>
+                        {{ form.qrs }}
+                        {% if form.qrs.help_text %}<small class="form-text text-muted">{{ form.qrs.help_text }}</small>{% endif %}
+                        {% if form.qrs.errors %}<div class="text-danger">{{ form.qrs.errors }}</div>{% endif %}
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label" for="{{ form.qtc.id_for_label }}">QTc</label>
+                        {{ form.qtc }}
+                        {% if form.qtc.help_text %}<small class="form-text text-muted">{{ form.qtc.help_text }}</small>{% endif %}
+                        {% if form.qtc.errors %}<div class="text-danger">{{ form.qtc.errors }}</div>{% endif %}
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label" for="{{ form.p_wave.id_for_label }}">P موج</label>
+                        {{ form.p_wave }}
+                        {% if form.p_wave.help_text %}<small class="form-text text-muted">{{ form.p_wave.help_text }}</small>{% endif %}
+                        {% if form.p_wave.errors %}<div class="text-danger">{{ form.p_wave.errors }}</div>{% endif %}
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label" for="{{ form.st_t.id_for_label }}">ST-T تغییرات</label>
+                        {{ form.st_t }}
+                        {% if form.st_t.help_text %}<small class="form-text text-muted">{{ form.st_t.help_text }}</small>{% endif %}
+                        {% if form.st_t.errors %}<div class="text-danger">{{ form.st_t.errors }}</div>{% endif %}
+                    </div>
+                    <div class="col-md-3 form-check mt-3">
+                        {{ form.q_wave }}
+                        <label class="form-check-label" for="{{ form.q_wave.id_for_label }}">Q موج پاتولوژیک؟</label>
+                        {% if form.q_wave.help_text %}<small class="form-text text-muted">{{ form.q_wave.help_text }}</small>{% endif %}
+                        {% if form.q_wave.errors %}<div class="text-danger">{{ form.q_wave.errors }}</div>{% endif %}
+                    </div>
+                    <div class="col-md-3 form-check mt-3">
+                        {{ form.u_wave }}
+                        <label class="form-check-label" for="{{ form.u_wave.id_for_label }}">U موج مشاهده شد؟</label>
+                        {% if form.u_wave.help_text %}<small class="form-text text-muted">{{ form.u_wave.help_text }}</small>{% endif %}
+                        {% if form.u_wave.errors %}<div class="text-danger">{{ form.u_wave.errors }}</div>{% endif %}
+                    </div>
+                    <div class="col-12">
+                        <label class="form-label" for="{{ form.tech_opinion.id_for_label }}">توضیح تکنسین</label>
+                        {{ form.tech_opinion }}
+                        {% if form.tech_opinion.help_text %}<small class="form-text text-muted">{{ form.tech_opinion.help_text }}</small>{% endif %}
+                        {% if form.tech_opinion.errors %}<div class="text-danger">{{ form.tech_opinion.errors }}</div>{% endif %}
+                    </div>
+
+                    <hr class="mt-4 mb-4">
+                    <h6><i class="bx bx-check-shield me-1"></i> نهایی‌سازی و تأیید</h6>
+                    <div class="col-md-6 form-check mt-3">
+                        {{ form.ecg_repeat }}
+                        <label class="form-check-label" for="{{ form.ecg_repeat.id_for_label }}">نیاز به تکرار نوار؟</label>
+                        {% if form.ecg_repeat.help_text %}<small class="form-text text-muted">{{ form.ecg_repeat.help_text }}</small>{% endif %}
+                        {% if form.ecg_repeat.errors %}<div class="text-danger">{{ form.ecg_repeat.errors }}</div>{% endif %}
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label" for="{{ form.repeat_reason.id_for_label }}">دلیل تکرار</label>
+                        {{ form.repeat_reason }}
+                        {% if form.repeat_reason.help_text %}<small class="form-text text-muted">{{ form.repeat_reason.help_text }}</small>{% endif %}
+                        {% if form.repeat_reason.errors %}<div class="text-danger">{{ form.repeat_reason.errors }}</div>{% endif %}
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label" for="{{ form.tech_signature.id_for_label }}">تکنسین ثبت‌کننده</label>
+                        {{ form.tech_signature }}
+                        {% if form.tech_signature.help_text %}<small class="form-text text-muted">{{ form.tech_signature.help_text }}</small>{% endif %}
+                        {% if form.tech_signature.errors %}<div class="text-danger">{{ form.tech_signature.errors }}</div>{% endif %}
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label" for="{{ form.doctor_signature.id_for_label }}">پزشک تأییدکننده</label>
+                        {{ form.doctor_signature }}
+                        {% if form.doctor_signature.help_text %}<small class="form-text text-muted">{{ form.doctor_signature.help_text }}</small>{% endif %}
+                        {% if form.doctor_signature.errors %}<div class="text-danger">{{ form.doctor_signature.errors }}</div>{% endif %}
+                    </div>
+                    <div class="col-12">
+                        <label class="form-label" for="{{ form.ai_result.id_for_label }}">نتیجه تحلیل سیستم هوشمند</label>
+                        {{ form.ai_result }}
+                        {% if form.ai_result.help_text %}<small class="form-text text-muted">{{ form.ai_result.help_text }}</small>{% endif %}
+                        {% if form.ai_result.errors %}<div class="text-danger">{{ form.ai_result.errors }}</div>{% endif %}
+                    </div>
+                    
+                    <hr class="mt-4 mb-4">
+                    <h6><i class="bx bx-paperclip me-1"></i> فایل پیوست</h6>
+                    <div class="col-12">
+                        <label for="{{ form.ecg_file.id_for_label }}" class="form-label">فایل نوار قلب</label>
+                        {{ form.ecg_file }}
+                        {% if form.ecg_file.help_text %}<small class="form-text text-muted">{{ form.ecg_file.help_text }}</small>{% endif %}
+                        {% if form.ecg_file.errors %}<div class="text-danger">{{ form.ecg_file.errors }}</div>{% endif %}
+                        {% if form.instance.ecg_file %}
+                            <p class="mt-2">فایل فعلی: <a href="{{ form.instance.ecg_file.url }}" target="_blank">{{ form.instance.ecg_file.name }}</a></p>
+                        {% endif %}
+                    </div>
+
+                    <div class="col-12 text-end">
+                        <button type="submit" class="btn btn-primary me-2">
+                            <i class="bx bx-save me-1"></i>
+                            {% if form.instance.pk %}ذخیره تغییرات{% else %}ثبت گزارش{% endif %}
+                        </button>
+                        <a href="{% if form.instance.pk %}{% url 'ecg:ecg_detail' form.instance.pk %}{% else %}{% url 'ecg:ecg_worklist' %}{% endif %}" class="btn btn-outline-secondary">
+                            <i class="bx bx-x me-1"></i>
+                            لغو
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% comment %}
+    Helper filter for form errors if needed.
+    If you don't have a custom template filter for 'get_item', you'll get an error.
+    You might need to create a `templatetags` directory in your app and define it.
+    Example `apps/ecg/templatetags/ecg_filters.py`:
+    ```python
+    from django import template
+    register = template.Library()
+
+    @register.filter
+    def get_item(dictionary, key):
+        return dictionary.get(key)
+    ```
+    Then, in your template, add `{% load ecg_filters %}`
+{% endcomment %}
+{% if form.errors %}
+    <script>
+        // Small script to scroll to the error messages if form has errors
+        document.addEventListener('DOMContentLoaded', function() {
+            const errorDiv = document.querySelector('.alert-danger');
+            if (errorDiv) {
+                errorDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+        });
+    </script>
+{% endif %}
+
+{% endblock %}

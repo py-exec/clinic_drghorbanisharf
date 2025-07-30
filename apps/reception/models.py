@@ -37,6 +37,21 @@ class ReceptionServiceStatus(models.Model):
         ("on_hold", "در انتظار ادامه"),
     ]
 
+    created_by = models.ForeignKey(
+        User,
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name='created_statuses'
+    )
+    changed_by = models.ForeignKey(
+        User,
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name='changed_statuses'
+    )
+
     status = models.CharField(
         max_length=20,
         choices=STATUS_CHOICES,
@@ -53,14 +68,6 @@ class ReceptionServiceStatus(models.Model):
     timestamp = models.DateTimeField(
         auto_now_add=True,
         verbose_name="زمان ثبت"
-    )
-
-    changed_by = models.ForeignKey(
-        User,
-        null=True,
-        blank=True,
-        on_delete=models.SET_NULL,
-        verbose_name="تغییر یافته توسط"
     )
 
     duration_seconds = models.PositiveIntegerField(
@@ -468,8 +475,8 @@ class ReceptionService(models.Model):
         ]
 
     def __str__(self):
-        patient_full_name = self.reception.patient.full_name() if self.reception and self.reception.patient else "بیمار نامشخص"
-        return f"{self.tariff.service_type.name} | {patient_full_name} | وضعیت: {self.get_status_display()}"
+        patient_full_name = self.reception.patient.full_name if self.reception and self.reception.patient else "بدون بیمار"
+        return f"{self.tariff.service_type.name} | {patient_full_name} | وضعیت: {self.get_latest_status_display()}"
 
     @property
     def calculated_cost(self):

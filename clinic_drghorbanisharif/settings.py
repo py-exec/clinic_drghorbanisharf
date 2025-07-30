@@ -5,6 +5,8 @@ from pathlib import Path
 
 # مسیر اصلی پروژه
 BASE_DIR = Path(__file__).resolve().parent.parent
+BACKUP_ROOT = os.getenv("BACKUP_ROOT", str(BASE_DIR / "backups"))
+BACKUP_LOG_FILE = os.getenv("BACKUP_LOG_FILE", str(Path(BACKUP_ROOT) / "backup.log"))
 ENV_PATH = "env/.env"
 load_dotenv(ENV_PATH)
 
@@ -108,10 +110,11 @@ INSTALLED_APPS = [
     'apps.exercise_stress_test',  # (اگر اپ جداگانه برای تست ورزش است)
     'apps.preparation',  # (اگر اپ جداگانه برای آماده‌سازی بیمار است)
     'apps.tilt',  # (اگر اپ جداگانه برای تست Tilt Table است)
+'apps.backup', # ابزار پشتیبان‌گیری از پایگاه داده
 ]
 
 # WebSocket Channels with Redis
-ASGI_APPLICATION = 'clinic.asgi.application'
+ASGI_APPLICATION = 'clinic_drghorbanisharif.asgi.application'
 
 CHANNEL_LAYERS = {
     "default": {
@@ -212,13 +215,11 @@ LOGGING = {
     "version": 1,
     "disable_existing_loggers": False,
     "handlers": {
-        "console": {
-            "class": "logging.StreamHandler",
-        },
+        "console": {"class": "logging.StreamHandler"},
+        "backup_file": {"class": "logging.FileHandler", "filename": BACKUP_LOG_FILE, "level": "INFO"},
     },
-    "root": {
-        "handlers": ["console"],
-        "level": "DEBUG",
+    "loggers": {
+        "backup": {"handlers": ["backup_file", "console"], "level": "INFO", "propagate": False},
     },
 }
 
@@ -234,6 +235,7 @@ CELERY_ACCEPT_CONTENT = ["json"]
 CELERY_TASK_SERIALIZER = "json"
 CELERY_RESULT_SERIALIZER = "json"
 CELERY_TIMEZONE = "Asia/Tehran"
+CELERY_BEAT_SCHEDULE = {"daily_backup": {"task": "apps.backup.tasks.scheduled_backup", "schedule": 86400}}
 
 # اطلاعات پیش‌فرض سوپر یوزر
 DEFAULT_SUPERUSER_PHONE = os.getenv("DEFAULT_SUPERUSER_PHONE", "09100000000")

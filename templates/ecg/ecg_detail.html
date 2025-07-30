@@ -1,0 +1,144 @@
+{% extends "base.html" %}
+{% load static %}
+{% load humanize %}
+
+{% block title %}جزئیات گزارش ECG - {{ report.patient.full_name }}{% endblock %}
+
+{% block content %}
+<h4 class="py-3 mb-4">
+    <span class="text-muted fw-light">گزارش‌ها / ECG /</span> جزئیات گزارش
+</h4>
+
+<div class="row">
+    <div class="col-lg-8 mx-auto">
+        <div class="card mb-4">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">گزارش نوار قلب (ECG)</h5>
+                <div>
+                    <a href="{% url 'ecg:ecg_update' report.pk %}" class="btn btn-sm btn-primary me-2">
+                        <i class="bx bx-edit-alt me-1"></i> ویرایش
+                    </a>
+                    <a href="{% url 'ecg:ecg_list' %}" class="btn btn-sm btn-outline-secondary">
+                        <i class="bx bx-arrow-back me-1"></i> بازگشت به لیست
+                    </a>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <strong>بیمار:</strong>
+                        <a href="{% url 'patient:patient_detail' report.patient.pk %}">{{ report.patient.full_name }} (کد ملی: {{ report.patient.national_code|default:"--" }})</a>
+                    </div>
+                    <div class="col-md-6">
+                        <strong>کد پذیرش:</strong>
+                        {% if report.reception_service %}
+                            <a href="{% url 'reception:service_detail' report.reception_service.pk %}">
+                                {{ report.reception_service.reception.admission_code }}
+                            </a>
+                        {% else %}
+                            --
+                        {% endif %}
+                    </div>
+                </div>
+                <hr>
+
+                <h6><i class="bx bx-info-circle me-1"></i> اطلاعات عمومی</h6>
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <strong>نسخه:</strong> {{ report.prescription.title|default:"--" }}
+                    </div>
+                    <div class="col-md-6">
+                        <strong>تاریخ و زمان ثبت:</strong> {{ report.created_at|date:"Y/m/d - H:i" }}
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <strong>نوع نوار:</strong> {{ report.get_ecg_type_display|default:"--" }}
+                    </div>
+                    <div class="col-md-6">
+                        <strong>وضعیت بیمار:</strong> {{ report.patient_position|default:"--" }}
+                    </div>
+                </div>
+                 <div class="row mb-3">
+                    <div class="col-md-6">
+                        <strong>دمای اتاق:</strong> {{ report.room_temp|default:"--" }}
+                    </div>
+                     <div class="col-md-6">
+                        <strong>محل انجام:</strong> {{ report.ecg_location|default:"--" }}
+                    </div>
+                 </div>
+                 <div class="row mb-3">
+                    <div class="col-md-6">
+                        <strong>کیفیت نوار:</strong> {{ report.get_ecg_quality_display|default:"--" }}
+                    </div>
+                     <div class="col-md-6">
+                        <strong>مشکل تکنیکی:</strong> {{ report.tech_issue|yesno:"بله,خیر" }}
+                        {% if report.tech_issue %}({{ report.issue_desc|default:"--" }}){% endif %}
+                    </div>
+                 </div>
+                 <div class="row mb-3">
+                    <div class="col-md-6">
+                        <strong>شماره سریال دستگاه:</strong> {{ report.device_serial|default:"--" }}
+                    </div>
+                     <div class="col-md-6">
+                        <strong>زمان شروع/پایان:</strong> {{ report.start_time|date:"H:i"|default:"--" }} - {{ report.end_time|date:"H:i"|default:"--" }}
+                    </div>
+                 </div>
+
+                <hr>
+                <h6><i class="bx bx-line-chart me-1"></i> تحلیل اولیه ECG</h6>
+                <div class="row mb-3">
+                    <div class="col-md-4"><strong>HR:</strong> {{ report.hr|default:"--" }}</div>
+                    <div class="col-md-4"><strong>ریتم:</strong> {{ report.rhythm|default:"--" }}</div>
+                    <div class="col-md-4"><strong>محور (Axis):</strong> {{ report.axis|default:"--" }}</div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-4"><strong>QRS:</strong> {{ report.qrs|default:"--" }}</div>
+                    <div class="col-md-4"><strong>QTc:</strong> {{ report.qtc|default:"--" }}</div>
+                    <div class="col-md-4"><strong>P موج:</strong> {{ report.p_wave|default:"--" }}</div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-6"><strong>ST-T تغییرات:</strong> {{ report.st_t|default:"--" }}</div>
+                    <div class="col-md-3"><strong>Q موج پاتولوژیک:</strong> {{ report.q_wave|yesno:"بله,خیر" }}</div>
+                    <div class="col-md-3"><strong>U موج مشاهده شد:</strong> {{ report.u_wave|yesno:"بله,خیر" }}</div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-12"><strong>توضیح تکنسین:</strong> {{ report.tech_opinion|default:"--" }}</div>
+                </div>
+
+                <hr>
+                <h6><i class="bx bx-check-shield me-1"></i> نهایی‌سازی و تأیید</h6>
+                <div class="row mb-3">
+                    <div class="col-md-6"><strong>نیاز به تکرار نوار:</strong> {{ report.ecg_repeat|yesno:"بله,خیر" }}</div>
+                    {% if report.ecg_repeat %}
+                        <div class="col-md-6"><strong>دلیل تکرار:</strong> {{ report.repeat_reason|default:"--" }}</div>
+                    {% endif %}
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-6"><strong>تکنسین ثبت‌کننده:</strong> {{ report.tech_signature.full_name|default:"--" }}</div>
+                    <div class="col-md-6"><strong>پزشک تأییدکننده:</strong> {{ report.doctor_signature.full_name|default:"--" }}</div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-12"><strong>نتیجه تحلیل AI:</strong> <p class="text-break">{{ report.ai_result|default:"--" }}</p></div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-12"><strong>تأیید پزشک (نهایی):</strong> {{ report.is_approved_by_doctor|yesno:"تأیید شده,تأیید نشده" }}</div>
+                </div>
+
+                {% if report.ecg_file %}
+                <hr>
+                <h6><i class="bx bx-paperclip me-1"></i> فایل پیوست</h6>
+                <div class="row mb-3">
+                    <div class="col-md-12">
+                        <a href="{{ report.ecg_file.url }}" target="_blank" class="btn btn-sm btn-outline-info">
+                            <i class="bx bx-download me-1"></i> دانلود فایل ECG
+                        </a>
+                    </div>
+                </div>
+                {% endif %}
+
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

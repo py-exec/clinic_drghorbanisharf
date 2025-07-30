@@ -1,62 +1,46 @@
 # apps/reception/consumers.py
+
 import json
-from channels.db import database_sync_to_async
 from channels.generic.websocket import AsyncWebsocketConsumer
 
-
 class ReceptionUpdatesConsumer(AsyncWebsocketConsumer):
-    """
-    این Consumer مسئول اطلاع‌رسانی لحظه‌ای تغییرات در خدمات پذیرش است.
-    """
-
     async def connect(self):
-        self.user = self.scope["user"]
+        self.group_name = 'reception_updates'
 
-        # ⛔ فقط کاربران لاگین کرده
-        if not self.user.is_authenticated:
-            await self.close()
-            return
-
-        # ⛔ فقط با پرمیشن مناسب
-        has_perm = await self.check_user_permission(self.user, "reception.view_reception")
-        if not has_perm:
-            await self.close()
-            return
-
-        # 🧠 تعیین گروه WebSocket بر اساس نقش کاربر
-        role = await self.get_user_role(self.user)
-        if not role:
-            await self.close()
-            return
-
-        self.group_name = f"role_{role.code}"
-
+        # Join group
         await self.channel_layer.group_add(
             self.group_name,
             self.channel_name
         )
+        print(f"--- Consumer: WebSocket connected. Channel: {self.channel_name}, Group: {self.group_name} ---") # Added print
         await self.accept()
 
     async def disconnect(self, close_code):
-        if hasattr(self, "group_name"):
-            await self.channel_layer.group_discard(
-                self.group_name,
-                self.channel_name
-            )
+        # Leave group
+        await self.channel_layer.group_discard(
+            self.group_name,
+            self.channel_name
+        )
+        print(f"--- Consumer: WebSocket disconnected. Channel: {self.channel_name}, Close code: {close_code} ---") # Added print
 
-    async def reception_update(self, event):
-        """
-        متد دریافت پیام از گروه و ارسال به کلاینت WebSocket.
-        """
-        await self.send(text_data=json.dumps(event))
+    async def receive(self, text_data):
+        # This consumer only sends messages, it does not expect to receive from client
+        pass
 
-    @database_sync_to_async
-    def check_user_permission(self, user, perm_code):
-        return user.has_perm(perm_code)
+    async def service_message(self, event):
+        message = event['message_type']
+        service = event['service']
+        stats = event.get('stats', {}) # Get stats, default to empty dict if not present
 
-    @database_sync_to_async
-    def get_user_role(self, user):
-        """
-        نقش اصلی کاربر را برمی‌گرداند.
-        """
-        return getattr(user, "role", None)  # اگر چند نقش داری، اینجا رو تغییر بده
+        print(f"--- Consumer: Received message of type '{message}' for Service ID: {service.get('id')} ---") # Added print
+        print(f"--- Consumer: Service Data: {service} ---") # Added print
+        print(f"--- Consumer: Stats Data: {stats} ---") # Added print
+
+        # Send message to WebSocket
+        await self.send(text_data=json.dumps({
+            'message_type': message,
+            'service': service,
+            'stats': stats,
+            'action': 'update' # Consider if you need more dynamic actions here
+        }))
+        print(f"--- Consumer: Message sent to frontend. ---") # Added print

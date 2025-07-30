@@ -16,6 +16,12 @@ User = get_user_model()
 
 
 class TiltTestReport(models.Model):
+    patient = models.ForeignKey(
+        Patient,
+        on_delete=models.PROTECT,
+        verbose_name="بیمار"
+    )
+
     # ==== وابستگی اصلی به خدمت پذیرش شده ====
     content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE, null=True, blank=True)
     object_id = models.PositiveIntegerField(null=True, blank=True)
@@ -65,12 +71,6 @@ class TiltTestReport(models.Model):
             patient_name = self.content_object.reception.patient.full_name()
         return f"تست تیلت برای {patient_name} - {self.created_at.strftime('%Y-%m-%d')}"
 
-    @property
-    def patient(self):
-        if self.content_object and hasattr(self.content_object, "reception") and self.content_object.reception:
-            return self.content_object.reception.patient
-        return None
-
     def save(self, *args, **kwargs):
         if not self.referring_physician and self.prescription and self.prescription.doctor:
             self.referring_physician = self.prescription.doctor.user.get_full_name()
@@ -116,3 +116,9 @@ class TiltTestReport(models.Model):
 
     def get_absolute_url(self):
         return reverse('tilt:tilt_detail', kwargs={'pk': self.pk})
+
+    @property
+    def reception_service(self):
+        if isinstance(self.content_object, ReceptionService):
+            return self.content_object
+        return None

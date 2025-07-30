@@ -4,430 +4,92 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="107ccca5-2b11-4857-a334-8264903cabfa" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/clinic.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/profiles_settings.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/accounting/admin.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/accounting/apps.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/accounting/forms.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/accounting/migrations/0001_initial.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/accounting/migrations/0002_initial.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/accounting/migrations/0003_initial.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/accounting/migrations/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/accounting/mixins.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/accounting/models.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/accounting/tests.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/accounting/urls.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/accounting/views.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/accounts/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/accounts/admin.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/accounts/apps.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/accounts/backends.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/accounts/decorators.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/accounts/fixtures/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/accounts/fixtures/initial_menu_data_fixed.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/accounts/fixtures/initial_permissions_fixed.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/accounts/fixtures/initial_roles_fixed_clean.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/accounts/fixtures/initial_users_fixed.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/accounts/fixtures/test/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/accounts/fixtures/test/fix.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/accounts/fixtures/test/fix_permissions_fixture.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/accounts/fixtures/test/fix_roles_fixture.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/accounts/fixtures/test/initial_menu_data.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/accounts/fixtures/test/initial_permissions_data.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/accounts/fixtures/test/initial_roles_data.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/accounts/fixtures/test/initial_roles_fixed.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/accounts/fixtures/test/initial_users_clean.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/accounts/fixtures/test/initial_users_clean_fixed.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/accounts/fixtures/test/initial_users_clean_fixed_ready.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/accounts/fixtures/test/initial_users_data.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/accounts/fixtures/test/menu_export.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/accounts/forms.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/accounts/management/commands/setup_roles.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/accounts/managers.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/accounts/migrations/0001_initial.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/accounts/migrations/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/accounts/mixins.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/accounts/models.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/accounts/signals.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/accounts/tests.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/accounts/urls.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/accounts/views.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/accounts/views_acl.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/accounts/views_otp.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/appointments/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/appointments/admin.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/appointments/apps.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/appointments/calendar_utils.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/appointments/migrations/0001_initial.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/appointments/migrations/0002_initial.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/appointments/migrations/0003_initial.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/appointments/migrations/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/appointments/models.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/appointments/serializers.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/appointments/tests.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/appointments/urls.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/appointments/views.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/clinic_messenger/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/clinic_messenger/admin.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/clinic_messenger/apps.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/clinic_messenger/forms.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/clinic_messenger/migrations/0001_initial.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/clinic_messenger/migrations/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/clinic_messenger/models.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/clinic_messenger/sms.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/clinic_messenger/tasks.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/clinic_messenger/tests.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/clinic_messenger/urls.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/clinic_messenger/views_email.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/clinic_messenger/views_sms.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/doctors/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/doctors/admin.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/doctors/apps.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/doctors/fixtures/initial_doctors_specialty.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/doctors/fixtures/initial_doctors_specialty_category.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/doctors/forms.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/doctors/migrations/0001_initial.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/doctors/migrations/0002_initial.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/doctors/migrations/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/doctors/models.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/doctors/tests.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/doctors/urls.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/doctors/views.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/ecg/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/ecg/admin.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/ecg/apps.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/ecg/forms.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/ecg/migrations/0001_initial.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/ecg/migrations/0002_initial.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/ecg/migrations/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/ecg/models.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/ecg/tests.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/ecg/urls.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/ecg/views.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/echo_fellowship/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/echo_fellowship/admin.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/echo_fellowship/apps.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/echo_fellowship/migrations/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/echo_fellowship/models.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/echo_fellowship/tests.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/echo_fellowship/views.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/echo_tee/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/echo_tee/admin.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/echo_tee/apps.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/echo_tee/migrations/0001_initial.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/echo_tee/migrations/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/echo_tee/models.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/echo_tee/tests.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/echo_tee/urls.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/echo_tee/views.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/echo_tte/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/echo_tte/admin.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/echo_tte/apps.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/echo_tte/migrations/0001_initial.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/echo_tte/migrations/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/echo_tte/models.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/echo_tte/tests.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/echo_tte/urls.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/echo_tte/views.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/exercise_stress_test/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/exercise_stress_test/admin.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/exercise_stress_test/apps.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/exercise_stress_test/migrations/0001_initial.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/exercise_stress_test/migrations/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/exercise_stress_test/models.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/exercise_stress_test/tests.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/exercise_stress_test/urls.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/exercise_stress_test/views.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/holter/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/holter/admin.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/holter/apps.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/holter/forms.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/holter/migrations/0001_initial.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/holter/migrations/0002_initial.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/holter/migrations/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/holter/models.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/holter/tests.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/holter/urls.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/holter/views.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/holter_bp/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/holter_bp/admin.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/holter_bp/apps.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/holter_bp/forms.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/holter_bp/migrations/0001_initial.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/holter_bp/migrations/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/holter_bp/models.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/holter_bp/tests.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/holter_bp/urls.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/holter_bp/views.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/holter_hr/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/holter_hr/admin.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/holter_hr/apps.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/holter_hr/forms.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/holter_hr/migrations/0001_initial.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/holter_hr/migrations/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/holter_hr/models.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/holter_hr/tests.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/holter_hr/urls.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/holter_hr/views.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/inventory/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/inventory/admin.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/inventory/apps.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/inventory/forms.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/inventory/migrations/0001_initial.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/inventory/migrations/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/inventory/models.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/inventory/tests.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/inventory/urls.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/inventory/views.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/menu/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/menu/admin.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/menu/apps.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/menu/context_processors.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/menu/migrations/0001_initial.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/menu/migrations/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/menu/models.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/menu/templatetags/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/menu/templatetags/menu_tags.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/menu/tests.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/menu/utils.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/menu/views.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/patient/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/patient/admin.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/patient/apps.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/patient/forms.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/patient/migrations/0001_initial.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/patient/migrations/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/patient/models.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/patient/tests.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/patient/urls.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/patient/views.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/preparation/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/preparation/admin.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/preparation/apps.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/preparation/migrations/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/preparation/models.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/preparation/tests.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/preparation/views.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/prescriptions/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/prescriptions/admin.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/prescriptions/apps.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/prescriptions/forms.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/prescriptions/migrations/0001_initial.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/prescriptions/migrations/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/prescriptions/models.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/prescriptions/tests.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/prescriptions/urls.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/prescriptions/views.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/procedures/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/procedures/admin.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/procedures/apps.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/procedures/forms.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/procedures/migrations/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/procedures/models.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/procedures/procedure_urls.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/procedures/tests.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/procedures/urls.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/procedures/views.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/reception/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/reception/admin.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/reception/apps.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/reception/consumers.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/reception/fixtures/initial_service_tariff.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/reception/fixtures/initial_service_types.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/reception/forms.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/reception/forms_service.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/reception/migrations/0001_initial.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/reception/migrations/0002_servicetype_assigned_role.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/reception/migrations/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/reception/models.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/reception/routing.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/reception/signals.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/reception/status_service.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/reception/templatetags/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/reception/templatetags/reception_filters.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/reception/templatetags/service_filters.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/reception/tests.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/reception/urls.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/reception/utils.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/reception/views.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/staffs/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/staffs/admin.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/staffs/apps.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/staffs/fixtures/initial_staff.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/staffs/fixtures/initial_staff_positions.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/staffs/forms.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/staffs/migrations/0001_initial.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/staffs/migrations/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/staffs/models.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/staffs/tests.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/staffs/urls.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/staffs/views.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/tilt/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/tilt/admin.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/tilt/apps.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/tilt/forms.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/tilt/migrations/0001_initial.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/tilt/migrations/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/tilt/models.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/tilt/tests.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/tilt/urls.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/tilt/views.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/clinic_drghorbanisharif/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/clinic_drghorbanisharif/asgi.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/clinic_drghorbanisharif/celery.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/clinic_drghorbanisharif/routing.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/clinic_drghorbanisharif/settings.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/clinic_drghorbanisharif/urls.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/clinic_drghorbanisharif/views.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/clinic_drghorbanisharif/wsgi.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/env/.env" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/env/menuitem.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/manage.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/migrate_all.sh" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/accounting/account_detail.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/accounting/account_list.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/accounting/bankreceipt_detail.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/accounting/bankreceipt_form.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/accounting/document_form.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/accounting/document_list.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/accounting/financialdocument_detail.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/accounting/financialdocument_list.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/accounting/invoice_detail.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/accounting/invoice_form.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/accounting/invoice_list.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/accounting/ledgerentry_detail.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/accounting/ledgerentry_list.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/accounting/transaction_detail.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/accounting/transaction_form.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/accounting/transaction_list.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/accounts/acl/permission_detail.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/accounts/acl/permission_form.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/accounts/acl/permission_list.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/accounts/acl/role_detail.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/accounts/acl/role_form.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/accounts/acl/role_list.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/accounts/login.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/accounts/user_detail.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/accounts/user_form.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/accounts/user_list.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/accounts/user_register.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/accounts/verify_otp.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/accounts/verify_phone.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/appointments/calendar.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/appointments/jalali_calendar.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/base.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/clinic_messenger/send_email.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/clinic_messenger/sms_config_form.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/clinic_messenger/sms_dashboard.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/clinic_messenger/sms_pattern_form.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/clinic_messenger/sms_pattern_type_form.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/clinic_messenger/sms_send.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/clinic_messenger/sms_status.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/doctors/doctor_confirm_delete.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/doctors/doctor_detail.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/doctors/doctor_form.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/doctors/doctor_list.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/doctors/specialty_category_confirm_delete.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/doctors/specialty_category_form.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/doctors/specialty_category_list.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/doctors/specialty_confirm_delete.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/doctors/specialty_form.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/doctors/specialty_list.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/ecg/ecg_create.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/ecg/ecg_list.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/ecg/partials/_ecg_table.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/echo/echo_tee_list.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/echo/echo_tte_list.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/echo/stress_test_form.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/echo/stress_test_list.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/echo/tee_echo_form.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/echo/tilt_test_form.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/echo/tilt_test_list.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/echo/tte_echo_form.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/errors/403.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/errors/404.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/errors/500.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/holter_bp/holter_bp_archive.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/holter_bp/holter_bp_detail.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/holter_bp/holter_bp_install_form.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/holter_bp/holter_bp_reading_form.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/holter_bp/holter_bp_reception_form.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/holter_bp/holter_bp_worklist.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/holter_hr/holter_bp_confirm_delete.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/holter_hr/holter_bp_install_form.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/holter_hr/holter_bp_reading_form.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/holter_hr/holter_bp_reception_form.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/holter_hr/holter_hr_detail.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/holter_hr/holter_hr_worklist.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/inventory/items/create.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/inventory/items/detail.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/inventory/items/list.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/inventory/items/loan_form.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/inventory/items/maintenance_form.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/inventory/items/pm_form.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/inventory/items/stockin_form.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/inventory/items/stockout_form.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/inventory/lists/inventory_list.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/inventory/lists/loan_list.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/inventory/lists/maintenance_list.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/inventory/lists/pm_list.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/inventory/lists/stockin_list.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/inventory/lists/stockout_list.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/main_dashboard.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/message.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/partials/_menu_tree.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/partials/_sub_menu.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/partials/menu.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/partials/navbar.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/patient/patient_confirm_delete.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/patient/patient_detail.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/patient/patient_form.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/patient/patient_list.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/patient/patient_lookup.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/patient/patient_lookup_result.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/prescriptions/doctor_review_list.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/procedures/surgery_plan_list.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/reception/partials/_reception_table.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/reception/patient_search_box.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/reception/reception_detail.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/reception/reception_form.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/reception/reception_list.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/reception/reception_receipt.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/reception/reception_start.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/reception/service_tariff_confirm_delete.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/reception/service_tariff_form.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/reception/service_tariff_list.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/reception/service_type_confirm_delete.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/reception/service_type_form.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/reception/service_type_list.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/risk-assessment/StructuredMedicalـHistoryـRiskـForm.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/staffs/attendance_confirm_delete.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/staffs/attendance_form.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/staffs/attendance_list.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/staffs/leave_confirm_delete.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/staffs/leave_form.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/staffs/leave_list.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/staffs/log_confirm_delete.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/staffs/log_form.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/staffs/pdf/staff_report.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/staffs/position_confirm_delete.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/staffs/position_form.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/staffs/staff_confirm_delete.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/staffs/staff_detail.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/staffs/staff_form.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/staffs/staff_list.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/storage/clinic_storage.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/test.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/tilt/tilt_detail.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/tilt/tilt_form.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/tilt/tilt_list.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/tilt/tilt_worklist.html" afterDir="false" />
+    <list default="true" id="107ccca5-2b11-4857-a334-8264903cabfa" name="Changes" comment="1">
+      <change afterPath="$PROJECT_DIR$/apps/backup/tasks.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/apps/backup/urls.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/apps/backup/utils.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/apps/echo_tee/forms.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/apps/echo_tte/forms.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/apps/exercise_stress_test/forms.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/templates/ecg/ecg_confirm_delete.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/templates/ecg/ecg_detail.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/templates/ecg/ecg_form.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/templates/ecg/ecg_worklist.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/templates/echo_tee/echo_tee_detail.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/templates/echo_tee/echo_tee_worklist.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/templates/echo_tee/tee_confirm_delete.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/templates/echo_tte/echo_tte_detail.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/templates/echo_tte/echo_tte_worklist.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/templates/echo_tte/tte_confirm_delete.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/templates/exercise_stress_test/stress_test_confirm_delete.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/templates/exercise_stress_test/stress_test_detail.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/templates/exercise_stress_test/stress_test_worklist.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/templates/holter_hr/holter_hr_archive.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/templates/holter_hr/holter_hr_confirm_delete.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/templates/holter_hr/holter_hr_install_form.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/templates/holter_hr/holter_hr_reading_form.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/templates/holter_hr/holter_hr_reception_form.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/templates/procedures/prescription_confirm_delete.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/templates/procedures/prescription_detail.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/templates/procedures/prescription_form.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/templates/procedures/prescription_list.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/templates/reception/reception_confirm_delete.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/templates/tilt/tilt_confirm_delete.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/ecg/forms.py" beforeDir="false" afterPath="$PROJECT_DIR$/apps/ecg/forms.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/ecg/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/apps/ecg/models.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/ecg/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/apps/ecg/urls.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/ecg/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/apps/ecg/views.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/echo_tee/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/apps/echo_tee/models.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/echo_tee/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/apps/echo_tee/urls.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/echo_tee/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/apps/echo_tee/views.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/echo_tte/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/apps/echo_tte/models.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/echo_tte/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/apps/echo_tte/urls.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/echo_tte/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/apps/echo_tte/views.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/exercise_stress_test/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/apps/exercise_stress_test/models.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/exercise_stress_test/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/apps/exercise_stress_test/urls.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/exercise_stress_test/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/apps/exercise_stress_test/views.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/holter_bp/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/apps/holter_bp/models.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/holter_bp/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/apps/holter_bp/views.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/holter_hr/forms.py" beforeDir="false" afterPath="$PROJECT_DIR$/apps/holter_hr/forms.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/holter_hr/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/apps/holter_hr/models.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/holter_hr/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/apps/holter_hr/views.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/prescriptions/forms.py" beforeDir="false" afterPath="$PROJECT_DIR$/apps/prescriptions/forms.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/prescriptions/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/apps/prescriptions/models.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/prescriptions/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/apps/prescriptions/urls.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/prescriptions/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/apps/prescriptions/views.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/reception/consumers.py" beforeDir="false" afterPath="$PROJECT_DIR$/apps/reception/consumers.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/reception/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/apps/reception/models.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/reception/signals.py" beforeDir="false" afterPath="$PROJECT_DIR$/apps/reception/signals.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/reception/status_service.py" beforeDir="false" afterPath="$PROJECT_DIR$/apps/reception/status_service.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/tilt/forms.py" beforeDir="false" afterPath="$PROJECT_DIR$/apps/tilt/forms.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/tilt/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/apps/tilt/models.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/tilt/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/apps/tilt/urls.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/tilt/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/apps/tilt/views.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/clinic_drghorbanisharif/asgi.py" beforeDir="false" afterPath="$PROJECT_DIR$/clinic_drghorbanisharif/asgi.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/clinic_drghorbanisharif/celery.py" beforeDir="false" afterPath="$PROJECT_DIR$/clinic_drghorbanisharif/celery.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/clinic_drghorbanisharif/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/clinic_drghorbanisharif/settings.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/clinic_drghorbanisharif/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/clinic_drghorbanisharif/urls.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/clinic_drghorbanisharif/wsgi.py" beforeDir="false" afterPath="$PROJECT_DIR$/clinic_drghorbanisharif/wsgi.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/ecg/ecg_list.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/ecg/ecg_list.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/echo/echo_tee_list.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/echo_tee/echo_tee_list.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/echo/echo_tte_list.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/echo_tte/echo_tte_list.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/echo/stress_test_form.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/exercise_stress_test/stress_test_form.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/echo/stress_test_list.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/exercise_stress_test/stress_test_list.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/echo/tee_echo_form.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/echo_tee/tee_echo_form.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/echo/tilt_test_form.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/tilt/tilt_test_form.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/echo/tilt_test_list.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/tilt/tilt_test_list.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/echo/tte_echo_form.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/echo_tte/tte_echo_form.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/holter_hr/holter_bp_confirm_delete.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/holter_hr/holter_bp_install_form.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/holter_hr/holter_bp_reading_form.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/holter_hr/holter_bp_reception_form.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/holter_hr/holter_hr_worklist.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/holter_hr/holter_hr_worklist.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/reception/reception_detail.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/reception/reception_detail.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/staffs/leave_form.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/staffs/leave_form.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/tilt/tilt_detail.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/tilt/tilt_detail.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/tilt/tilt_form.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/tilt/tilt_form.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/tilt/tilt_worklist.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/tilt/tilt_worklist.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -448,6 +110,18 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;py-exec&quot;
+  }
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/py-exec/clinic_drghorbanisharf.git&quot;,
+    &quot;accountId&quot;: &quot;ced9827a-1391-485e-a4fa-beee97d80ce0&quot;
+  }
+}</component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 5
 }</component>
@@ -459,42 +133,45 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "DefaultHtmlFileTemplate": "HTML File",
-    "Django Server.clinic.executor": "Run",
-    "ModuleVcsDetector.initialDetectionPerformed": "true",
-    "Python.fix.executor": "Run",
-    "RunOnceActivity.OpenDjangoStructureViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "RunOnceActivity.pycharm.django.structure.promotion.once.per.project": "true",
-    "SHELLCHECK.PATH": "/home/py/.local/share/JetBrains/PyCharm2025.1/Shell Script/shellcheck",
-    "django.template.preview.state": "SHOW_EDITOR",
-    "git-widget-placeholder": "master",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "com.intellij.pycharm.community.ide.impl.configuration.PythonContentEntriesConfigurable",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;DefaultHtmlFileTemplate&quot;: &quot;HTML File&quot;,
+    &quot;Django Server.clinic.executor&quot;: &quot;Run&quot;,
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;Python.daphne.executor&quot;: &quot;Run&quot;,
+    &quot;Python.fix.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.OpenDjangoStructureViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.pycharm.django.structure.promotion.once.per.project&quot;: &quot;true&quot;,
+    &quot;SHELLCHECK.PATH&quot;: &quot;/home/py/.local/share/JetBrains/PyCharm2025.1/Shell Script/shellcheck&quot;,
+    &quot;django.template.preview.state&quot;: &quot;SHOW_EDITOR&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/home/py/Desktop/clinic&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   },
-  "keyToStringList": {
-    "DatabaseDriversLRU": [
-      "postgresql"
+  &quot;keyToStringList&quot;: {
+    &quot;DatabaseDriversLRU&quot;: [
+      &quot;postgresql&quot;
     ]
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/templates/exercise_stress_test" />
+      <recent name="$PROJECT_DIR$/templates/tilt" />
+      <recent name="$PROJECT_DIR$/templates/echo_tee" />
+      <recent name="$PROJECT_DIR$/templates/echo_tte" />
       <recent name="$PROJECT_DIR$/apps/doctors/fixtures" />
-      <recent name="$PROJECT_DIR$/apps/reception/fixtures" />
-      <recent name="$PROJECT_DIR$/apps/accounts/fixtures/test" />
-      <recent name="$PROJECT_DIR$/apps/accounts/fixtures" />
     </key>
   </component>
-  <component name="RunManager" selected="Python.fix">
+  <component name="RunManager" selected="Python.daphne">
     <configuration name="fix" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="clinic" />
       <option name="ENV_FILES" value="" />
@@ -525,6 +202,7 @@
       <option name="PARENT_ENVS" value="true" />
       <envs>
         <env name="PYTHONUNBUFFERED" value="1" />
+        <env name="PYTHONPATH" value=". daphne -p 8001 clinic_drghorbanisharif.asgi:application " />
         <env name="DJANGO_SETTINGS_MODULE" value="clinic_drghorbanisharif.settings" />
       </envs>
       <option name="SDK_HOME" value="" />
@@ -544,6 +222,11 @@
       <option name="customRunCommand" value="" />
       <method v="2" />
     </configuration>
+    <list>
+      <item itemvalue="Django Server.clinic" />
+      <item itemvalue="Python.daphne" />
+      <item itemvalue="Python.fix" />
+    </list>
     <recent_temporary>
       <list>
         <item itemvalue="Python.fix" />
@@ -569,14 +252,29 @@
       <workItem from="1753654679335" duration="9092000" />
       <workItem from="1753673822490" duration="926000" />
       <workItem from="1753674761296" duration="6198000" />
-      <workItem from="1753745701248" duration="13308000" />
+      <workItem from="1753745701248" duration="29585000" />
+      <workItem from="1753863838336" duration="21460000" />
     </task>
+    <task id="LOCAL-00001" summary="1">
+      <option name="closed" value="true" />
+      <created>1753759089472</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1753759089472</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="1" />
+    <option name="LAST_COMMIT_MESSAGE" value="1" />
+  </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/clinic$fix.coverage" NAME="fix Coverage Results" MODIFIED="1753757695317" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/clinic$daphne.coverage" NAME="daphne Coverage Results" MODIFIED="1753888959369" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
 </project>

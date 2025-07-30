@@ -16,12 +16,10 @@ class HolterBPInstallation(models.Model):
     """
     مرحله اول: نصب دستگاه هلتر فشار. این مدل به عنوان رکورد اصلی عمل می‌کند.
     """
-    # وابستگی اصلی به خدمت پذیرش شده
     content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
     object_id = models.PositiveIntegerField()
     reception_service = GenericForeignKey('content_type', 'object_id')
 
-    # ✅ اتصال مستقیم به بیمار برای پایداری و کارایی بهتر
     patient = models.ForeignKey(
         "patient.Patient",
         on_delete=models.PROTECT,
@@ -29,7 +27,6 @@ class HolterBPInstallation(models.Model):
         verbose_name="بیمار"
     )
 
-    # ✅ کد پیگیری برای مدیریت آسان‌تر
     tracking_code = models.CharField(max_length=30, unique=True, editable=False, verbose_name="کد پیگیری")
 
     device = models.ForeignKey(
@@ -57,7 +54,20 @@ class HolterBPInstallation(models.Model):
     )
     created_at = models.DateTimeField(auto_now_add=True, verbose_name="تاریخ ایجاد")
     updated_at = models.DateTimeField(auto_now=True, verbose_name="آخرین بروزرسانی")
-# # HISTORICAL_COMMENTED:     history = HistoricalRecords()
+
+    # NEW: Latest status for this specific installation stage
+    latest_installation_status = models.CharField(
+        max_length=20,
+        choices=[
+            ('installed', 'نصب شده'),
+            ('reinstalled', 'نصب مجدد'),
+            ('cancelled', 'لغو نصب'),
+            ('failed', 'ناموفق'),
+            ('on_hold', 'در انتظار'),  # مثلا منتظر قطعه خاصی
+        ],
+        default='installed',  # وضعیت پیش‌فرض پس از ثبت موفق نصب
+        verbose_name="آخرین وضعیت نصب"
+    )
 
     class Meta:
         verbose_name = "نصب هلتر فشار"
@@ -77,34 +87,111 @@ class HolterBPInstallation(models.Model):
         super().clean()
         if self.install_datetime > timezone.now():
             raise ValidationError("تاریخ نصب نمی‌تواند در آینده باشد.")
-
-        # ✅ اعتبارسنجی تداخلی بیمار
         if self.reception_service and self.reception_service.reception.patient != self.patient:
             raise ValidationError("بیمار انتخاب‌شده با بیمار ثبت‌شده در پذیرش مطابقت ندارد.")
-
-        # ✅ جلوگیری از ثبت چند نصب برای یک خدمت
         if self.pk is None and self.__class__.objects.filter(content_type=self.content_type,
                                                              object_id=self.object_id).exists():
             raise ValidationError("برای این خدمت قبلاً یک رکورد نصب ثبت شده است.")
 
+        # Add validation for device (similar to what was discussed for Holter HR)
+        # Assuming Item model has 'category' and 'name' that can identify Holter BP devices
+        # Example:
+        # if self.device:
+        #     if self.device.category != 'equipment' or 'هولتر' not in self.device.name or 'فشار' not in self.device.name:
+        #         raise ValidationError(
+        #             {'device': "دستگاه انتخاب شده یک دستگاه هلتر فشار معتبر نیست. لطفاً یک 'تجهیزات پزشکی' با نام 'هولتر فشار' انتخاب کنید."}
+        #         )
+
     def save(self, *args, **kwargs):
+        is_new = self._state.adding  # Check if this is a new instance
+
         if not self.tracking_code:
             today = timezone.now().strftime("%y%m%d")
-            prefix = "BPH"
+            prefix = "BPH"  # Changed prefix for Holter BP
             count = HolterBPInstallation.objects.filter(
                 install_datetime__date=timezone.now().date()
             ).count() + 1
             self.tracking_code = f"{prefix}-{today}-{count:04d}"
 
-        # اطمینان از اینکه بیمار از روی سرویس پذیرش ست شده
         if self.reception_service and not self.patient_id:
             self.patient = self.reception_service.reception.patient
 
         self.full_clean()
         super().save(*args, **kwargs)
 
+        # NEW: Create an initial status record if this is a new installation
+        if is_new:
+            HolterBPInstallationStatus.objects.create(
+                installation=self,
+                status=self.latest_installation_status,  # Use the default or set it
+                changed_by=self.created_by,  # Assuming created_by is the user who made the record
+                note="رکورد نصب جدید هلتر فشار ثبت شد."
+            )
+
     def get_absolute_url(self):
         return reverse('holter_bp:holter_bp_detail', kwargs={'pk': self.pk})
+
+
+class HolterBPInstallationStatus(models.Model):
+    """
+    تاریخچه وضعیت‌های مرحله نصب دستگاه هلتر فشار.
+    """
+    STATUS_CHOICES = [
+        ('installed', 'نصب شده'),
+        ('reinstalled', 'نصب مجدد'),
+        ('cancelled', 'لغو نصب'),
+        ('failed', 'ناموفق'),
+        ('on_hold', 'در انتظار'),
+        # ... سایر وضعیت‌های داخلی مرحله نصب ...
+    ]
+    installation = models.ForeignKey(
+        HolterBPInstallation,
+        on_delete=models.CASCADE,
+        related_name="status_history",
+        verbose_name="نصب مربوطه"
+    )
+    status = models.CharField(
+        max_length=20,
+        choices=STATUS_CHOICES,
+        verbose_name="وضعیت نصب"
+    )
+    timestamp = models.DateTimeField(auto_now_add=True, verbose_name="زمان ثبت وضعیت")
+    changed_by = models.ForeignKey(
+        User,
+        on_delete=models.SET_NULL,
+        null=True,
+        verbose_name="تغییر دهنده وضعیت"
+    )
+    note = models.TextField(blank=True, null=True, verbose_name="یادداشت وضعیت")
+    duration_seconds = models.PositiveIntegerField(default=0, verbose_name="مدت این وضعیت (ثانیه)")
+
+    class Meta:
+        ordering = ['timestamp']
+        verbose_name = "وضعیت نصب هلتر فشار"
+        verbose_name_plural = "وضعیت‌های نصب هلتر فشار"
+
+    def __str__(self):
+        return f"نصب BP #{self.installation.pk} - وضعیت: {self.get_status_display()} @ {self.timestamp.strftime('%Y-%m-%d %H:%M')}"
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        # Update previous status duration
+        previous = (
+            HolterBPInstallationStatus.objects
+            .filter(installation=self.installation)
+            .exclude(pk=self.pk)
+            .order_by("-timestamp")
+            .first()
+        )
+        if previous and previous.duration_seconds == 0:
+            delta = (self.timestamp - previous.timestamp).total_seconds()
+            previous.duration_seconds = max(1, int(delta))
+            previous.save(update_fields=["duration_seconds"])
+
+        # Update latest_installation_status on HolterBPInstallation
+        if self.installation.latest_installation_status != self.status:
+            self.installation.latest_installation_status = self.status
+            self.installation.save(update_fields=["latest_installation_status"])
 
 
 class HolterBPReception(models.Model):
@@ -124,7 +211,19 @@ class HolterBPReception(models.Model):
     device_condition_on_return = models.TextField(blank=True, null=True, verbose_name="وضعیت دستگاه در بازگشت")
     patient_feedback = models.TextField(blank=True, null=True, verbose_name="بازخورد بیمار")
     notes = models.TextField(blank=True, null=True, verbose_name="یادداشت‌های دریافت")
-# # HISTORICAL_COMMENTED:     history = HistoricalRecords()
+
+    # NEW: Latest status for this specific reception stage
+    latest_reception_status = models.CharField(
+        max_length=25,
+        choices=[
+            ('received', 'دریافت شده'),
+            ('damaged_on_return', 'آسیب دیده در بازگشت'),
+            ('missing_accessories', 'کسر قطعات'),
+            ('on_hold_for_inspection', 'در انتظار بازرسی'),
+        ],
+        default='received',
+        verbose_name="آخرین وضعیت دریافت"
+    )
 
     class Meta:
         verbose_name = "دریافت هلتر فشار"
@@ -136,23 +235,90 @@ class HolterBPReception(models.Model):
         ]
 
     def __str__(self):
-        # ✅ پایدارسازی متد
         patient_name = getattr(getattr(self.installation, 'patient', None), 'full_name', lambda: '---')()
-        return f"دریافت هلتر از {patient_name} در تاریخ {self.receive_datetime.strftime('%Y-%m-%d')}"
+        return f"دریافت هلتر فشار از {patient_name} در تاریخ {self.receive_datetime.strftime('%Y-%m-%d')}"
 
     def clean(self):
         if self.receive_datetime < self.installation.install_datetime:
             raise ValidationError("زمان دریافت نمی‌تواند قبل از زمان نصب باشد.")
 
     def save(self, *args, **kwargs):
+        is_new = self._state.adding
         self.full_clean()
         super().save(*args, **kwargs)
+
+        # NEW: Create an initial status record if this is a new reception
+        if is_new:
+            HolterBPReceptionStatus.objects.create(
+                reception=self,
+                status=self.latest_reception_status,
+                changed_by=self.received_by,  # Assuming received_by is the appropriate user
+                note="رکورد دریافت جدید هلتر فشار ثبت شد."
+            )
 
     def get_absolute_url(self):
         return self.installation.get_absolute_url()
 
 
-# در فایل apps/holter_bp/models.py
+class HolterBPReceptionStatus(models.Model):
+    """
+    تاریخچه وضعیت‌های مرحله دریافت دستگاه هلتر فشار.
+    """
+    STATUS_CHOICES = [
+        ('received', 'دریافت شده'),
+        ('damaged_on_return', 'آسیب دیده در بازگشت'),
+        ('missing_accessories', 'کسر قطعات'),
+        ('on_hold_for_inspection', 'در انتظار بازرسی'),
+        # ... سایر وضعیت‌های داخلی مرحله دریافت ...
+    ]
+    reception = models.ForeignKey(
+        HolterBPReception,
+        on_delete=models.CASCADE,
+        related_name="status_history",
+        verbose_name="دریافت مربوطه"
+    )
+    status = models.CharField(
+        max_length=25,
+        choices=STATUS_CHOICES,
+        verbose_name="وضعیت دریافت"
+    )
+    timestamp = models.DateTimeField(auto_now_add=True, verbose_name="زمان ثبت وضعیت")
+    changed_by = models.ForeignKey(
+        User,
+        on_delete=models.SET_NULL,
+        null=True,
+        verbose_name="تغییر دهنده وضعیت"
+    )
+    note = models.TextField(blank=True, null=True, verbose_name="یادداشت وضعیت")
+    duration_seconds = models.PositiveIntegerField(default=0, verbose_name="مدت این وضعیت (ثانیه)")
+
+    class Meta:
+        ordering = ['timestamp']
+        verbose_name = "وضعیت دریافت هلتر فشار"
+        verbose_name_plural = "وضعیت‌های دریافت هلتر فشار"
+
+    def __str__(self):
+        return f"دریافت BP #{self.reception.pk} - وضعیت: {self.get_status_display()} @ {self.timestamp.strftime('%Y-%m-%d %H:%M')}"
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        previous = (
+            HolterBPReceptionStatus.objects
+            .filter(reception=self.reception)
+            .exclude(pk=self.pk)
+            .order_by("-timestamp")
+            .first()
+        )
+        if previous and previous.duration_seconds == 0:
+            delta = (self.timestamp - previous.timestamp).total_seconds()
+            previous.duration_seconds = max(1, int(delta))
+            previous.save(update_fields=["duration_seconds"])
+
+        # Update latest_reception_status on HolterBPReception
+        if self.reception.latest_reception_status != self.status:
+            self.reception.latest_reception_status = self.status
+            self.reception.save(update_fields=["latest_reception_status"])
+
 
 class HolterBPReading(models.Model):
     """
@@ -191,7 +357,21 @@ class HolterBPReading(models.Model):
     report_file = models.FileField(upload_to="holter_reports/bp/", blank=True, null=True,
                                    verbose_name="فایل گزارش نهایی")
     notes = models.TextField(blank=True, null=True, verbose_name="یادداشت خوانش")
-# # HISTORICAL_COMMENTED:     history = HistoricalRecords()
+
+    # NEW: Latest status for this specific reading stage
+    latest_reading_status = models.CharField(
+        max_length=20,
+        choices=[
+            ('in_analysis', 'در حال تحلیل'),
+            ('analyzed', 'تحلیل شده'),
+            ('reviewed', 'بازبینی شده'),
+            ('finalized', 'نهایی شده'),
+            ('rejected', 'رد شده'),  # مثلا به دلیل کیفیت پایین داده
+            ('on_hold', 'در انتظار'),  # مثلا منتظر تایید پزشک
+        ],
+        default='in_analysis',
+        verbose_name="آخرین وضعیت خوانش"
+    )
 
     class Meta:
         verbose_name = "خواندن هلتر فشار"
@@ -211,8 +391,80 @@ class HolterBPReading(models.Model):
             raise ValidationError("زمان خواندن نمی‌تواند قبل از نصب باشد.")
 
     def save(self, *args, **kwargs):
+        is_new = self._state.adding
         self.full_clean()
         super().save(*args, **kwargs)
 
+        # NEW: Create an initial status record if this is a new reading
+        if is_new:
+            HolterBPReadingStatus.objects.create(
+                reading=self,
+                status=self.latest_reading_status,
+                changed_by=self.interpreted_by,  # Assuming interpreted_by is the appropriate user
+                note="رکورد خوانش جدید هلتر فشار ثبت شد."
+            )
+
     def get_absolute_url(self):
         return self.installation.get_absolute_url()
+
+
+class HolterBPReadingStatus(models.Model):
+    """
+    تاریخچه وضعیت‌های مرحله خوانش و تحلیل گزارش هلتر فشار.
+    """
+    STATUS_CHOICES = [
+        ('in_analysis', 'در حال تحلیل'),
+        ('analyzed', 'تحلیل شده'),
+        ('reviewed', 'بازبینی شده'),
+        ('finalized', 'نهایی شده'),
+        ('rejected', 'رد شده'),  # مثلا به دلیل کیفیت پایین داده
+        ('on_hold', 'در انتظار'),  # مثلا منتظر تایید پزشک
+        # ... سایر وضعیت‌های داخلی مرحله خوانش ...
+    ]
+    reading = models.ForeignKey(
+        HolterBPReading,
+        on_delete=models.CASCADE,
+        related_name="status_history",
+        verbose_name="خوانش مربوطه"
+    )
+    status = models.CharField(
+        max_length=20,
+        choices=STATUS_CHOICES,
+        verbose_name="وضعیت خوانش"
+    )
+    timestamp = models.DateTimeField(auto_now_add=True, verbose_name="زمان ثبت وضعیت")
+    changed_by = models.ForeignKey(
+        User,
+        on_delete=models.SET_NULL,
+        null=True,
+        verbose_name="تغییر دهنده وضعیت"
+    )
+    note = models.TextField(blank=True, null=True, verbose_name="یادداشت وضعیت")
+    duration_seconds = models.PositiveIntegerField(default=0, verbose_name="مدت این وضعیت (ثانیه)")
+
+    class Meta:
+        ordering = ['timestamp']
+        verbose_name = "وضعیت خوانش هلتر فشار"
+        verbose_name_plural = "وضعیت‌های خوانش هلتر فشار"
+
+    def __str__(self):
+        return f"خوانش BP #{self.reading.pk} - وضعیت: {self.get_status_display()} @ {self.timestamp.strftime('%Y-%m-%d %H:%M')}"
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        previous = (
+            HolterBPReadingStatus.objects
+            .filter(reading=self.reading)
+            .exclude(pk=self.pk)
+            .order_by("-timestamp")
+            .first()
+        )
+        if previous and previous.duration_seconds == 0:
+            delta = (self.timestamp - previous.timestamp).total_seconds()
+            previous.duration_seconds = max(1, int(delta))
+            previous.save(update_fields=["duration_seconds"])
+
+        # Update latest_reading_status on HolterBPReading
+        if self.reading.latest_reading_status != self.status:
+            self.reading.latest_reading_status = self.status
+            self.reading.save(update_fields=["latest_reading_status"])

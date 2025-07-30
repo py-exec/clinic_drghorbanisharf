@@ -28,4 +28,7 @@ urlpatterns = [
 
     # حذف یک گزارش
     path("<int:pk>/delete/", views.tilt_test_delete, name="tilt_delete"),
+
+path('api/dashboard-stats/', views.tilt_dashboard_stats, name='tilt_dashboard_stats'),
+
 ]

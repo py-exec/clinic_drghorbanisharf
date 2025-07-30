@@ -10,7 +10,7 @@
         <form method="post">
             {% csrf_token %}
             <div class="row g-3">
-                <div class="col-md-6">{{ form.staff.label_tag }}{{ form.staff }}</div>
+                <div class="col-md-6">{{ form.staff.label_tag }}{{ form.USER }}</div>
                 <div class="col-md-6">{{ form.start_date.label_tag }}{{ form.start_date }}</div>
                 <div class="col-md-6">{{ form.end_date.label_tag }}{{ form.end_date }}</div>
                 <div class="col-md-6">{{ form.leave_type.label_tag }}{{ form.leave_type }}</div>

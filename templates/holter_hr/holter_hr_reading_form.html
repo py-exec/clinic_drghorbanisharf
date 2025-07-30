@@ -1,0 +1,159 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}
+{% if form.instance.pk %}
+ویرایش گزارش خوانش هلتر ضربان
+{% else %}
+ثبت گزارش خوانش هلتر ضربان
+{% endif %}
+{% endblock %}
+
+{% block content %}
+<h4 class="py-3 mb-4">
+    <span class="text-muted fw-light">خدمات کلینیکی /</span>
+    {% if form.instance.pk %}
+    ویرایش گزارش خوانش هلتر ضربان
+    {% else %}
+    ثبت گزارش خوانش جدید
+    {% endif %}
+</h4>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card mb-4">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                {% if form.instance.pk %}
+                <h5 class="mb-0">ویرایش گزارش خوانش برای بیمار: {{ form.instance.installation.patient.full_name }}</h5>
+                {% else %}
+                <h5 class="mb-0">ثبت گزارش خوانش برای بیمار: {{ installation.patient.full_name }}</h5>
+                <small class="text-muted">کد پیگیری نصب: {{ installation.tracking_code }}</small>
+                {% endif %}
+            </div>
+            <div class="card-body">
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+
+                    {% if form.non_field_errors %}
+                    <div class="alert alert-danger">
+                        {% for error in form.non_field_errors %}
+                        <p class="mb-0">{{ error }}</p>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="{{ form.read_datetime.id_for_label }}" class="form-label">{{ form.read_datetime.label }}</label>
+                            {{ form.read_datetime }}
+                            {% if form.read_datetime.errors %}
+                                <div class="invalid-feedback d-block">{% for error in form.read_datetime.errors %}{{ error }}{% endfor %}</div>
+                            {% endif %}
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="{{ form.interpreted_by.id_for_label }}" class="form-label">{{ form.interpreted_by.label }}</label>
+                            {{ form.interpreted_by }}
+                            {% if form.interpreted_by.errors %}
+                                <div class="invalid-feedback d-block">{% for error in form.interpreted_by.errors %}{{ error }}{% endfor %}</div>
+                            {% endif %}
+                        </div>
+
+                        <div class="col-12"><h6 class="mt-4 mb-3 text-muted">جزئیات ضربان قلب</h6><hr class="mt-0"></div>
+                        <div class="col-md-4 mb-3">
+                            <label for="{{ form.avg_heart_rate.id_for_label }}" class="form-label">{{ form.avg_heart_rate.label }}</label>
+                            {{ form.avg_heart_rate }}
+                            {% if form.avg_heart_rate.errors %}
+                                <div class="invalid-feedback d-block">{% for error in form.avg_heart_rate.errors %}{{ error }}{% endfor %}</div>
+                            {% endif %}
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label for="{{ form.min_heart_rate.id_for_label }}" class="form-label">{{ form.min_heart_rate.label }}</label>
+                            {{ form.min_heart_rate }}
+                            {% if form.min_heart_rate.errors %}
+                                <div class="invalid-feedback d-block">{% for error in form.min_heart_rate.errors %}{{ error }}{% endfor %}</div>
+                            {% endif %}
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label for="{{ form.min_hr_time.id_for_label }}" class="form-label">{{ form.min_hr_time.label }}</label>
+                            {{ form.min_hr_time }}
+                            {% if form.min_hr_time.errors %}
+                                <div class="invalid-feedback d-block">{% for error in form.min_hr_time.errors %}{{ error }}{% endfor %}</div>
+                            {% endif %}
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label for="{{ form.max_heart_rate.id_for_label }}" class="form-label">{{ form.max_heart_rate.label }}</label>
+                            {{ form.max_heart_rate }}
+                            {% if form.max_heart_rate.errors %}
+                                <div class="invalid-feedback d-block">{% for error in form.max_heart_rate.errors %}{{ error }}{% endfor %}</div>
+                            {% endif %}
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label for="{{ form.max_hr_time.id_for_label }}" class="form-label">{{ form.max_hr_time.label }}</label>
+                            {{ form.max_hr_time }}
+                            {% if form.max_hr_time.errors %}
+                                <div class="invalid-feedback d-block">{% for error in form.max_hr_time.errors %}{{ error }}{% endfor %}</div>
+                            {% endif %}
+                        </div>
+
+                        <div class="col-12"><h6 class="mt-4 mb-3 text-muted">HRV Metrics</h6><hr class="mt-0"></div>
+                        <div class="col-md-4 mb-3">
+                            <label for="{{ form.sdnn.id_for_label }}" class="form-label">{{ form.sdnn.label }}</label>
+                            {{ form.sdnn }}
+                            {% if form.sdnn.errors %}
+                                <div class="invalid-feedback d-block">{% for error in form.sdnn.errors %}{{ error }}{% endfor %}</div>
+                            {% endif %}
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label for="{{ form.rmssd.id_for_label }}" class="form-label">{{ form.rmssd.label }}</label>
+                            {{ form.rmssd }}
+                            {% if form.rmssd.errors %}
+                                <div class="invalid-feedback d-block">{% for error in form.rmssd.errors %}{{ error }}{% endfor %}</div>
+                            {% endif %}
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label for="{{ form.pnn50.id_for_label }}" class="form-label">{{ form.pnn50.label }}</label>
+                            {{ form.pnn50 }}
+                            {% if form.pnn50.errors %}
+                                <div class="invalid-feedback d-block">{% for error in form.pnn50.errors %}{{ error }}{% endfor %}</div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="col-md-12 mb-3">
+                            <label for="{{ form.summary.id_for_label }}" class="form-label">{{ form.summary.label }}</label>
+                            {{ form.summary }}
+                            {% if form.summary.errors %}
+                                <div class="invalid-feedback d-block">{% for error in form.summary.errors %}{{ error }}{% endfor %}</div>
+                            {% endif %}
+                        </div>
+                        <div class="col-md-12 mb-3">
+                            <label for="{{ form.report_file.id_for_label }}" class="form-label">{{ form.report_file.label }}</label>
+                            {{ form.report_file }}
+                            {% if form.instance.report_file %}
+                            <div class="form-text">فایل فعلی: <a href="{{ form.instance.report_file.url }}" target="_blank">{{ form.instance.report_file.name}}</a></div>
+                            {% endif %}
+                            {% if form.report_file.errors %}
+                                <div class="invalid-feedback d-block">{% for error in form.report_file.errors %}{{ error }}{% endfor %}</div>
+                            {% endif %}
+                        </div>
+                        <div class="col-md-12 mb-3">
+                            <label for="{{ form.notes.id_for_label }}" class="form-label">{{ form.notes.label }}</label>
+                            {{ form.notes }}
+                            {% if form.notes.errors %}
+                                <div class="invalid-feedback d-block">{% for error in form.notes.errors %}{{ error }}{% endfor %}</div>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div class="mt-4">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bx bx-save me-1"></i>
+                            ذخیره گزارش
+                        </button>
+                        <a href="{% url 'holter_hr:holter_hr_worklist' %}" class="btn btn-secondary">بازگشت به لیست کار</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,7 +1,7 @@
 # apps/holter_bp/views.py
 
-from apps.appointments.models import Appointment
-from apps.reception.models import ReceptionService
+from django.contrib.contenttypes.models import ContentType
+from apps.reception.models import ReceptionService, ServiceType, ReceptionServiceStatus
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth.mixins import PermissionRequiredMixin, LoginRequiredMixin
@@ -10,12 +10,16 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse, reverse_lazy
 from django.utils import timezone
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
+from django.db.models.expressions import Exists
+from django.db.models import Subquery, OuterRef, F, Count
 
 from .forms import HolterBPInstallationForm, HolterBPReceptionForm, HolterBPReadingForm
-from .models import HolterBPInstallation, HolterBPReception, HolterBPReading
+from .models import HolterBPInstallation, HolterBPReception, HolterBPReading, \
+    HolterBPInstallationStatus, HolterBPReceptionStatus, HolterBPReadingStatus
 
 
 # --- داشبورد کاری و آرشیو ---
+
 
 @login_required
 @permission_required("holter_bp.view_holterbpinstallation", raise_exception=True)
@@ -25,45 +29,109 @@ def holter_bp_worklist_view(request):
     """
     today = timezone.now().date()
 
-    # --- محاسبه آمار بالای صفحه ---
+    # Subquery برای گرفتن آخرین وضعیت هر ReceptionService
+    latest_service_status_subquery = Subquery(
+        ReceptionServiceStatus.objects.filter(
+            reception_service=OuterRef('pk')
+        ).order_by('-timestamp').values('status')[:1]
+    )
 
-    # تعداد نصب‌هایی که امروز تکمیل شده و گزارش خوانش برای آنها ثبت شده
-    done_today_count = HolterBPReading.objects.filter(
-        read_datetime__date=today
-    ).count()
+    # Get the ServiceType object for Holter BP (using the code 'BP')
+    holter_bp_service_type = None
+    try:
+        holter_bp_service_type = ServiceType.objects.get(code='BP')
+    except ServiceType.DoesNotExist:
+        messages.error(request, "نوع خدمت 'هولتر فشار' (کد BP) در سیستم یافت نشد. لطفاً آن را ایجاد کنید.")
+        # If service type is not found, return empty lists and 0 for stats
+        context = {
+            'waiting_for_install_list': [],
+            'waiting_for_return_list': [],
+            'waiting_for_reading_list': [],
+            'done_today': 0,
+            'in_queue_total': 0,
+        }
+        return render(request, 'holter_bp/holter_bp_worklist.html', context)
 
-    # --- تهیه لیست‌های کاری ---
+    # Base query for all Holter BP services for today, with latest ReceptionService status
+    holter_relevant_reception_services = ReceptionService.objects.filter(
+        tariff__service_type=holter_bp_service_type,  # Filter by the correct service type ('BP')
+        created_at__date=today,  # Services created today
+    ).annotate(
+        latest_service_status=latest_service_status_subquery  # This is the status from ReceptionServiceStatus
+    ).select_related(
+        'reception__patient__user', 'tariff__service_type'
+    )
 
-    # ۱. لیست انتظار نصب
-    installed_service_ids = HolterBPInstallation.objects.values_list('object_id', flat=True)
-    waiting_for_install_list = ReceptionService.objects.filter(
-        tariff__service_type__code='holter_bp',
-        created_at__date=today,
-        status__in=['pending', 'in_progress']
-    ).exclude(
-        id__in=installed_service_ids
-    ).select_related('reception__patient__user').order_by('created_at')
+    # Dynamic Exists checks (always based on ReceptionService PK and GFK fields)
+    reception_service_content_type = ContentType.objects.get_for_model(ReceptionService)
 
-    # ۲. لیست انتظار بازگشت
+    has_holter_installation_qs = Exists(
+        HolterBPInstallation.objects.filter(
+            content_type=reception_service_content_type,
+            object_id=OuterRef('pk')
+        )
+    )
+
+    # Annotate holter_relevant_reception_services for the 'install' queue and for stats calculation
+    holter_reception_services_annotated_for_install = holter_relevant_reception_services.annotate(
+        _has_installation=has_holter_installation_qs,
+    )
+
+    # 1. لیست انتظار نصب (ReceptionServices that need an installation)
+    waiting_for_install_list = holter_reception_services_annotated_for_install.filter(
+        latest_service_status__in=['pending', 'started'],
+        _has_installation=False  # Only services without an installation yet
+    ).order_by('created_at')
+
+    # 2. لیست انتظار بازگشت (HolterBPInstallations that have been installed but not received)
+    # This query directly starts from HolterBPInstallation, which has direct FKs to patient
     waiting_for_return_list = HolterBPInstallation.objects.filter(
-        reception_record__isnull=True
+        content_type=reception_service_content_type,  # GFK content_type
+        object_id__in=holter_relevant_reception_services.values('pk'),  # Link to relevant ReceptionServices
+        reception_record__isnull=True  # No reception record yet
     ).select_related('patient').order_by('install_datetime')
 
-    # ۳. لیست انتظار خوانش
+    # 3. لیست انتظار خوانش (HolterBPInstallations that have been received but not read)
+    # This query directly starts from HolterBPInstallation
     waiting_for_reading_list = HolterBPInstallation.objects.filter(
-        reception_record__isnull=False,
-        reading__isnull=True
+        content_type=reception_service_content_type,  # GFK content_type
+        object_id__in=holter_relevant_reception_services.values('pk'),  # Link to relevant ReceptionServices
+        reception_record__isnull=False,  # Has a reception record
+        reading__isnull=True  # No reading record yet
     ).select_related('patient', 'reception_record').order_by('reception_record__receive_datetime')
 
-    # تعداد کل وظایف امروز (نصب + بازگشت + خوانش)
-    total_tasks_count = waiting_for_install_list.count() + waiting_for_return_list.count() + waiting_for_reading_list.count()
+    # Calculate Dashboard Stats
+    # Re-annotate the original set of today's holter services with all existence flags for accurate counting.
+    has_holter_reception_qs_for_stats = Exists(
+        HolterBPReception.objects.filter(
+            installation__content_type=reception_service_content_type,
+            installation__object_id=OuterRef('pk')
+        )
+    )
+    has_holter_reading_qs_for_stats = Exists(
+        HolterBPReading.objects.filter(
+            installation__content_type=reception_service_content_type,
+            installation__object_id=OuterRef('pk')
+        )
+    )
+
+    holter_services_for_stats = holter_relevant_reception_services.annotate(
+        _has_installation=has_holter_installation_qs,  # Already defined above
+        _has_reception=has_holter_reception_qs_for_stats,
+        _has_reading=has_holter_reading_qs_for_stats
+    )
+
+    done_today = holter_services_for_stats.filter(latest_service_status='completed').count()
+
+    # Ensure in_queue_total sums the counts from the *actual lists* used for display
+    in_queue_total = waiting_for_install_list.count() + waiting_for_return_list.count() + waiting_for_reading_list.count()
 
     context = {
-        'done_today': done_today_count,
-        'in_queue_total': total_tasks_count,  # مجموع تمام صف‌ها
         'waiting_for_install_list': waiting_for_install_list,
         'waiting_for_return_list': waiting_for_return_list,
         'waiting_for_reading_list': waiting_for_reading_list,
+        'done_today': done_today,
+        'in_queue_total': in_queue_total,
     }
     return render(request, 'holter_bp/holter_bp_worklist.html', context)
 
@@ -116,7 +184,11 @@ class HolterBPInstallationCreateView(PermissionRequiredMixin, LoginRequiredMixin
     permission_required = 'holter_bp.add_holterbpinstallation'
 
     def get_initial(self):
-        return {'technician': self.request.user}
+        # NEW: Set technician and install_datetime to current user and current time
+        return {
+            'technician': self.request.user,
+            'install_datetime': timezone.now()  # Current time
+        }
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -125,11 +197,27 @@ class HolterBPInstallationCreateView(PermissionRequiredMixin, LoginRequiredMixin
 
     def form_valid(self, form):
         reception_service = get_object_or_404(ReceptionService, pk=self.kwargs['service_id'])
+
+        # بررسی اگر قبلا نصب ثبت شده باشد
+        if HolterBPInstallation.objects.filter(reception_service=reception_service).exists():
+            messages.warning(self.request, "برای این خدمت قبلاً رکورد نصب هلتر ثبت شده است.")
+            # اگر وجود دارد، به صفحه جزئیات آن ریدایرکت کن
+            existing_installation = HolterBPInstallation.objects.get(reception_service=reception_service)
+            return redirect(existing_installation.get_absolute_url())
+
         form.instance.reception_service = reception_service
         form.instance.patient = reception_service.reception.patient
-        form.instance.created_by = self.request.user
+        form.instance.created_by = self.request.user  # This is redundant if technician is created_by, but safe to keep
+
+        response = super().form_valid(form)  # Save the installation first
+
+        # IMPORTANT: No direct change_service_status call here.
+        # It's handled by HolterBPInstallation.save() (which creates HolterBPInstallationStatus)
+        # and HolterBPInstallationStatus.save() (which updates HolterBPInstallation.latest_installation_status)
+        # and then by signals.py (which updates ReceptionServiceStatus).
+
         messages.success(self.request, "مرحله نصب دستگاه با موفقیت ثبت شد.")
-        return super().form_valid(form)
+        return response
 
 
 class HolterBPInstallationUpdateView(PermissionRequiredMixin, LoginRequiredMixin, UpdateView):
@@ -138,8 +226,13 @@ class HolterBPInstallationUpdateView(PermissionRequiredMixin, LoginRequiredMixin
     template_name = 'holter_bp/holter_bp_install_form.html'
     permission_required = 'holter_bp.change_holterbpinstallation'
 
-    def get_success_url(self):
+    def form_valid(self, form):
+        response = super().form_valid(form)
+        # No direct change_service_status call here
         messages.success(self.request, "اطلاعات نصب با موفقیت ویرایش شد.")
+        return response
+
+    def get_success_url(self):
         return self.object.get_absolute_url()
 
 
@@ -163,8 +256,16 @@ class HolterBPReceptionCreateView(PermissionRequiredMixin, LoginRequiredMixin, C
             return redirect(installation.get_absolute_url())
 
         form.instance.installation = installation
+
+        response = super().form_valid(form)
+
+        # IMPORTANT: No direct change_service_status call here.
+        # It's handled by HolterBPReception.save() (which creates HolterBPReceptionStatus)
+        # and HolterBPReceptionStatus.save() (which updates HolterBPReception.latest_reception_status)
+        # and then by signals.py.
+
         messages.success(self.request, "مرحله دریافت دستگاه با موفقیت ثبت شد.")
-        return super().form_valid(form)
+        return response
 
     def get_success_url(self):
         return self.object.installation.get_absolute_url()
@@ -175,6 +276,12 @@ class HolterBPReceptionUpdateView(PermissionRequiredMixin, LoginRequiredMixin, U
     form_class = HolterBPReceptionForm
     template_name = 'holter_bp/holter_bp_reception_form.html'
     permission_required = 'holter_bp.change_holterbpreception'
+
+    def form_valid(self, form):
+        response = super().form_valid(form)
+        # No direct change_service_status call here
+        messages.success(self.request, "اطلاعات دریافت با موفقیت ویرایش شد.")
+        return response
 
     def get_success_url(self):
         messages.success(self.request, "اطلاعات دریافت با موفقیت ویرایش شد.")
@@ -201,8 +308,16 @@ class HolterBPReadingCreateView(PermissionRequiredMixin, LoginRequiredMixin, Cre
             return redirect(installation.get_absolute_url())
 
         form.instance.installation = installation
+
+        response = super().form_valid(form)
+
+        # IMPORTANT: No direct change_service_status call here.
+        # It's handled by HolterBPReading.save() (which creates HolterBPReadingStatus)
+        # and HolterBPReadingStatus.save() (which updates HolterBPReading.latest_reading_status)
+        # and then by signals.py.
+
         messages.success(self.request, "گزارش خوانش با موفقیت ثبت شد.")
-        return super().form_valid(form)
+        return response
 
     def get_success_url(self):
         return self.object.installation.get_absolute_url()
@@ -214,6 +329,11 @@ class HolterBPReadingUpdateView(PermissionRequiredMixin, LoginRequiredMixin, Upd
     template_name = 'holter_bp/holter_bp_reading_form.html'
     permission_required = 'holter_bp.change_holterbpreading'
 
+    def form_valid(self, form):
+        response = super().form_valid(form)
+        messages.success(self.request, "اطلاعات خوانش با موفقیت ویرایش شد.")
+        return response
+
     def get_success_url(self):
-        messages.success(self.request, "گزارش خوانش با موفقیت ویرایش شد.")
+        messages.success(self.request, "اطلاعات خوانش با موفقیت ویرایش شد.")
         return self.object.installation.get_absolute_url()

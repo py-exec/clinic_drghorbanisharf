@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block title %}حذف فرآیند هلتر ضربان{% endblock %}
+
+{% block content %}
+    <div class="container mt-4">
+        <h4 class="mb-3">آیا مطمئن هستید که می‌خواهید این فرآیند هلتر ضربان را حذف کنید؟</h4>
+
+        <div class="alert alert-warning">
+            <p class="mb-1">با حذف این رکورد، تمامی مراحل مربوط به **نصب، دریافت، و خوانش** این دستگاه هلتر برای این بیمار نیز حذف خواهند شد.</p>
+            <p class="fw-bold">لطفاً قبل از حذف، از صحت تصمیم خود اطمینان حاصل کنید.</p>
+            <hr>
+            <ul>
+                <li><strong>نام بیمار:</strong> {{ installation.patient.full_name }}</li>
+                <li><strong>کد پیگیری:</strong> {{ installation.tracking_code }}</li>
+                <li><strong>تاریخ نصب:</strong> {{ installation.install_datetime|date:"Y/m/d H:i" }}</li>
+                {% if installation.reception_record %}
+                    <li><strong>تاریخ دریافت:</strong> {{ installation.reception_record.receive_datetime|date:"Y/m/d H:i" }}</li>
+                {% endif %}
+                {% if installation.reading %}
+                    <li><strong>تاریخ خوانش:</strong> {{ installation.reading.read_datetime|date:"Y/m/d H:i" }}</li>
+                    <li><strong>تحلیل‌گر:</strong> {{ installation.reading.interpreted_by.get_full_name }}</li>
+                {% endif %}
+            </ul>
+        </div>
+
+        <form method="post">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-danger">🗑 بله، حذف شود</button>
+            <a href="{% url 'holter_hr:holter_hr_worklist' %}" class="btn btn-secondary">بازگشت به لیست کار</a>
+        </form>
+    </div>
+{% endblock %}

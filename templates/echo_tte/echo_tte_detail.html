@@ -1,0 +1,178 @@
+{% extends "base.html" %}
+{% load static %}
+{% load humanize %}
+
+{% block title %}جزئیات گزارش اکو (TTE) - {{ report.patient.full_name }}{% endblock %}
+
+{% block content %}
+<h4 class="py-3 mb-4">
+    <span class="text-muted fw-light">گزارش‌ها / اکو TTE /</span> جزئیات گزارش
+</h4>
+
+<div class="row">
+    <div class="col-lg-8 mx-auto">
+        <div class="card mb-4">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">گزارش اکوکاردیوگرافی از راه قفسه سینه (TTE)</h5>
+                <div>
+                    <a href="{% url 'tte:tte_update' report.pk %}" class="btn btn-sm btn-primary me-2">
+                        <i class="bx bx-edit-alt me-1"></i> ویرایش
+                    </a>
+                    <a href="{% url 'tte:tte_list' %}" class="btn btn-sm btn-outline-secondary">
+                        <i class="bx bx-arrow-back me-1"></i> بازگشت به لیست
+                    </a>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <strong>بیمار:</strong>
+                        <a href="{% url 'patient:patient_detail' report.patient.pk %}">{{ report.patient.full_name }} (کد ملی: {{ report.patient.national_code|default:"--" }})</a>
+                    </div>
+                    <div class="col-md-6">
+                        <strong>کد پذیرش:</strong>
+                        {% if report.reception_service %}
+                            <a href="{% url 'reception:service_detail' report.reception_service.pk %}">
+                                {{ report.reception_service.reception.admission_code }}
+                            </a>
+                        {% else %}
+                            --
+                        {% endif %}
+                    </div>
+                </div>
+                <hr>
+
+                <h6><i class="bx bx-info-circle me-1"></i> اطلاعات عمومی</h6>
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <strong>نسخه:</strong> {{ report.prescription.title|default:"--" }}
+                    </div>
+                    <div class="col-md-6">
+                        <strong>تاریخ و زمان معاینه:</strong> {{ report.exam_datetime|date:"Y/m/d - H:i" }}
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <strong>تکنسین:</strong> {{ report.technician.full_name|default:"--" }}
+                    </div>
+                    <div class="col-md-6">
+                        <strong>پزشک گزارش‌دهنده:</strong> {{ report.reporting_physician.full_name|default:"--" }}
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-12">
+                        <strong>یادداشت تکنسین:</strong> {{ report.technician_note|default:"--" }}
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <strong>کیفیت تصویر:</strong> {{ report.image_quality|default:"--" }}
+                    </div>
+                    <div class="col-md-6">
+                        <strong>دلیل محدودیت تصویر:</strong> {{ report.image_limitation_reason|default:"--" }}
+                    </div>
+                </div>
+                 <div class="row mb-3">
+                    <div class="col-md-6">
+                        <strong>نوع پروب:</strong> {{ report.probe_type|default:"--" }}
+                    </div>
+                     <div class="col-md-6">
+                        <strong>هماهنگی ECG:</strong> {{ report.ecg_sync|yesno:"بله,خیر" }}
+                    </div>
+                 </div>
+                 <div class="row mb-3">
+                    <div class="col-md-6">
+                        <strong>همکاری بیمار:</strong> {{ report.patient_cooperation|default:"--" }}
+                    </div>
+                     <div class="col-md-6">
+                        <strong>تمام نماها گرفته شد:</strong> {{ report.all_views_taken|yesno:"بله,خیر" }}
+                    </div>
+                 </div>
+
+                <hr>
+                <h6><i class="bx bx-heart me-1"></i> عملکرد بطن چپ</h6>
+                <div class="row mb-3">
+                    <div class="col-md-6"><strong>EF:</strong> {{ report.ef|default:"--" }}</div>
+                    <div class="col-md-6"><strong>LV Dysfunction:</strong> {{ report.lv_dysfunction|default:"--" }}</div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-6"><strong>LVEDD:</strong> {{ report.lvedd|default:"--" }}</div>
+                    <div class="col-md-6"><strong>LVESD:</strong> {{ report.lvesd|default:"--" }}</div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-6"><strong>GLS:</strong> {{ report.gls|default:"--" }}</div>
+                    <div class="col-md-6"><strong>Image Type:</strong> {{ report.image_type|default:"--" }}</div>
+                </div>
+
+                <hr>
+                <h6><i class="bx bx-plus-medical me-1"></i> عملکرد بطن راست و فشار ریوی</h6>
+                <div class="row mb-3">
+                    <div class="col-md-6"><strong>TAPSE:</strong> {{ report.tapse|default:"--" }}</div>
+                    <div class="col-md-6"><strong>SPAP:</strong> {{ report.spap|default:"--" }}</div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-12"><strong>IVC Status:</strong> {{ report.ivc_status|default:"--" }}</div>
+                </div>
+
+                <hr>
+                <h6><i class="bx bx-plus-medical me-1"></i> دریچه‌ها</h6>
+                <div class="row mb-3">
+                    <div class="col-md-4"><strong>میترال (نوع):</strong> {{ report.mitral_type|default:"--" }}</div>
+                    <div class="col-md-4"><strong>میترال (شدت):</strong> {{ report.mitral_severity|default:"--" }}</div>
+                    <div class="col-md-4"><strong>میترال (ویژگی‌ها):</strong> {{ report.mitral_features|default:"--" }}</div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-4"><strong>آئورت (نوع):</strong> {{ report.aortic_type|default:"--" }}</div>
+                    <div class="col-md-4"><strong>آئورت (شدت):</strong> {{ report.aortic_severity|default:"--" }}</div>
+                    <div class="col-md-4"><strong>آئورت (ویژگی‌ها):</strong> {{ report.aortic_features|default:"--" }}</div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-4"><strong>تریکوسپید (نوع):</strong> {{ report.tricuspid_type|default:"--" }}</div>
+                    <div class="col-md-4"><strong>تریکوسپید (شدت):</strong> {{ report.tricuspid_severity|default:"--" }}</div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-4"><strong>پولموناری (نوع):</strong> {{ report.pulmonary_type|default:"--" }}</div>
+                    <div class="col-md-4"><strong>پولموناری (شدت):</strong> {{ report.pulmonary_severity|default:"--" }}</div>
+                </div>
+
+                <hr>
+                <h6><i class="bx bx-notepad me-1"></i> سایر یافته‌ها</h6>
+                <div class="row mb-3">
+                    <div class="col-md-6"><strong>افیوژن پریکارد:</strong> {{ report.pericardial_effusion|default:"--" }}</div>
+                    <div class="col-md-6"><strong>افیوژن پلورال:</strong> {{ report.pleural_effusion|default:"--" }}</div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-6"><strong>توده یا لخته:</strong> {{ report.mass_or_clot|default:"--" }}</div>
+                    <div class="col-md-6"><strong>آنوریسم:</strong> {{ report.aneurysm|default:"--" }}</div>
+                </div>
+
+                <hr>
+                <h6><i class="bx bx-file-blank me-1"></i> نظر نهایی پزشک</h6>
+                <div class="row mb-3">
+                    <div class="col-md-6"><strong>نیاز به اکوی پیشرفته:</strong> {{ report.need_advanced_echo|default:"--" }}</div>
+                    <div class="col-md-6"><strong>دلیل اکوی پیشرفته:</strong> {{ report.reason_advanced_echo|default:"--" }}</div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-6"><strong>تاریخ گزارش:</strong> {{ report.report_date|date:"Y/m/d" }}</div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-12"><strong>گزارش نهایی:</strong> <p class="text-break">{{ report.final_report|default:"--" }}</p></div>
+                </div>
+
+                {% if report.upload_file %}
+                <hr>
+                <h6><i class="bx bx-paperclip me-1"></i> فایل پیوست</h6>
+                <div class="row mb-3">
+                    <div class="col-md-12">
+                        <a href="{{ report.upload_file.url }}" target="_blank" class="btn btn-sm btn-outline-info">
+                            <i class="bx bx-download me-1"></i> دانلود فایل پیوست
+                        </a>
+                    </div>
+                </div>
+                {% endif %}
+
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

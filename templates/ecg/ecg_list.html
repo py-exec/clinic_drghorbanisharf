@@ -1,72 +1,125 @@
 {% extends "base.html" %}
 {% load static %}
-{% block title %}لیست نوار قلب (ECG){% endblock %}
+{% load humanize %}
+
+{% block title %}آرشیو گزارش‌های نوار قلب (ECG){% endblock %}
 
 {% block content %}
-<h2 class="mb-4 text-center">لیست نوار قلب (ECG)</h2>
+<h4 class="py-3 mb-4">
+    <span class="text-muted fw-light">گزارش‌های کلینیکی /</span> آرشیو نوار قلب (ECG)
+</h4>
 
 <div class="card">
-    <!-- هدر -->
-    <div class="card-header d-flex flex-column flex-md-row justify-content-between align-items-center gap-2">
-        <h5 class="mb-0">گزارش‌های ECG ثبت‌شده</h5>
-        <div class="d-flex flex-wrap gap-2 align-items-center">
-
-            <!-- تعداد نمایش -->
-            <select id="per-page-select" class="form-select form-select-sm" style="width: 100px;">
-                <option value="10">10 تایی</option>
-                <option value="25">25 تایی</option>
-                <option value="50" selected>50 تایی</option>
-                <option value="100">100 تایی</option>
-            </select>
-
-            <!-- افزودن -->
-            <a href="{% url 'ecg:ecg-create' patient_id=1 %}" class="btn btn-success btn-sm">
-                ➕ افزودن ECG
-            </a>
-
-            <!-- PDF -->
-            <button class="btn btn-outline-danger btn-sm">🖨 خروجی PDF</button>
-        </div>
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <h5 class="mb-0">لیست تمام گزارش‌های ECG</h5>
+        <a href="{% url 'ecg:ecg_worklist' %}" class="btn btn-sm btn-outline-primary">
+            <i class="bx bx-list-ul me-1"></i> داشبورد کاری
+        </a>
     </div>
+    <div class="table-responsive text-nowrap">
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>کد پذیرش</th>
+                    <th>بیمار</th>
+                    <th>تاریخ و زمان ثبت</th>
+                    <th>نوع نوار</th>
+                    <th>کیفیت</th>
+                    <th>تکنسین</th>
+                    <th>پزشک تأییدکننده</th>
+                    <th class="text-center">عملیات</th>
+                </tr>
+            </thead>
+            <tbody class="table-border-bottom-0">
+                {% for report in reports %}
+                <tr>
+                    <td>
+                        {% if report.reception_service %}
+                            <a href="{% url 'reception:service_detail' report.reception_service.pk %}">
+                                <strong>{{ report.reception_service.reception.admission_code }}</strong>
+                            </a>
+                        {% else %}
+                            N/A
+                        {% endif %}
+                    </td>
+                    <td>
+                        <a href="{% url 'patient:patient_detail' report.patient.pk %}">
+                            <strong>{{ report.patient.full_name }}</strong>
+                        </a>
+                    </td>
+                    <td>{{ report.created_at|date:"Y/m/d - H:i" }}</td>
+                    <td>{{ report.get_ecg_type_display }}</td>
+                    <td>{{ report.get_ecg_quality_display }}</td>
+                    <td>{{ report.tech_signature.full_name|default:"--" }}</td>
+                    <td>{{ report.doctor_signature.full_name|default:"--" }}</td>
+                    <td class="text-center">
+                        <div class="dropdown">
+                            <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
+                                <i class="bx bx-dots-vertical-rounded"></i>
+                            </button>
+                            <div class="dropdown-menu">
+                                <a class="dropdown-item" href="{% url 'ecg:ecg_detail' report.pk %}">
+                                    <i class="bx bx-show-alt me-1"></i> مشاهده
+                                </a>
+                                <a class="dropdown-item" href="{% url 'ecg:ecg_update' report.pk %}">
+                                    <i class="bx bx-edit-alt me-1"></i> ویرایش
+                                </a>
+                                <form action="{% url 'ecg:ecg_delete' report.pk %}" method="post" style="display:inline;">
+                                    {% csrf_token %}
+                                    <button type="submit" class="dropdown-item text-danger" onclick="return confirm('آیا از حذف این گزارش مطمئن هستید؟');">
+                                        <i class="bx bx-trash me-1"></i> حذف
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="8" class="text-center py-4">گزارش نوار قلب (ECG) یافت نشد.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <div class="card-footer d-flex justify-content-center">
+        <nav aria-label="Page navigation">
+            <ul class="pagination">
+                {% if page_obj.has_previous %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page=1" aria-label="First">
+                            <i class="tf-icon bx bx-chevrons-right"></i>
+                        </a>
+                    </li>
+                    <li class="page-item prev">
+                        <a class="page-link" href="?page={{ page_obj.previous_page_number }}" aria-label="Previous">
+                            <i class="tf-icon bx bx-chevron-right"></i>
+                        </a>
+                    </li>
+                {% endif %}
 
-    <!-- جدول -->
-    <div class="card-body pt-0">
-        <div id="ecg-table">
-  {% include "ecg/partials/_ecg_table.html" %}
-        </div>
+                {% for num in page_obj.paginator.page_range %}
+                    {% if page_obj.number == num %}
+                        <li class="page-item active"><a class="page-link" href="#">{{ num }}</a></li>
+                    {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                        <li class="page-item"><a class="page-link" href="?page={{ num }}">{{ num }}</a></li>
+                    {% endif %}
+                {% endfor %}
 
+                {% if page_obj.has_next %}
+                    <li class="page-item next">
+                        <a class="page-link" href="?page={{ page_obj.next_page_number }}" aria-label="Next">
+                            <i class="tf-icon bx bx-chevron-left"></i>
+                        </a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}" aria-label="Last">
+                            <i class="tf-icon bx bx-chevrons-left"></i>
+                        </a>
+                    </li>
+                {% endif %}
+            </ul>
+        </nav>
     </div>
 </div>
-
-{% endblock %}
-
-{% block extra_js %}
-<script>
-const ecgSocket = new WebSocket(`ws://${window.location.host}/ws/reception/list/`);
-
-ecgSocket.onopen = () => console.log("✅ WebSocket ECG وصل شد");
-ecgSocket.onclose = () => console.warn("❌ WebSocket ECG قطع شد");
-ecgSocket.onerror = (err) => console.error("🚫 خطا در WebSocket ECG:", err);
-
-ecgSocket.onmessage = function(event) {
-  const data = JSON.parse(event.data);
-  console.log("📩 پیام WebSocket دریافت شد:", data);
-
-  if (data.service_type === "ecg" && ["created", "updated", "deleted"].includes(data.action)) {
-    console.log("🔄 درخواست بروزرسانی جدول ECG...");
-    fetch("/ecg/partial/table/")
-      .then(res => {
-        if (!res.ok) throw new Error("❌ وضعیت پاسخ fetch نامناسب بود!");
-        return res.json();
-      })
-      .then(data => {
-        console.log("✅ جدول ECG دریافت شد:", data);
-        document.getElementById("ecg-table").innerHTML = data.html;
-      })
-      .catch(err => console.error("❌ خطا در بروزرسانی جدول ECG:", err));
-  } else {
-    console.log("ℹ️ این پیام ربطی به ECG نداشت یا اکشن معتبر نبود.");
-  }
-};
-</script>
 {% endblock %}

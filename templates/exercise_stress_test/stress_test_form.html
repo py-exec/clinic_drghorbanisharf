@@ -1,0 +1,435 @@
+{% extends "base.html" %}
+{% load static %}
+{% load humanize %}
+
+{% block title %}
+    {% if form.instance.pk %}ویرایش{% else %}ثبت{% endif %} گزارش تست ورزش
+{% endblock %}
+
+{% block content %}
+<h4 class="py-3 mb-4">
+    <span class="text-muted fw-light">گزارش‌ها / تست ورزش /</span>
+    {% if form.instance.pk %}ویرایش گزارش{% else %}ثبت گزارش جدید{% endif %}
+</h4>
+
+<div class="row">
+    <div class="col-lg-10 mx-auto">
+        <div class="card mb-4">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">
+                    {% if form.instance.pk %}ویرایش گزارش تست ورزش / استرس اکو{% else %}ثبت گزارش جدید تست ورزش / استرس اکو{% endif %}
+                </h5>
+                <div>
+                    <a href="{% url 'exercise_stress_test:stress_test_worklist' %}" class="btn btn-sm btn-outline-secondary me-2">
+                        <i class="bx bx-arrow-back me-1"></i> بازگشت به داشبورد
+                    </a>
+                </div>
+            </div>
+            <div class="card-body">
+                {% if patient %}
+                <div class="alert alert-info" role="alert">
+                    <h6 class="alert-heading mb-1">بیمار: <a href="{% url 'patient:patient_detail' patient.pk %}" class="alert-link">{{ patient.full_name }}</a></h6>
+                    <p class="mb-0">کد ملی: {{ patient.national_code|default:"--" }} | کد پذیرش: {% if service %}{{ service.reception.admission_code }}{% else %}--{% endif %}</p>
+                </div>
+                {% endif %}
+
+                <form method="post" enctype="multipart/form-data" class="row g-3">
+                    {% csrf_token %}
+
+                    {% if form.errors %}
+                        <div class="alert alert-danger">
+                            لطفاً خطاهای زیر را اصلاح کنید:
+                            <ul>
+                                {% for field, errors in form.errors.items %}
+                                    {% for error in errors %}
+                                        <li>{{ field }}: {{ error }}</li>
+                                    {% endfor %}
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    {% endif %}
+
+                    {# Input fields for StressTestReportForm #}
+                    {# اطلاعات عمومی #}
+                    <div class="col-md-6">
+                        <label class="form-label" for="{{ form.prescription.id_for_label }}">نسخه</label>
+                        {{ form.prescription }}
+                        {% if form.prescription.help_text %}<small class="form-text text-muted">{{ form.prescription.help_text }}</small>{% endif %}
+                        {% if form.prescription.errors %}<div class="text-danger">{{ form.prescription.errors }}</div>{% endif %}
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label" for="{{ form.exam_datetime.id_for_label }}">تاریخ انجام تست</label>
+                        {{ form.exam_datetime }}
+                        {% if form.exam_datetime.help_text %}<small class="form-text text-muted">{{ form.exam_datetime.help_text }}</small>{% endif %}
+                        {% if form.exam_datetime.errors %}<div class="text-danger">{{ form.exam_datetime.errors }}</div>{% endif %}
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label" for="{{ form.created_by.id_for_label }}">ایجادکننده</label>
+                        {{ form.created_by }}
+                        {% if form.created_by.help_text %}<small class="form-text text-muted">{{ form.created_by.help_text }}</small>{% endif %}
+                        {% if form.created_by.errors %}<div class="text-danger">{{ form.created_by.errors }}</div>{% endif %}
+                    </div>
+
+                    <hr class="mt-4 mb-4">
+                    <h6><i class="bx bx-card me-1"></i> مشخصات تست</h6>
+                    <div class="col-md-4">
+                        <label class="form-label" for="{{ form.stress_type.id_for_label }}">نوع تست</label>
+                        {{ form.stress_type }}
+                        {% if form.stress_type.help_text %}<small class="form-text text-muted">{{ form.stress_type.help_text }}</small>{% endif %}
+                        {% if form.stress_type.errors %}<div class="text-danger">{{ form.stress_type.errors }}</div>{% endif %}
+                    </div>
+                    <div class="col-md-8">
+                        <label class="form-label" for="{{ form.protocol.id_for_label }}">پروتکل تست</label>
+                        {{ form.protocol }}
+                        {% if form.protocol.help_text %}<small class="form-text text-muted">{{ form.protocol.help_text }}</small>{% endif %}
+                        {% if form.protocol.errors %}<div class="text-danger">{{ form.protocol.errors }}</div>{% endif %}
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label" for="{{ form.stress_duration.id_for_label }}">مدت تست (دقیقه)</label>
+                        {{ form.stress_duration }}
+                        {% if form.stress_duration.help_text %}<small class="form-text text-muted">{{ form.stress_duration.help_text }}</small>{% endif %}
+                        {% if form.stress_duration.errors %}<div class="text-danger">{{ form.stress_duration.errors }}</div>{% endif %}
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label" for="{{ form.test_duration.id_for_label }}">مدت تست (ساعت:دقیقه:ثانیه)</label>
+                        {{ form.test_duration }}
+                        {% if form.test_duration.help_text %}<small class="form-text text-muted">{{ form.test_duration.help_text }}</small>{% endif %}
+                        {% if form.test_duration.errors %}<div class="text-danger">{{ form.test_duration.errors }}</div>{% endif %}
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label" for="{{ form.stress_start_time.id_for_label }}">زمان شروع تست</label>
+                        {{ form.stress_start_time }}
+                        {% if form.stress_start_time.help_text %}<small class="form-text text-muted">{{ form.stress_start_time.help_text }}</small>{% endif %}
+                        {% if form.stress_start_time.errors %}<div class="text-danger">{{ form.stress_start_time.errors }}</div>{% endif %}
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label" for="{{ form.stress_stop_reason.id_for_label }}">علت توقف تست</label>
+                        {{ form.stress_stop_reason }}
+                        {% if form.stress_stop_reason.help_text %}<small class="form-text text-muted">{{ form.stress_stop_reason.help_text }}</small>{% endif %}
+                        {% if form.stress_stop_reason.errors %}<div class="text-danger">{{ form.stress_stop_reason.errors }}</div>{% endif %}
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label" for="{{ form.stress_conditions.id_for_label }}">شرایط حین تست</label>
+                        {{ form.stress_conditions }}
+                        {% if form.stress_conditions.help_text %}<small class="form-text text-muted">{{ form.stress_conditions.help_text }}</small>{% endif %}
+                        {% if form.stress_conditions.errors %}<div class="text-danger">{{ form.stress_conditions.errors }}</div>{% endif %}
+                    </div>
+
+                    <hr class="mt-4 mb-4">
+                    <h6><i class="bx bx-pulse me-1"></i> شاخص‌های عملکرد قلب</h6>
+                    <div class="col-md-3">
+                        <label class="form-label" for="{{ form.patient_age.id_for_label }}">سن بیمار</label>
+                        {{ form.patient_age }}
+                        {% if form.patient_age.help_text %}<small class="form-text text-muted">{{ form.patient_age.help_text }}</small>{% endif %}
+                        {% if form.patient_age.errors %}<div class="text-danger">{{ form.patient_age.errors }}</div>{% endif %}
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label" for="{{ form.mets.id_for_label }}">METs</label>
+                        {{ form.mets }}
+                        {% if form.mets.help_text %}<small class="form-text text-muted">{{ form.mets.help_text }}</small>{% endif %}
+                        {% if form.mets.errors %}<div class="text-danger">{{ form.mets.errors }}</div>{% endif %}
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label" for="{{ form.hr_rest.id_for_label }}">HR در استراحت</label>
+                        {{ form.hr_rest }}
+                        {% if form.hr_rest.help_text %}<small class="form-text text-muted">{{ form.hr_rest.help_text }}</small>{% endif %}
+                        {% if form.hr_rest.errors %}<div class="text-danger">{{ form.hr_rest.errors }}</div>{% endif %}
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label" for="{{ form.hr_peak.id_for_label }}">HR در اوج</label>
+                        {{ form.hr_peak }}
+                        {% if form.hr_peak.help_text %}<small class="form-text text-muted">{{ form.hr_peak.help_text }}</small>{% endif %}
+                        {% if form.hr_peak.errors %}<div class="text-danger">{{ form.hr_peak.errors }}</div>{% endif %}
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label" for="{{ form.hr_peak_metric.id_for_label }}">HR اوج (متریک)</label>
+                        {{ form.hr_peak_metric }}
+                        {% if form.hr_peak_metric.help_text %}<small class="form-text text-muted">{{ form.hr_peak_metric.help_text }}</small>{% endif %}
+                        {% if form.hr_peak_metric.errors %}<div class="text-danger">{{ form.hr_peak_metric.errors }}</div>{% endif %}
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label" for="{{ form.max_hr.id_for_label }}">حداکثر HR</label>
+                        {{ form.max_hr }}
+                        {% if form.max_hr.help_text %}<small class="form-text text-muted">{{ form.max_hr.help_text }}</small>{% endif %}
+                        {% if form.max_hr.errors %}<div class="text-danger">{{ form.max_hr.errors }}</div>{% endif %}
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label" for="{{ form.target_hr.id_for_label }}">هدف HR</label>
+                        {{ form.target_hr }}
+                        {% if form.target_hr.help_text %}<small class="form-text text-muted">{{ form.target_hr.help_text }}</small>{% endif %}
+                        {% if form.target_hr.errors %}<div class="text-danger">{{ form.target_hr.errors }}</div>{% endif %}
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label" for="{{ form.sbp_rest.id_for_label }}">SBP در استراحت</label>
+                        {{ form.sbp_rest }}
+                        {% if form.sbp_rest.help_text %}<small class="form-text text-muted">{{ form.sbp_rest.help_text }}</small>{% endif %}
+                        {% if form.sbp_rest.errors %}<div class="text-danger">{{ form.sbp_rest.errors }}</div>{% endif %}
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label" for="{{ form.sbp_peak.id_for_label }}">SBP در اوج</label>
+                        {{ form.sbp_peak }}
+                        {% if form.sbp_peak.help_text %}<small class="form-text text-muted">{{ form.sbp_peak.help_text }}</small>{% endif %}
+                        {% if form.sbp_peak.errors %}<div class="text-danger">{{ form.sbp_peak.errors }}</div>{% endif %}
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label" for="{{ form.sbp_peak_metric.id_for_label }}">SBP اوج (متریک)</label>
+                        {{ form.sbp_peak_metric }}
+                        {% if form.sbp_peak_metric.help_text %}<small class="form-text text-muted">{{ form.sbp_peak_metric.help_text }}</small>{% endif %}
+                        {% if form.sbp_peak_metric.errors %}<div class="text-danger">{{ form.sbp_peak_metric.errors }}</div>{% endif %}
+                    </div>
+                    <div class="col-md-12">
+                        <label class="form-label" for="{{ form.bp_during_test.id_for_label }}">فشار خون حین تست</label>
+                        {{ form.bp_during_test }}
+                        {% if form.bp_during_test.help_text %}<small class="form-text text-muted">{{ form.bp_during_test.help_text }}</small>{% endif %}
+                        {% if form.bp_during_test.errors %}<div class="text-danger">{{ form.bp_during_test.errors }}</div>{% endif %}
+                    </div>
+
+                    <hr class="mt-4 mb-4">
+                    <h6><i class="bx bx-refresh me-1"></i> ریکاوری</h6>
+                    <div class="col-md-4">
+                        <label class="form-label" for="{{ form.recovery_duration.id_for_label }}">مدت ریکاوری</label>
+                        {{ form.recovery_duration }}
+                        {% if form.recovery_duration.help_text %}<small class="form-text text-muted">{{ form.recovery_duration.help_text }}</small>{% endif %}
+                        {% if form.recovery_duration.errors %}<div class="text-danger">{{ form.recovery_duration.errors }}</div>{% endif %}
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label" for="{{ form.hr_recovery.id_for_label }}">HR در ریکاوری</label>
+                        {{ form.hr_recovery }}
+                        {% if form.hr_recovery.help_text %}<small class="form-text text-muted">{{ form.hr_recovery.help_text }}</small>{% endif %}
+                        {% if form.hr_recovery.errors %}<div class="text-danger">{{ form.hr_recovery.errors }}</div>{% endif %}
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label" for="{{ form.sbp_recovery.id_for_label }}">SBP در ریکاوری</label>
+                        {{ form.sbp_recovery }}
+                        {% if form.sbp_recovery.help_text %}<small class="form-text text-muted">{{ form.sbp_recovery.help_text }}</small>{% endif %}
+                        {% if form.sbp_recovery.errors %}<div class="text-danger">{{ form.sbp_recovery.errors }}</div>{% endif %}
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label" for="{{ form.recovery_st_change.id_for_label }}">تغییرات ST در ریکاوری</label>
+                        {{ form.recovery_st_change }}
+                        {% if form.recovery_st_change.help_text %}<small class="form-text text-muted">{{ form.recovery_st_change.help_text }}</small>{% endif %}
+                        {% if form.recovery_st_change.errors %}<div class="text-danger">{{ form.recovery_st_change.errors }}</div>{% endif %}
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label" for="{{ form.recovery_symptoms.id_for_label }}">علائم در ریکاوری</label>
+                        {{ form.recovery_symptoms }}
+                        {% if form.recovery_symptoms.help_text %}<small class="form-text text-muted">{{ form.recovery_symptoms.help_text }}</small>{% endif %}
+                        {% if form.recovery_symptoms.errors %}<div class="text-danger">{{ form.recovery_symptoms.errors }}</div>{% endif %}
+                    </div>
+                    <div class="col-12">
+                        <label class="form-label" for="{{ form.recovery_monitoring.id_for_label }}">پایش در ریکاوری</label>
+                        {{ form.recovery_monitoring }}
+                        {% if form.recovery_monitoring.help_text %}<small class="form-text text-muted">{{ form.recovery_monitoring.help_text }}</small>{% endif %}
+                        {% if form.recovery_monitoring.errors %}<div class="text-danger">{{ form.recovery_monitoring.errors }}</div>{% endif %}
+                    </div>
+
+                    <hr class="mt-4 mb-4">
+                    <h6><i class="bx bx-notepad me-1"></i> پیش تست</h6>
+                    <div class="col-md-12">
+                        <label class="form-label" for="{{ form.pretest_medications.id_for_label }}">داروهای قبل از تست</label>
+                        {{ form.pretest_medications }}
+                        {% if form.pretest_medications.help_text %}<small class="form-text text-muted">{{ form.pretest_medications.help_text }}</small>{% endif %}
+                        {% if form.pretest_medications.errors %}<div class="text-danger">{{ form.pretest_medications.errors }}</div>{% endif %}
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label" for="{{ form.baseline_ecg.id_for_label }}">ECG پایه</label>
+                        {{ form.baseline_ecg }}
+                        {% if form.baseline_ecg.help_text %}<small class="form-text text-muted">{{ form.baseline_ecg.help_text }}</small>{% endif %}
+                        {% if form.baseline_ecg.errors %}<div class="text-danger">{{ form.baseline_ecg.errors }}</div>{% endif %}
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label" for="{{ form.pretest_sbp.id_for_label }}">SBP قبل از تست</label>
+                        {{ form.pretest_sbp }}
+                        {% if form.pretest_sbp.help_text %}<small class="form-text text-muted">{{ form.pretest_sbp.help_text }}</small>{% endif %}
+                        {% if form.pretest_sbp.errors %}<div class="text-danger">{{ form.pretest_sbp.errors }}</div>{% endif %}
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label" for="{{ form.pretest_dbp.id_for_label }}">DBP قبل از تست</label>
+                        {{ form.pretest_dbp }}
+                        {% if form.pretest_dbp.help_text %}<small class="form-text text-muted">{{ form.pretest_dbp.help_text }}</small>{% endif %}
+                        {% if form.pretest_dbp.errors %}<div class="text-danger">{{ form.pretest_dbp.errors }}</div>{% endif %}
+                    </div>
+                    <div class="col-12">
+                        <label class="form-label" for="{{ form.pretest_contra.id_for_label }}">موارد منع قبل از تست</label>
+                        {{ form.pretest_contra }}
+                        {% if form.pretest_contra.help_text %}<small class="form-text text-muted">{{ form.pretest_contra.help_text }}</small>{% endif %}
+                        {% if form.pretest_contra.errors %}<div class="text-danger">{{ form.pretest_contra.errors }}</div>{% endif %}
+                    </div>
+
+                    <hr class="mt-4 mb-4">
+                    <h6><i class="bx bx-plus-medical me-1"></i> علائم بالینی و نتایج تست</h6>
+                    <div class="col-md-6">
+                        <label class="form-label" for="{{ form.symptoms.id_for_label }}">علائم حین تست</label>
+                        {{ form.symptoms }}
+                        {% if form.symptoms.help_text %}<small class="form-text text-muted">{{ form.symptoms.help_text }}</small>{% endif %}
+                        {% if form.symptoms.errors %}<div class="text-danger">{{ form.symptoms.errors }}</div>{% endif %}
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label" for="{{ form.stress_symptomatic.id_for_label }}">تست علامت‌دار</label>
+                        {{ form.stress_symptomatic }}
+                        {% if form.stress_symptomatic.help_text %}<small class="form-text text-muted">{{ form.stress_symptomatic.help_text }}</small>{% endif %}
+                        {% if form.stress_symptomatic.errors %}<div class="text-danger">{{ form.stress_symptomatic.errors }}</div>{% endif %}
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label" for="{{ form.borg_scale.id_for_label }}">مقیاس بورگ</label>
+                        {{ form.borg_scale }}
+                        {% if form.borg_scale.help_text %}<small class="form-text text-muted">{{ form.borg_scale.help_text }}</small>{% endif %}
+                        {% if form.borg_scale.errors %}<div class="text-danger">{{ form.borg_scale.errors }}</div>{% endif %}
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label" for="{{ form.test_result.id_for_label }}">نتیجه تست</label>
+                        {{ form.test_result }}
+                        {% if form.test_result.help_text %}<small class="form-text text-muted">{{ form.test_result.help_text }}</small>{% endif %}
+                        {% if form.test_result.errors %}<div class="text-danger">{{ form.test_result.errors }}</div>{% endif %}
+                    </div>
+
+                    <hr class="mt-4 mb-4">
+                    <h6><i class="bx bx-chart me-1"></i> یافته‌های ECG</h6>
+                    <div class="col-md-6">
+                        <label class="form-label" for="{{ form.arrhythmia_type.id_for_label }}">نوع آریتمی</label>
+                        {{ form.arrhythmia_type }}
+                        {% if form.arrhythmia_type.help_text %}<small class="form-text text-muted">{{ form.arrhythmia_type.help_text }}</small>{% endif %}
+                        {% if form.arrhythmia_type.errors %}<div class="text-danger">{{ form.arrhythmia_type.errors }}</div>{% endif %}
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label" for="{{ form.ecg_leads.id_for_label }}">لیدهای ECG</label>
+                        {{ form.ecg_leads }}
+                        {% if form.ecg_leads.help_text %}<small class="form-text text-muted">{{ form.ecg_leads.help_text }}</small>{% endif %}
+                        {% if form.ecg_leads.errors %}<div class="text-danger">{{ form.ecg_leads.errors }}</div>{% endif %}
+                    </div>
+                    <div class="col-12">
+                        <label class="form-label" for="{{ form.ecg_changes.id_for_label }}">تغییرات ECG</label>
+                        {{ form.ecg_changes }}
+                        {% if form.ecg_changes.help_text %}<small class="form-text text-muted">{{ form.ecg_changes.help_text }}</small>{% endif %}
+                        {% if form.ecg_changes.errors %}<div class="text-danger">{{ form.ecg_changes.errors }}</div>{% endif %}
+                    </div>
+
+                    <hr class="mt-4 mb-4">
+                    <h6><i class="bx bx-echo me-1"></i> یافته‌های اکو</h6>
+                    <div class="col-md-4 form-check mt-3">
+                        {{ form.wall_motion_abnormalities }}
+                        <label class="form-check-label" for="{{ form.wall_motion_abnormalities.id_for_label }}">اختلال حرکتی دیواره؟</label>
+                        {% if form.wall_motion_abnormalities.help_text %}<small class="form-text text-muted">{{ form.wall_motion_abnormalities.help_text }}</small>{% endif %}
+                        {% if form.wall_motion_abnormalities.errors %}<div class="text-danger">{{ form.wall_motion_abnormalities.errors }}</div>{% endif %}
+                    </div>
+                    <div class="col-md-4 form-check mt-3">
+                        {{ form.ischemic_changes }}
+                        <label class="form-check-label" for="{{ form.ischemic_changes.id_for_label }}">تغییرات ایسکمیک؟</label>
+                        {% if form.ischemic_changes.help_text %}<small class="form-text text-muted">{{ form.ischemic_changes.help_text }}</small>{% endif %}
+                        {% if form.ischemic_changes.errors %}<div class="text-danger">{{ form.ischemic_changes.errors }}</div>{% endif %}
+                    </div>
+                    <div class="col-md-4 form-check mt-3">
+                        {{ form.arrhythmia_occurred }}
+                        <label class="form-check-label" for="{{ form.arrhythmia_occurred.id_for_label }}">آریتمی در حین تست؟</label>
+                        {% if form.arrhythmia_occurred.help_text %}<small class="form-text text-muted">{{ form.arrhythmia_occurred.help_text }}</small>{% endif %}
+                        {% if form.arrhythmia_occurred.errors %}<div class="text-danger">{{ form.arrhythmia_occurred.errors }}</div>{% endif %}
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label" for="{{ form.rwma_severity.id_for_label }}">شدت RWMA</label>
+                        {{ form.rwma_severity }}
+                        {% if form.rwma_severity.help_text %}<small class="form-text text-muted">{{ form.rwma_severity.help_text }}</small>{% endif %}
+                        {% if form.rwma_severity.errors %}<div class="text-danger">{{ form.rwma_severity.errors }}</div>{% endif %}
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label" for="{{ form.ef_rest.id_for_label }}">EF در استراحت</label>
+                        {{ form.ef_rest }}
+                        {% if form.ef_rest.help_text %}<small class="form-text text-muted">{{ form.ef_rest.help_text }}</small>{% endif %}
+                        {% if form.ef_rest.errors %}<div class="text-danger">{{ form.ef_rest.errors }}</div>{% endif %}
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label" for="{{ form.ef_post.id_for_label }}">EF پس از تست</label>
+                        {{ form.ef_post }}
+                        {% if form.ef_post.help_text %}<small class="form-text text-muted">{{ form.ef_post.help_text }}</small>{% endif %}
+                        {% if form.ef_post.errors %}<div class="text-danger">{{ form.ef_post.errors }}</div>{% endif %}
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label" for="{{ form.mr_grade.id_for_label }}">درجه MR</label>
+                        {{ form.mr_grade }}
+                        {% if form.mr_grade.help_text %}<small class="form-text text-muted">{{ form.mr_grade.help_text }}</small>{% endif %}
+                        {% if form.mr_grade.errors %}<div class="text-danger">{{ form.mr_grade.errors }}</div>{% endif %}
+                    </div>
+                    <div class="col-12">
+                        <label class="form-label" for="{{ form.rwma_walls.id_for_label }}">دیواره‌های درگیر RWMA</label>
+                        {{ form.rwma_walls }}
+                        {% if form.rwma_walls.help_text %}<small class="form-text text-muted">{{ form.rwma_walls.help_text }}</small>{% endif %}
+                        {% if form.rwma_walls.errors %}<div class="text-danger">{{ form.rwma_walls.errors }}</div>{% endif %}
+                    </div>
+
+                    <hr class="mt-4 mb-4">
+                    <h6><i class="bx bx-folder me-1"></i> فایل‌ها و مستندات</h6>
+                    <div class="col-md-6">
+                        <label class="form-label" for="{{ form.stress_video.id_for_label }}">ویدیوی تست</label>
+                        {{ form.stress_video }}
+                        {% if form.stress_video.help_text %}<small class="form-text text-muted">{{ form.stress_video.help_text }}</small>{% endif %}
+                        {% if form.stress_video.errors %}<div class="text-danger">{{ form.stress_video.errors }}</div>{% endif %}
+                        {% if form.instance.stress_video %}<p class="mt-2">فایل فعلی: <a href="{{ form.instance.stress_video.url }}" target="_blank">{{ form.instance.stress_video.name }}</a></p>{% endif %}
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label" for="{{ form.echo_file.id_for_label }}">فایل تست اکو</label>
+                        {{ form.echo_file }}
+                        {% if form.echo_file.help_text %}<small class="form-text text-muted">{{ form.echo_file.help_text }}</small>{% endif %}
+                        {% if form.echo_file.errors %}<div class="text-danger">{{ form.echo_file.errors }}</div>{% endif %}
+                        {% if form.instance.echo_file %}<p class="mt-2">فایل فعلی: <a href="{{ form.instance.echo_file.url }}" target="_blank">{{ form.instance.echo_file.name }}</a></p>{% endif %}
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label" for="{{ form.image_saved.id_for_label }}">تصاویر ذخیره شده</label>
+                        {{ form.image_saved }}
+                        {% if form.image_saved.help_text %}<small class="form-text text-muted">{{ form.image_saved.help_text }}</small>{% endif %}
+                        {% if form.image_saved.errors %}<div class="text-danger">{{ form.image_saved.errors }}</div>{% endif %}
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label" for="{{ form.technical_issues.id_for_label }}">مشکلات فنی</label>
+                        {{ form.technical_issues }}
+                        {% if form.technical_issues.help_text %}<small class="form-text text-muted">{{ form.technical_issues.help_text }}</small>{% endif %}
+                        {% if form.technical_issues.errors %}<div class="text-danger">{{ form.technical_issues.errors }}</div>{% endif %}
+                    </div>
+
+                    <hr class="mt-4 mb-4">
+                    <h6><i class="bx bx-analyse me-1"></i> نتیجه نهایی</h6>
+                    <div class="col-md-12">
+                        <label class="form-label" for="{{ form.final_comment.id_for_label }}">توضیح نهایی</label>
+                        {{ form.final_comment }}
+                        {% if form.final_comment.help_text %}<small class="form-text text-muted">{{ form.final_comment.help_text }}</small>{% endif %}
+                        {% if form.final_comment.errors %}<div class="text-danger">{{ form.final_comment.errors }}</div>{% endif %}
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label" for="{{ form.final_diagnosis.id_for_label }}">تشخیص نهایی</label>
+                        {{ form.final_diagnosis }}
+                        {% if form.final_diagnosis.help_text %}<small class="form-text text-muted">{{ form.final_diagnosis.help_text }}</small>{% endif %}
+                        {% if form.final_diagnosis.errors %}<div class="text-danger">{{ form.final_diagnosis.errors }}</div>{% endif %}
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label" for="{{ form.final_plan.id_for_label }}">برنامه نهایی</label>
+                        {{ form.final_plan }}
+                        {% if form.final_plan.help_text %}<small class="form-text text-muted">{{ form.final_plan.help_text }}</small>{% endif %}
+                        {% if form.final_plan.errors %}<div class="text-danger">{{ form.final_plan.errors }}</div>{% endif %}
+                    </div>
+
+                    <div class="col-12 text-end">
+                        <button type="submit" class="btn btn-primary me-2">
+                            <i class="bx bx-save me-1"></i>
+                            {% if form.instance.pk %}ذخیره تغییرات{% else %}ثبت گزارش{% endif %}
+                        </button>
+                        <a href="{% if form.instance.pk %}{% url 'exercise_stress_test:stress_detail' form.instance.pk %}{% else %}{% url 'exercise_stress_test:stress_test_worklist' %}{% endif %}" class="btn btn-outline-secondary">
+                            <i class="bx bx-x me-1"></i>
+                            لغو
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% if form.errors %}
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const errorDiv = document.querySelector('.alert-danger');
+            if (errorDiv) {
+                errorDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+        });
+    </script>
+{% endif %}
+
+{% endblock %}
