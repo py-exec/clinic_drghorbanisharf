@@ -1,0 +1,129 @@
+{% extends "base.html" %}
+{% load static %}
+{% load humanize %}
+
+{% block title %}📈 داشبورد نسخه‌ها{% endblock %}
+
+{% block content %}
+<h4 class="py-3 mb-4">
+    <span class="text-muted fw-light">پزشکی /</span> داشبورد نسخه‌ها و نظرات پزشک
+</h4>
+
+<div class="row g-4 mb-4">
+    <div class="col-sm-6 col-xl-4">
+        <div class="card">
+            <div class="card-body">
+                <div class="d-flex align-items-start justify-content-between">
+                    <div class="content-left">
+                        <span>کل نسخه‌های امروز</span>
+                        <div class="d-flex align-items-end mt-2">
+                            <h3 class="mb-0 me-2" data-type="total_prescriptions_today">{{ total_prescriptions_today|intcomma }}</h3>
+                        </div>
+                        <small>تعداد نسخه‌های ثبت شده امروز</small>
+                    </div>
+                    <span class="badge bg-label-primary rounded p-2">
+                        <i class="bx bx-file-medical bx-sm"></i>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-sm-6 col-xl-4">
+        <div class="card">
+            <div class="card-body">
+                <div class="d-flex align-items-start justify-content-between">
+                    <div class="content-left">
+                        <span>نسخه‌های نهایی شده امروز</span>
+                        <div class="d-flex align-items-end mt-2">
+                            <h3 class="mb-0 me-2" data-type="finalized_prescriptions_today">{{ finalized_prescriptions_today|intcomma }}</h3>
+                        </div>
+                        <small>نسخه‌هایی با نظر نهایی پزشک</small>
+                    </div>
+                    <span class="badge bg-label-success rounded p-2">
+                        <i class="bx bx-check-double bx-sm"></i>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-sm-6 col-xl-4">
+        <div class="card">
+            <div class="card-body">
+                <div class="d-flex align-items-start justify-content-between">
+                    <div class="content-left">
+                        <span>نسخه‌های در انتظار بررسی</span>
+                        <div class="d-flex align-items-end mt-2">
+                            <h3 class="mb-0 me-2" data-type="pending_review_prescriptions">{{ pending_review_prescriptions|intcomma }}</h3>
+                        </div>
+                        <small>نسخه‌هایی که نیاز به پیگیری دارند</small>
+                    </div>
+                    <span class="badge bg-label-warning rounded p-2">
+                        <i class="bx bx-time-five bx-sm"></i>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    </div>
+
+<div class="row">
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">نسخه‌های اخیر</h5>
+                <a href="{% url 'prescriptions:prescription_list' %}" class="btn btn-sm btn-outline-secondary">
+                    <i class="bx bx-list-ul me-1"></i> مشاهده همه
+                </a>
+            </div>
+            <div class="table-responsive text-nowrap">
+                {# می‌توانید اینجا یک جدول کوچک برای نمایش چند نسخه اخیر اضافه کنید #}
+                {# مثلاً: {% include "prescriptions/partials/_recent_prescriptions_table.html" %} #}
+                {# یا فقط یک پیام ساده: #}
+                <div class="p-4 text-muted">
+                    این بخش می‌تواند شامل نسخه‌هایی باشد که نیاز به تأیید دارند، یا نسخه‌هایی که اخیراً صادر شده‌اند.
+                    پیاده‌سازی آن نیازمند کوئری‌های اضافی در `views.py` و یک قالب `partial` است.
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // Elements for dashboard stats
+        const totalPrescriptionsTodayElem = document.querySelector("h3[data-type='total_prescriptions_today']");
+        const finalizedPrescriptionsTodayElem = document.querySelector("h3[data-type='finalized_prescriptions_today']");
+        const pendingReviewPrescriptionsElem = document.querySelector("h3[data-type='pending_review_prescriptions']");
+
+        // Function to update dashboard stats from an API (if you had one, otherwise, initial load is enough)
+        // Since stats are calculated on page load in views.py, WebSocket updates are for real-time changes
+        // which would require a dedicated API endpoint or more complex signal processing.
+        // For now, this function is primarily for potential future WebSocket integration.
+        function updateDashboardStats(data) {
+            if (totalPrescriptionsTodayElem) totalPrescriptionsTodayElem.textContent = data.total_prescriptions_today.toLocaleString('fa-IR');
+            if (finalizedPrescriptionsTodayElem) finalizedPrescriptionsTodayElem.textContent = data.finalized_prescriptions_today.toLocaleString('fa-IR');
+            if (pendingReviewPrescriptionsElem) pendingReviewPrescriptionsElem.textContent = data.pending_review_prescriptions.toLocaleString('fa-IR');
+        }
+
+        // WebSocket setup (if you decide to send real-time stats for Prescriptions)
+        // This would require modifying apps/reception/signals.py to also calculate and send
+        // Prescription specific stats, or having a separate consumer/channel.
+        // const prescriptionsSocket = new WebSocket(`ws://${window.location.host}/ws/prescriptions/updates/`);
+        // prescriptionsSocket.onopen = () => { console.log("✅ WebSocket connection opened for Prescriptions Dashboard"); };
+        // prescriptionsSocket.onmessage = (e) => {
+        //     const data = JSON.parse(e.data);
+        //     console.log("Received WebSocket message:", data);
+        //     if (data.stats && data.stats.prescriptions_dashboard) { // Assuming stats come nested
+        //         updateDashboardStats(data.stats.prescriptions_dashboard);
+        //     }
+        // };
+        // prescriptionsSocket.onclose = () => { console.warn("⚠️ WebSocket for Prescriptions Dashboard closed."); };
+    });
+</script>
+{% endblock %}

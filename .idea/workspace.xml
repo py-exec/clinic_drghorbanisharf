@@ -5,91 +5,27 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="107ccca5-2b11-4857-a334-8264903cabfa" name="Changes" comment="1">
-      <change afterPath="$PROJECT_DIR$/apps/backup/tasks.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/backup/urls.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/backup/utils.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/echo_tee/forms.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/echo_tte/forms.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/exercise_stress_test/forms.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/ecg/ecg_confirm_delete.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/ecg/ecg_detail.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/ecg/ecg_form.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/ecg/ecg_worklist.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/echo_tee/echo_tee_detail.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/echo_tee/echo_tee_worklist.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/echo_tee/tee_confirm_delete.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/echo_tte/echo_tte_detail.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/echo_tte/echo_tte_worklist.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/echo_tte/tte_confirm_delete.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/exercise_stress_test/stress_test_confirm_delete.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/exercise_stress_test/stress_test_detail.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/exercise_stress_test/stress_test_worklist.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/holter_hr/holter_hr_archive.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/holter_hr/holter_hr_confirm_delete.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/holter_hr/holter_hr_install_form.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/holter_hr/holter_hr_reading_form.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/holter_hr/holter_hr_reception_form.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/procedures/prescription_confirm_delete.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/procedures/prescription_detail.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/procedures/prescription_form.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/procedures/prescription_list.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/reception/reception_confirm_delete.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/tilt/tilt_confirm_delete.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/apps/risk_assessment/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/apps/risk_assessment/admin.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/apps/risk_assessment/apps.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/apps/risk_assessment/migrations/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/apps/risk_assessment/models.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/apps/risk_assessment/tests.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/apps/risk_assessment/views.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/templates/prescriptions/prescriptions_dashboard.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/ecg/forms.py" beforeDir="false" afterPath="$PROJECT_DIR$/apps/ecg/forms.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/ecg/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/apps/ecg/models.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/ecg/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/apps/ecg/urls.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/ecg/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/apps/ecg/views.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/echo_tee/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/apps/echo_tee/models.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/echo_tee/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/apps/echo_tee/urls.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/echo_tee/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/apps/echo_tee/views.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/echo_tte/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/apps/echo_tte/models.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/echo_tte/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/apps/echo_tte/urls.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/echo_tte/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/apps/echo_tte/views.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/exercise_stress_test/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/apps/exercise_stress_test/models.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/exercise_stress_test/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/apps/exercise_stress_test/urls.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/exercise_stress_test/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/apps/exercise_stress_test/views.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/holter_bp/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/apps/holter_bp/models.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/holter_bp/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/apps/holter_bp/views.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/holter_hr/forms.py" beforeDir="false" afterPath="$PROJECT_DIR$/apps/holter_hr/forms.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/holter_hr/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/apps/holter_hr/models.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/holter_hr/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/apps/holter_hr/views.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/prescriptions/forms.py" beforeDir="false" afterPath="$PROJECT_DIR$/apps/prescriptions/forms.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/prescriptions/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/apps/prescriptions/models.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/accounts/fixtures/initial_menu_data_fixed.json" beforeDir="false" afterPath="$PROJECT_DIR$/apps/accounts/fixtures/initial_menu_data_fixed.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/accounts/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/apps/accounts/models.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/patient/forms.py" beforeDir="false" afterPath="$PROJECT_DIR$/apps/patient/forms.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/patient/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/apps/patient/models.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/apps/prescriptions/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/apps/prescriptions/urls.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/apps/prescriptions/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/apps/prescriptions/views.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/reception/consumers.py" beforeDir="false" afterPath="$PROJECT_DIR$/apps/reception/consumers.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/reception/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/apps/reception/models.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/reception/signals.py" beforeDir="false" afterPath="$PROJECT_DIR$/apps/reception/signals.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/reception/status_service.py" beforeDir="false" afterPath="$PROJECT_DIR$/apps/reception/status_service.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/tilt/forms.py" beforeDir="false" afterPath="$PROJECT_DIR$/apps/tilt/forms.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/tilt/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/apps/tilt/models.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/tilt/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/apps/tilt/urls.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/tilt/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/apps/tilt/views.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/clinic_drghorbanisharif/asgi.py" beforeDir="false" afterPath="$PROJECT_DIR$/clinic_drghorbanisharif/asgi.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/clinic_drghorbanisharif/celery.py" beforeDir="false" afterPath="$PROJECT_DIR$/clinic_drghorbanisharif/celery.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/clinic_drghorbanisharif/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/clinic_drghorbanisharif/settings.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/clinic_drghorbanisharif/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/clinic_drghorbanisharif/urls.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/clinic_drghorbanisharif/wsgi.py" beforeDir="false" afterPath="$PROJECT_DIR$/clinic_drghorbanisharif/wsgi.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/ecg/ecg_list.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/ecg/ecg_list.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/echo/echo_tee_list.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/echo_tee/echo_tee_list.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/echo/echo_tte_list.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/echo_tte/echo_tte_list.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/echo/stress_test_form.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/exercise_stress_test/stress_test_form.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/echo/stress_test_list.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/exercise_stress_test/stress_test_list.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/echo/tee_echo_form.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/echo_tee/tee_echo_form.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/echo/tilt_test_form.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/tilt/tilt_test_form.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/echo/tilt_test_list.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/tilt/tilt_test_list.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/echo/tte_echo_form.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/echo_tte/tte_echo_form.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/holter_hr/holter_bp_confirm_delete.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/holter_hr/holter_bp_install_form.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/holter_hr/holter_bp_reading_form.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/holter_hr/holter_bp_reception_form.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/holter_hr/holter_hr_worklist.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/holter_hr/holter_hr_worklist.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/reception/reception_detail.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/reception/reception_detail.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/staffs/leave_form.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/staffs/leave_form.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/tilt/tilt_detail.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/tilt/tilt_detail.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/tilt/tilt_form.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/tilt/tilt_form.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/tilt/tilt_worklist.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/tilt/tilt_worklist.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/procedures/prescription_confirm_delete.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/prescriptions/prescription_confirm_delete.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/procedures/prescription_detail.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/prescriptions/prescription_detail.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/procedures/prescription_form.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/prescriptions/prescription_form.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/procedures/prescription_list.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/prescriptions/prescription_list.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -164,11 +100,11 @@
 }</component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/templates/prescriptions" />
       <recent name="$PROJECT_DIR$/templates/exercise_stress_test" />
       <recent name="$PROJECT_DIR$/templates/tilt" />
       <recent name="$PROJECT_DIR$/templates/echo_tee" />
       <recent name="$PROJECT_DIR$/templates/echo_tte" />
-      <recent name="$PROJECT_DIR$/apps/doctors/fixtures" />
     </key>
   </component>
   <component name="RunManager" selected="Python.daphne">
@@ -253,7 +189,8 @@
       <workItem from="1753673822490" duration="926000" />
       <workItem from="1753674761296" duration="6198000" />
       <workItem from="1753745701248" duration="29585000" />
-      <workItem from="1753863838336" duration="21460000" />
+      <workItem from="1753863838336" duration="22143000" />
+      <workItem from="1753925129580" duration="6487000" />
     </task>
     <task id="LOCAL-00001" summary="1">
       <option name="closed" value="true" />
@@ -263,7 +200,15 @@
       <option name="project" value="LOCAL" />
       <updated>1753759089472</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="1">
+      <option name="closed" value="true" />
+      <created>1753890613546</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1753890613546</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -275,6 +220,6 @@
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/clinic$fix.coverage" NAME="fix Coverage Results" MODIFIED="1753757695317" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/clinic$daphne.coverage" NAME="daphne Coverage Results" MODIFIED="1753888959369" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/clinic$daphne.coverage" NAME="daphne Coverage Results" MODIFIED="1753925844355" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
 </project>

@@ -7,6 +7,10 @@ from . import views
 app_name = "prescriptions"
 
 urlpatterns = [
+    # ------------------ داشبورد آماری ------------------
+    # [GET] - نمایش داشبورد آماری نسخه‌ها
+    path("dashboard/", views.prescriptions_dashboard_view, name="prescriptions_dashboard"),
+
     # ------------------ مدیریت نسخه‌ها ------------------
 
     # [GET] - نمایش لیست تمام نسخه‌ها (آرشیو)

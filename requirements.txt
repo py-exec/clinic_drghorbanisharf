@@ -1,5 +1,5 @@
-Django>=4.2,<5.0  # نسخه پایدار Django
-django-adminlte3==0.1.6  # آخرین نسخه پایدار
+Django==4.2.23
+django-adminlte3==0.1.6
 pandas==2.2.3
 numpy==1.26.4
 amqp==5.3.1
@@ -71,9 +71,10 @@ phonenumbers
 ippanel
 django_celery_results
 django-cleanup
+django-jalali
 # ------------------- App: py_ai -------------------
-#hazm==0.7.0
-#transformers==4.41.1
+hazm==0.7.0
+transformers==4.41.1
 #torch>=2.2.2
-#scikit-learn==1.5.0
-#matplotlib==3.9.0
+scikit-learn==1.5.0
+matplotlib==3.9.0

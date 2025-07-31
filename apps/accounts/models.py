@@ -158,7 +158,7 @@ class User(AbstractUser):
         null=True,
         verbose_name="جنسیت"
     )
-    birth_date = models.DateField("تاریخ تولد", null=True, blank=True)
+    date_of_birth = models.DateField("تاریخ تولد", null=True, blank=True)
     phone_number = models.CharField("شماره موبایل", max_length=15, unique=True, db_index=True)
     email = models.EmailField("ایمیل", blank=True, null=True)
     profile_image = models.ImageField("تصویر پروفایل", upload_to="users/profile/", blank=True, null=True)
